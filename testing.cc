@@ -48,7 +48,7 @@ namespace LA
 #include <deal.II/dofs/dof_accessor.h>
 #include <deal.II/dofs/dof_tools.h>
 #include <deal.II/fe/fe_values.h>
-#include <deal.II/fe/fe_q.h>
+#include <deal.II/fe/fe_dgq.h>
 #include <deal.II/numerics/vector_tools.h>
 #include <deal.II/numerics/data_out.h>
 #include <deal.II/numerics/error_estimator.h>
@@ -69,31 +69,55 @@ int main(int argc, char *argv[])
       Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, 1);
   
       const int dim = 2;
-      const int p = 2;
+      const int p = 0;
 
       MPI_Comm                                  mpi_communicator(MPI_COMM_WORLD);
       parallel::distributed::Triangulation<dim> triangulation(mpi_communicator);
       DoFHandler<dim>                           dof_handler(triangulation);
-      FE_Q<dim>                                 fe(p);
+      FE_DGQ<dim>                                 fe(p);
       IndexSet                                  locally_owned_dofs;
       IndexSet                                  locally_relevant_dofs;
       LA::MPI::SparseMatrix                     system_matrix;
+      const int this_mpi_process(Utilities::MPI::this_mpi_process(mpi_communicator));
 
+      GridGenerator::subdivided_hyper_cube(triangulation,3);
 
+      dof_handler.distribute_dofs(fe);
       locally_owned_dofs = dof_handler.locally_owned_dofs ();
       DoFTools::extract_locally_relevant_dofs (dof_handler,
                           locally_relevant_dofs) ;
     
     
-    DynamicSparsityPattern dsp (locally_relevant_dofs);
-    DoFTools::make_flux_sparsity_pattern (dof_handler, dsp);
-    SparsityTools::distribute_sparsity_pattern (dsp,
-                                                dof_handler.n_locally_owned_dofs_per_processor(),
-                                                mpi_communicator,
-                                                locally_relevant_dofs);
-    system_matrix.reinit (locally_owned_dofs,
-                          locally_owned_dofs,
-                          dsp,
-                          mpi_communicator);
+ 
+      LA::MPI::Vector locally_owned;
+      LA::MPI::Vector locally_relevant;
+
+      locally_owned.reinit(locally_owned_dofs,mpi_communicator);
+      locally_relevant.reinit(locally_owned_dofs,locally_relevant_dofs,mpi_communicator);
+
+ 
+      IndexSet::ElementIterator begin_owned = locally_owned_dofs.begin(), end_owned = locally_owned_dofs.end();
+      IndexSet::ElementIterator b_relevant = locally_relevant_dofs.begin(), e_relevant = locally_relevant_dofs.end();
+
+      for (; begin_owned != end_owned; ++begin_owned)
+	{
+		std::cout << "i am: " << this_mpi_process << std::endl;
+		locally_owned((*begin_owned)) = this_mpi_process;
+		std::cout << "i have dof: " << (*begin_owned) << "i have value: " << locally_owned((*begin_owned)) << std::endl; 
+	}
+
+ 	locally_relevant = locally_owned;
+     for (; b_relevant != e_relevant; ++b_relevant)
+	{
+		std::cout << "i am: " << this_mpi_process << std::endl;
+		std::cout << "i have dof:" << (*b_relevant) << "i have value: " << locally_relevant((*b_relevant)) << std::endl; 
+        }
+
+       typename DoFHandler<dim>::active_cell_iterator cell =
+                                                   dof_handler.begin_active(),
+                                                 endc = dof_handler.end();
+
+
+   	
   return 0;
 }
