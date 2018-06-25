@@ -3,7 +3,7 @@
 ##
 
 # Set the name of the project and target:
-SET(TARGET "testing")
+SET(TARGET "2D_advection")
 
 # Declare all source files the target consists of. Here, this is only
 # the one step-X.cc file, but as you expand your project you may wish
@@ -35,6 +35,25 @@ IF(NOT ${deal.II_FOUND})
     )
 ENDIF()
 
+SET(LAPTOP ON)
+SET(TURBINE OFF)
+SET(CLUSTER OFF)
+
+
+IF(LAPTOP)
+  MESSAGE("ON LAPTOP")
+  SET(DEAL_II_DIR "/Applications/deal.II.app/Contents/Resources/lib/cmake")
+  SET(EIGEN_DIR "/usr/local/include/eigen")
+ENDIF()
+
+IF(TURBINE)
+  SET("ON TURBINE")
+  SET(DEAL_II_DIR "/home/sarna/Desktop/Libraries/dealii/lib/cmake")
+  SET(EIGEN_DIR "/home/sarna/Desktop/Libraries/eigenv3/eigen")
+ENDIF()
+
+
+
 #
 # Are all dependencies fulfilled?
 #
@@ -51,6 +70,25 @@ One or both of these combinations are OFF in your installation but at least one 
 ENDIF()
 
 DEAL_II_INITIALIZE_CACHED_VARIABLES()
-SET(CLEAN_UP_FILES *.log *.gmv *.gnuplot *.gpl *.eps *.pov *.vtk *.ucd *.d2 *.vtu *.pvtu)
 PROJECT(${TARGET})
-DEAL_II_INVOKE_AUTOPILOT()
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include_files)
+INCLUDE_DIRECTORIES(${EIGEN_DIR})
+FILE(GLOB TARGET_SRC  "src/*.cc")
+
+ADD_EXECUTABLE(2D_advection.out 2D_advection.cc ${TARGET_SRC})
+
+DEAL_II_SETUP_TARGET(2D_advection.out)
+
+
+ADD_CUSTOM_TARGET(release
+  COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=Release ${CMAKE_SOURCE_DIR}
+  COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
+  COMMENT "Switch CMAKE_BUILD_TYPE to Release"
+  )
+
+ADD_CUSTOM_TARGET(debug
+  COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=Debug ${CMAKE_SOURCE_DIR}
+  COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
+  COMMENT "Switch CMAKE_BUILD_TYPE to Debug"
+  )
+
