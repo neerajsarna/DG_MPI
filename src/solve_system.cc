@@ -324,7 +324,7 @@ Solve_System<dim>::compute_error()
                    per_cell_error);
   
   double errorTot = error_per_cell.l2_norm();
-  pout << "error: " << errorTot << " total dofs: " << dof_handler.n_dofs() << std::endl;
+  pout << dof_handler.n_dofs() << "\t" << errorTot << std::endl;
 
 }
 
