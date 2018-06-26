@@ -11,7 +11,7 @@ ic_bc:public ic_bc_base<dim>
 	public:
 		ic_bc() {;};
 		virtual double ic(const Point<dim> &p,const int &id);
-
+		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
 };
 
 int main(int argc, char *argv[])
@@ -23,9 +23,10 @@ int main(int argc, char *argv[])
 
       const int dim = 2;
       const int poly_degree = 0;
+      std::string foldername = "2D_advection_gaussian";
 
 	  // develop mesh
-	  int repetitions = 200;
+	  int repetitions = atoi(argv[2]);
       parallel::distributed::Triangulation<dim> triangulation(MPI_COMM_WORLD);
       GridGenerator::subdivided_hyper_cube(triangulation,repetitions);
 
@@ -41,10 +42,8 @@ int main(int argc, char *argv[])
 	  Solve_System<dim> solve_system(system_matrices,
 	  								 triangulation,
 	  								 poly_degree,
-	  								 &initial_boundary);
-
-		
-
+	  								 &initial_boundary,
+	  								 foldername);
  
 	  solve_system.run_time_loop();
 }
@@ -138,4 +137,13 @@ ic_bc<dim>::ic(const Point<dim> &p,const int &id)
 	return 0;
 }
 
+template<int dim>
+void 
+ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
+{
+	const double x = p[0];
+	const double y = p[1];
 
+	value(0) = exp(-pow((x-t-0.5),2)*100) * exp(-pow((y-t-0.5),2)*100);
+
+}

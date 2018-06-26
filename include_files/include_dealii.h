@@ -11,6 +11,8 @@ namespace LA
 #include <deal.II/lac/dynamic_sparsity_pattern.h>
 #include <deal.II/lac/sparse_matrix.h>
 
+#include <deal.II/base/work_stream.h>
+#include <deal.II/base/multithread_info.h>
 
 #include <deal.II/grid/grid_generator.h>
 #include <deal.II/grid/tria_accessor.h>

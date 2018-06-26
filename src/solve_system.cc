@@ -6,22 +6,26 @@ template<int dim>
 Solve_System<dim>::Solve_System(system_data &system_mat,
 								parallel::distributed::Triangulation<dim> &triangulation,
 								const int poly_degree,
-								ic_bc_base<dim> *ic_bc)
+								ic_bc_base<dim> *ic_bc,
+                std::string &foldername)
 :
 mpi_comm(MPI_COMM_WORLD),
 dof_handler(triangulation),
 fe_basic(poly_degree),
 fe(fe_basic,system_mat.Ax.rows()),
+locally_owned_cells(triangulation.n_active_cells()),
 initial_boundary(ic_bc),
 n_eqn(fe.n_components()),
-system_matrices(system_mat)
+system_matrices(system_mat),
+output_foldername(foldername),
+this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
 {
 	
 	  // we store data of the system ( flux matrices and boundary matrices)
 
 	  dof_handler.distribute_dofs(fe);
 	  
-	  locally_owned_dofs = dof_handler.locally_owned_dofs ();
+	  locally_owned_dofs = dof_handler.locally_owned_dofs();
       DoFTools::extract_locally_relevant_dofs (dof_handler,
                           locally_relevant_dofs) ;
     
@@ -29,13 +33,18 @@ system_matrices(system_mat)
       locally_owned_solution.reinit(locally_owned_dofs,mpi_comm);
       locally_relevant_solution.reinit(locally_owned_dofs,locally_relevant_dofs,mpi_comm);
 
+
+      create_IndexSet_triangulation(); // initialise the locally_owned_cells
+      error_per_cell.reinit(locally_owned_cells,mpi_comm); //allocate memory for error per cell
+
       prescribe_initial_conditions();
       locally_relevant_solution = locally_owned_solution;
+
 
       const double min_h = GridTools::minimal_cell_diameter(triangulation);
 
       // we need to fix this in case of moments
-      const double max_speed = 1;
+      max_speed = 1;
 
       // an approximation to delta_t
       dt = CFL * min_h/max_speed;
@@ -74,6 +83,9 @@ Solve_System<dim>::prescribe_initial_conditions()
       		cell->distribute_local_to_global(value,locally_owned_solution);
 
       	}
+
+  
+    locally_relevant_solution = locally_owned_solution;
 }
 
 
@@ -132,11 +144,15 @@ Solve_System<dim>::run_time_loop()
       				cell->get_dof_indices(local_dof_indices);
       				const double volume = cell->measure();
 
+              Vector<double> flux_contri(dofs_per_cell);
+
+              flux_contri = 0;
+
           // loop over the faces, we assume no hanging nodes 
       				for(unsigned int face  = 0; face< GeometryInfo<dim>::faces_per_cell; face++ )
       				{
                 fe_v_face.reinit(cell,face);
-                
+              
       		   		// normal to the face assuming cartesian grid
       				 	Tensor<1,dim> normal_vec = fe_v_face.normal_vector(0);
 
@@ -148,21 +164,22 @@ Solve_System<dim>::run_time_loop()
 
       					const typename DoFHandler<dim>::face_iterator face_itr = cell->face(face);
 
+                const double face_length = face_itr->measure();
+
       					if (face_itr->at_boundary())
       					{
       						for (unsigned int m = 0 ; m < An.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(An,m); n ; ++n)
                   {
 							// 0 because of finite volume
-      							unsigned int dof_sol = local_dof_indices[component_to_system[n.row()](0)];
+      							unsigned int dof_sol = component_to_system[n.row()](0);
 
 							// the solution id which meets An
       							unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
 
 							// explicit euler update
-      							locally_owned_solution(dof_sol) = locally_relevant_solution(dof_sol) - 
-      							                                  dt * n.value() 
-                                                      * locally_relevant_solution(dof_sol_col)/volume;
+      							flux_contri(dof_sol) -=  dt * n.value() 
+                                             * locally_relevant_solution(dof_sol_col) * face_length/volume;
       						}
       					}
       					else
@@ -177,21 +194,29 @@ Solve_System<dim>::run_time_loop()
                     for (Sparse_Matrix::InnerIterator n(An,m); n ; ++n)
                   {
 								// 0 because of finite volume
-      							unsigned int dof_sol = local_dof_indices[component_to_system[n.row()](0)];
+      							unsigned int dof_sol = component_to_system[n.row()](0);
 
-								// the solution point which meets An
+								// the solution part which meets An
       							unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
       							unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n.col()](0)];
 
-					 		// explicit euler update
-      							locally_owned_solution(dof_sol) = locally_relevant_solution(dof_sol) - 
-      							dt * n.value() * (locally_relevant_solution(dof_sol_col)
-      								+ locally_relevant_solution(dof_neighbor_col))/volume;
+					 		// explicit euler update, the two comes from the flux 
+      							flux_contri(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col)
+      								                       + locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+              // now add the diffusion
+                    flux_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
+                                          - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+
       						}
        					}
 
 
-       				}
+       				} // end of else 
+
+              // update the solution with the fluxes
+              for (unsigned int i = 0 ; i < dofs_per_cell ; i ++)
+                locally_owned_solution(local_dof_indices[i]) = locally_relevant_solution(local_dof_indices[i])
+                                                               + flux_contri(i);
 
       			} // end of loop over cells
 
@@ -199,11 +224,123 @@ Solve_System<dim>::run_time_loop()
       			t += dt;
       			std::cout << "time: " << t << std::endl;
 
-      		}	
+      		}	// end of loop over time
+
+          //create_output();
+          compute_error();
+
+}
+
+template<int dim>
+void 
+Solve_System<dim>::create_output()
+{
+  std::string filename = output_foldername + "/result" + std::to_string(this_mpi_process) +  ".txt";
+
+  typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end(), cell = dof_handler.begin_active();
+
+  const unsigned int dofs_per_cell = fe.dofs_per_cell;
+  std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
+  Vector<double> solution_value(n_eqn);
+
+  FILE *fp;
+  fp = fopen(filename.c_str(),"w+");
+
+  AssertThrow(fp!=NULL,ExcFileNotOpen(filename));
+  for(; cell != endc ; cell++)
+    if (cell->is_locally_owned())
+    {
+      cell->get_dof_indices(local_dof_indices);
+
+      for (unsigned int space = 0 ; space < dim ; space ++)
+        fprintf(fp, "%f ",cell->center()(space));
+
+      VectorTools::point_value(dof_handler,locally_owned_solution, cell->center(),solution_value); 
+
+      for (unsigned int i = 0 ; i < n_eqn; i++)
+        fprintf(fp, "%f ",solution_value(i));
+
+      fprintf(fp, "\n");
+    }
+
+  fclose(fp);
+
+}
+
+template<int dim>
+void 
+Solve_System<dim>::compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
+                                          PerCellErrorScratch &scratch,
+                                          PerCellError &data)
+{
+
+    if (cell->is_locally_owned())
+    {
+    data.error_value = 0;
+    data.solution_value = 0;
+
+    VectorTools::point_value(dof_handler,locally_owned_solution, 
+                             cell->center(),data.solution_value); 
+    initial_boundary->exact_solution(cell->center(),data.exact_solution,t_end);
+
+    // overwrite the solution value with the error in this cell
+    data.solution_value.sadd(1,-1,data.exact_solution);
+    
+    for (unsigned int i = 0 ; i < data.solution_value.size(); i++) 
+      data.error_value = pow(data.solution_value(i),2) +data.error_value;
+
+    data.cell_index = cell->index();
+
+    data.volume = cell->measure();
+    
+  }
+}
+
+template<int dim>
+void
+Solve_System<dim>::copy_error_to_global(const PerCellError &data)
+{
+  error_per_cell(data.cell_index) = sqrt(data.error_value * data.volume);
+}
+
+
+template<int dim>
+void
+Solve_System<dim>::compute_error()
+{
+  PerCellError per_cell_error(n_eqn);
+  PerCellErrorScratch per_cell_error_scratch;
+
+  const typename DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),
+                                                       endc = dof_handler.end();
+
+  WorkStream::run (cell,
+                   endc,
+                   *this,
+                   &Solve_System<dim>::compute_error_per_cell,
+                   &Solve_System<dim>::copy_error_to_global,
+                   per_cell_error_scratch,
+                   per_cell_error);
+  
+  double errorTot = error_per_cell.l2_norm();
+  std::cout << "error: " << errorTot << std::endl;
 
 }
 
 
+template<int dim>
+void
+Solve_System<dim>::create_IndexSet_triangulation()
+{
+  typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end(), 
+                                                 cell = dof_handler.begin_active();
+
+
+  for(; cell!=endc;cell++)  
+    if(cell->is_locally_owned())
+      locally_owned_cells.add_index(cell->index());
+    
+}
 template<int dim>
 Solve_System<dim>::~Solve_System()
 {

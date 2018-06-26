@@ -12,7 +12,8 @@ Solve_System
 		Solve_System( system_data &system_mat,
 						parallel::distributed::Triangulation<dim> &triangulation,
 						const int poly_degree,
-						ic_bc_base<dim> *ic_bc);
+						ic_bc_base<dim> *ic_bc,
+						std::string &foldername);
 		~Solve_System();
 		
 		MPI_Comm mpi_comm;
@@ -23,9 +24,11 @@ Solve_System
 
 		IndexSet locally_relevant_dofs;
 		IndexSet locally_owned_dofs;
+		IndexSet locally_owned_cells; // helpful while computing error
 
 		LA::MPI::Vector locally_relevant_solution;
 		LA::MPI::Vector locally_owned_solution;
+		LA::MPI::Vector error_per_cell;   
 
 
 		ic_bc_base<dim> *initial_boundary;
@@ -38,7 +41,42 @@ Solve_System
 
 		const double CFL = 0.5;
 		double dt;
-		double t_end = 0.3;
+		double t_end = 0.15;
+		double max_speed;
 
+		std::string output_foldername;
+
+		void create_output();
+		const unsigned int this_mpi_process;
+		void compute_error();
+		void create_IndexSet_triangulation();
+		
+
+		DeclException1 (ExcFileNotOpen, std::string,
+                        << "Could not open: " << arg1);
+
+		struct PerCellError
+		{
+			Vector<double> solution_value;
+			Vector<double> exact_solution;
+			double error_value;
+			double cell_index;
+			double volume;
+
+			PerCellError(const unsigned int &n_eqn)
+			:
+			solution_value(n_eqn),
+			exact_solution(n_eqn)
+			{}
+		};
+
+		struct PerCellErrorScratch
+		{};
+
+		void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
+									 PerCellErrorScratch &scratch,
+									 PerCellError &data);
+
+		void copy_error_to_global(const PerCellError &data);
 
 };

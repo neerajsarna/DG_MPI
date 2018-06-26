@@ -9,5 +9,5 @@ ic_bc_base
 		ic_bc_base();
 
 		virtual double ic(const Point<dim> &p,const int &id) = 0;
-
+		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t) = 0;
 };

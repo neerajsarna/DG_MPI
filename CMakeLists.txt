@@ -22,7 +22,22 @@ SET(TARGET_SRC
 # Usually, you will not need to modify anything beyond this point...
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-SET(DEAL_II_DIR "/home/ns179556/dealii/lib/cmake")
+SET(LAPTOP ON)
+SET(CLUSTER OFF)
+
+
+IF(LAPTOP)
+  MESSAGE("ON LAPTOP")
+  SET(DEAL_II_DIR "/Applications/deal.II.app/Contents/Resources/lib/cmake")
+  SET(EIGEN_DIR "/usr/local/include/eigen")
+ENDIF()
+
+IF(CLUSTER)
+  SET("ON CLUSTER")
+  SET(DEAL_II_DIR "/home/ns179556/dealii/lib/cmake")
+  SET(EIGEN_DIR "/home/ns179556/eigen")
+ENDIF()
+
 
 FIND_PACKAGE(deal.II 8.4 QUIET
   HINTS ${deal.II_DIR} ${DEAL_II_DIR} ../ ../../ $ENV{DEAL_II_DIR}
@@ -33,23 +48,6 @@ IF(NOT ${deal.II_FOUND})
     "You may want to either pass a flag -DDEAL_II_DIR=/path/to/deal.II to cmake\n"
     "or set an environment variable \"DEAL_II_DIR\" that contains this path."
     )
-ENDIF()
-
-SET(LAPTOP ON)
-SET(TURBINE OFF)
-SET(CLUSTER OFF)
-
-
-IF(LAPTOP)
-  MESSAGE("ON LAPTOP")
-  SET(DEAL_II_DIR "/Applications/deal.II.app/Contents/Resources/lib/cmake")
-  SET(EIGEN_DIR "/usr/local/include/eigen")
-ENDIF()
-
-IF(TURBINE)
-  SET("ON TURBINE")
-  SET(DEAL_II_DIR "/home/sarna/Desktop/Libraries/dealii/lib/cmake")
-  SET(EIGEN_DIR "/home/sarna/Desktop/Libraries/eigenv3/eigen")
 ENDIF()
 
 
