@@ -27,10 +27,12 @@ int main(int argc, char *argv[])
 
      system_data system_matrices;
      develop_system(system_matrices);
+
+ 
 	  // develop mesh
-     for(int i = 1 ; i < 30 ; i++ ) 
-     {
-      int repetitions = 10 * i;
+     //for(int i = 1 ; i < 30 ; i++ ) 
+     //{
+      int repetitions = 512;
       parallel::distributed::Triangulation<dim> triangulation(MPI_COMM_WORLD);
       GridGenerator::subdivided_hyper_cube(triangulation,repetitions);
 
@@ -45,7 +47,7 @@ int main(int argc, char *argv[])
 	  								 foldername);
  
 	  solve_system.run_time_loop();
-     }
+     //}
 }
 
 

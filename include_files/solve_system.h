@@ -80,4 +80,6 @@ Solve_System
 		void copy_error_to_global(const PerCellError &data);
 		ConditionalOStream pout;
 
+    	TimerOutput computing_timer;
+
 };

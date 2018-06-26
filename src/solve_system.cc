@@ -19,7 +19,11 @@ n_eqn(fe.n_components()),
 system_matrices(system_mat),
 output_foldername(foldername),
 this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
-pout(std::cout,this_mpi_process==0)
+pout(std::cout,this_mpi_process==0),
+computing_timer(MPI_COMM_WORLD,
+                    pout,
+                    TimerOutput::summary,
+                    TimerOutput::wall_times)
 {
 	
 	  // we store data of the system ( flux matrices and boundary matrices)
@@ -94,6 +98,7 @@ template<int dim>
 void 
 Solve_System<dim>::run_time_loop()
 {
+    TimerOutput::Scope timer_section(computing_timer,"Solving");
     const QGauss<dim-1> face_quadrature(1);
 
 		typename DoFHandler<dim>::cell_iterator neighbor;
@@ -228,7 +233,9 @@ Solve_System<dim>::run_time_loop()
       		}	// end of loop over time
 
           //create_output();
-          compute_error();
+
+          computing_timer.print_summary();
+          //compute_error();
 
 }
 
