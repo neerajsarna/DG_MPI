@@ -39,7 +39,7 @@ Solve_System
 		
 		void run_time_loop();
 
-		const double CFL = 0.5;
+		const double CFL = 0.3;
 		double dt;
 		double t_end = 0.15;
 		double max_speed;
@@ -78,5 +78,6 @@ Solve_System
 									 PerCellError &data);
 
 		void copy_error_to_global(const PerCellError &data);
+		ConditionalOStream pout;
 
 };

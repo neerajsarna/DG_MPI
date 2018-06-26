@@ -25,19 +25,18 @@ int main(int argc, char *argv[])
       const int poly_degree = 0;
       std::string foldername = "2D_advection_gaussian";
 
+     system_data system_matrices;
+     develop_system(system_matrices);
 	  // develop mesh
-	  int repetitions = atoi(argv[2]);
+     for(int i = 1 ; i < 30 ; i++ ) 
+     {
+      int repetitions = 10 * i;
       parallel::distributed::Triangulation<dim> triangulation(MPI_COMM_WORLD);
       GridGenerator::subdivided_hyper_cube(triangulation,repetitions);
 
 
-      // develop the system
-      system_data system_matrices;
-
-      // initial and boundary conditions
       ic_bc<dim> initial_boundary;
 
-      develop_system(system_matrices);
 	  
 	  Solve_System<dim> solve_system(system_matrices,
 	  								 triangulation,
@@ -46,6 +45,7 @@ int main(int argc, char *argv[])
 	  								 foldername);
  
 	  solve_system.run_time_loop();
+     }
 }
 
 

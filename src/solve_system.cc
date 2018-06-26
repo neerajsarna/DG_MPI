@@ -18,7 +18,8 @@ initial_boundary(ic_bc),
 n_eqn(fe.n_components()),
 system_matrices(system_mat),
 output_foldername(foldername),
-this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
+this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
+pout(std::cout,this_mpi_process==0)
 {
 	
 	  // we store data of the system ( flux matrices and boundary matrices)
@@ -222,7 +223,7 @@ Solve_System<dim>::run_time_loop()
 
       			locally_relevant_solution = locally_owned_solution;
       			t += dt;
-      			std::cout << "time: " << t << std::endl;
+//      			std::cout << "time: " << t << std::endl;
 
       		}	// end of loop over time
 
@@ -323,7 +324,7 @@ Solve_System<dim>::compute_error()
                    per_cell_error);
   
   double errorTot = error_per_cell.l2_norm();
-  std::cout << "error: " << errorTot << std::endl;
+  pout << "error: " << errorTot << " total dofs: " << dof_handler.n_dofs() << std::endl;
 
 }
 

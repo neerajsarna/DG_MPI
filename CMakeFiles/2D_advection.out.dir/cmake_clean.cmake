@@ -1,4 +1,4 @@
-file(REMOVE_RECURSE
+FILE(REMOVE_RECURSE
   "CMakeFiles/2D_advection.out.dir/2D_advection.cc.o"
   "CMakeFiles/2D_advection.out.dir/src/ic_bc_base.cc.o"
   "CMakeFiles/2D_advection.out.dir/src/solve_system.cc.o"
@@ -7,6 +7,6 @@ file(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang CXX)
-  include(CMakeFiles/2D_advection.out.dir/cmake_clean_${lang}.cmake OPTIONAL)
-endforeach()
+FOREACH(lang CXX)
+  INCLUDE(CMakeFiles/2D_advection.out.dir/cmake_clean_${lang}.cmake OPTIONAL)
+ENDFOREACH(lang)
