@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/ns179556/DG_MPI/2D_advection.cc
+/home/ns179556/DG_MPI/src/solve_system.cc
 solve_system.h
-/home/ns179556/DG_MPI/solve_system.h
+/home/ns179556/DG_MPI/src/solve_system.h
 
 /home/ns179556/dealii/include/deal.II/base/aligned_vector.h
 deal.II/base/config.h
