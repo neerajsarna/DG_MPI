@@ -3,7 +3,7 @@
 ##
 
 # Set the name of the project and target:
-SET(TARGET "1D_advection")
+SET(TARGET "2x3v_moments")
 
 # Declare all source files the target consists of. Here, this is only
 # the one step-X.cc file, but as you expand your project you may wish
@@ -73,9 +73,9 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include_files)
 INCLUDE_DIRECTORIES(${EIGEN_DIR})
 FILE(GLOB TARGET_SRC  "src/*.cc")
 
-ADD_EXECUTABLE(1D_advection_sin.out 1D_advection_sin.cc ${TARGET_SRC})
+ADD_EXECUTABLE(2x3v_moments.out 2x3v_moments.cc ${TARGET_SRC})
 
-DEAL_II_SETUP_TARGET(1D_advection_sin.out)
+DEAL_II_SETUP_TARGET(2x3v_moments.out)
 
 
 ADD_CUSTOM_TARGET(release

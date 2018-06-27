@@ -48,10 +48,12 @@ pout(std::cout,this_mpi_process==0)
       locally_relevant_solution = locally_owned_solution;
 
       // we need to fix this in case of moments
-      max_speed = 1;
+      max_speed = compute_max_speed();
+
+      pout << "Max speed: " << max_speed << std::endl;
 
       // an approximation to delta_t
-      dt = CFL * min_h/max_speed;
+      dt = CFL * min_h/(dim * max_speed);
 
 }
 
@@ -157,6 +159,23 @@ Solve_System<dim>::run_time_loop()
 
               flux_contri = 0;
 
+              // contribution from collisions P
+              for (unsigned int m = 0 ; m < system_matrices.P.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(system_matrices.P,m); n ; ++n)
+                  {
+              // 0 because of finite volume
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+
+              // the solution id which meets An
+                    unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
+
+              // explicit euler update, 
+                    flux_contri(dof_sol) +=  n.value() * dt
+                                             * locally_relevant_solution(dof_sol_col);
+
+                  }
+
+
           // loop over the faces, we assume no hanging nodes 
       				for(unsigned int face  = 0; face< GeometryInfo<dim>::faces_per_cell; face++ )
       				{
@@ -222,7 +241,7 @@ Solve_System<dim>::run_time_loop()
       					}
       					else
       					{
-                  neighbor = cell->neighbor(face);
+                   neighbor = cell->neighbor(face);
 
       						 neighbor->get_dof_indices(local_dof_indices_neighbor);
 
@@ -242,10 +261,20 @@ Solve_System<dim>::run_time_loop()
       							flux_contri(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col)
       								                       + locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
               // now add the diffusion
-                    flux_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
-                                          - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+                    // flux_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
+                    //                       - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
 
       						}
+
+                  for (unsigned int id = 0 ; id < n_eqn ; id++)
+                  {
+                      unsigned int dof_sol = component_to_system[id](0);                    
+                      unsigned int dof_sol_col = local_dof_indices[component_to_system[id](0)];
+                      unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
+
+                      flux_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
+                                          - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+                  }
        					}
 
 
@@ -260,14 +289,14 @@ Solve_System<dim>::run_time_loop()
 
       			locally_relevant_solution = locally_owned_solution;
       			t += dt;
-//      			std::cout << "time: " << t << std::endl;
+      			std::cout << "time: " << t << std::endl;
 
       		}	// end of loop over time
 
           create_output();
 
           //computing_timer.print_summary();
-          compute_error();
+          //compute_error();
 
 }
 
@@ -295,7 +324,7 @@ Solve_System<dim>::create_output()
       for (unsigned int space = 0 ; space < dim ; space ++)
         fprintf(fp, "%f\t",cell->center()(space));
 
-      VectorTools::point_value(dof_handler,locally_owned_solution, cell->center(),solution_value); 
+      VectorTools::point_value(dof_handler,locally_owned_solution,cell->center(),solution_value); 
 
       for (unsigned int i = 0 ; i < n_eqn; i++)
         fprintf(fp, "%f\t",solution_value(i));
@@ -381,6 +410,17 @@ Solve_System<dim>::create_IndexSet_triangulation()
       locally_owned_cells.add_index(cell->index());
     
 }
+
+template<int dim>
+double
+Solve_System<dim>::compute_max_speed()
+{
+    EigenSolver<MatrixXd> ES(system_matrices.Ax);
+    VectorXd vals = ES.pseudoEigenvalueMatrix().diagonal().cwiseAbs();
+
+    return(vals.maxCoeff());
+}
+
 template<int dim>
 Solve_System<dim>::~Solve_System()
 {

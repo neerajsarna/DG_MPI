@@ -10,7 +10,7 @@ using Eigen::MatrixXd;
 using Eigen::MatrixXi;
 using Eigen::VectorXi;
 using Eigen::SparseMatrix;
-typedef SparseMatrix<double,Eigen::RowMajor> Sparse_Matrix;
+typedef Eigen::SparseMatrix<double,Eigen::RowMajor> Sparse_Matrix;
 typedef Eigen::Triplet<double> triplet;
 typedef Eigen::MatrixXd Full_matrix;
 

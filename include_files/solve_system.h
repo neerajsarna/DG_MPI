@@ -40,9 +40,9 @@ Solve_System
 		
 		void run_time_loop();
 
-		const double CFL = 1.0;
+		const double CFL = 0.5;
 		double dt;
-		double t_end = 1.0;
+		double t_end = 0.3;
 		double max_speed;
 
 		// data structure for RK time stepping
@@ -63,7 +63,7 @@ Solve_System
 		const unsigned int this_mpi_process;
 		void compute_error();
 		void create_IndexSet_triangulation();
-		
+		double compute_max_speed();		
 
 		DeclException1 (ExcFileNotOpen, std::string,
                         << "Could not open: " << arg1);
@@ -93,6 +93,7 @@ Solve_System
 
 		void copy_error_to_global(const PerCellError &data);
 		ConditionalOStream pout;
+
 
     	//TimerOutput computing_timer;
 
