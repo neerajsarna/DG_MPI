@@ -14,7 +14,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeLanguageInformation.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeSystemSpecificInformation.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeSystemSpecificInitialize.cmake"
-  "/Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeUnixFindMake.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.5/Modules/Compiler/AppleClang-C.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.5/Modules/Compiler/AppleClang-CXX.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.5/Modules/Compiler/Clang.cmake"
@@ -57,6 +56,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/debug.dir/DependInfo.cmake"
-  "CMakeFiles/2D_advection.out.dir/DependInfo.cmake"
   "CMakeFiles/release.dir/DependInfo.cmake"
+  "CMakeFiles/1D_advection_sin.out.dir/DependInfo.cmake"
   )

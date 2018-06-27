@@ -124,19 +124,6 @@ debug/fast:
 .PHONY : debug/fast
 
 #=============================================================================
-# Target rules for targets named 2D_advection.out
-
-# Build rule for target.
-2D_advection.out: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 2D_advection.out
-.PHONY : 2D_advection.out
-
-# fast build rule for target.
-2D_advection.out/fast:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/build
-.PHONY : 2D_advection.out/fast
-
-#=============================================================================
 # Target rules for targets named release
 
 # Build rule for target.
@@ -149,32 +136,45 @@ release/fast:
 	$(MAKE) -f CMakeFiles/release.dir/build.make CMakeFiles/release.dir/build
 .PHONY : release/fast
 
-2D_advection.o: 2D_advection.cc.o
+#=============================================================================
+# Target rules for targets named 1D_advection_sin.out
 
-.PHONY : 2D_advection.o
+# Build rule for target.
+1D_advection_sin.out: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 1D_advection_sin.out
+.PHONY : 1D_advection_sin.out
+
+# fast build rule for target.
+1D_advection_sin.out/fast:
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/build
+.PHONY : 1D_advection_sin.out/fast
+
+1D_advection_sin.o: 1D_advection_sin.cc.o
+
+.PHONY : 1D_advection_sin.o
 
 # target to build an object file
-2D_advection.cc.o:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/2D_advection.cc.o
-.PHONY : 2D_advection.cc.o
+1D_advection_sin.cc.o:
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/1D_advection_sin.cc.o
+.PHONY : 1D_advection_sin.cc.o
 
-2D_advection.i: 2D_advection.cc.i
+1D_advection_sin.i: 1D_advection_sin.cc.i
 
-.PHONY : 2D_advection.i
+.PHONY : 1D_advection_sin.i
 
 # target to preprocess a source file
-2D_advection.cc.i:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/2D_advection.cc.i
-.PHONY : 2D_advection.cc.i
+1D_advection_sin.cc.i:
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/1D_advection_sin.cc.i
+.PHONY : 1D_advection_sin.cc.i
 
-2D_advection.s: 2D_advection.cc.s
+1D_advection_sin.s: 1D_advection_sin.cc.s
 
-.PHONY : 2D_advection.s
+.PHONY : 1D_advection_sin.s
 
 # target to generate assembly for a file
-2D_advection.cc.s:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/2D_advection.cc.s
-.PHONY : 2D_advection.cc.s
+1D_advection_sin.cc.s:
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/1D_advection_sin.cc.s
+.PHONY : 1D_advection_sin.cc.s
 
 src/ic_bc_base.o: src/ic_bc_base.cc.o
 
@@ -182,7 +182,7 @@ src/ic_bc_base.o: src/ic_bc_base.cc.o
 
 # target to build an object file
 src/ic_bc_base.cc.o:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/src/ic_bc_base.cc.o
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/src/ic_bc_base.cc.o
 .PHONY : src/ic_bc_base.cc.o
 
 src/ic_bc_base.i: src/ic_bc_base.cc.i
@@ -191,7 +191,7 @@ src/ic_bc_base.i: src/ic_bc_base.cc.i
 
 # target to preprocess a source file
 src/ic_bc_base.cc.i:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/src/ic_bc_base.cc.i
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/src/ic_bc_base.cc.i
 .PHONY : src/ic_bc_base.cc.i
 
 src/ic_bc_base.s: src/ic_bc_base.cc.s
@@ -200,7 +200,7 @@ src/ic_bc_base.s: src/ic_bc_base.cc.s
 
 # target to generate assembly for a file
 src/ic_bc_base.cc.s:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/src/ic_bc_base.cc.s
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/src/ic_bc_base.cc.s
 .PHONY : src/ic_bc_base.cc.s
 
 src/solve_system.o: src/solve_system.cc.o
@@ -209,7 +209,7 @@ src/solve_system.o: src/solve_system.cc.o
 
 # target to build an object file
 src/solve_system.cc.o:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/src/solve_system.cc.o
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/src/solve_system.cc.o
 .PHONY : src/solve_system.cc.o
 
 src/solve_system.i: src/solve_system.cc.i
@@ -218,7 +218,7 @@ src/solve_system.i: src/solve_system.cc.i
 
 # target to preprocess a source file
 src/solve_system.cc.i:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/src/solve_system.cc.i
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/src/solve_system.cc.i
 .PHONY : src/solve_system.cc.i
 
 src/solve_system.s: src/solve_system.cc.s
@@ -227,7 +227,7 @@ src/solve_system.s: src/solve_system.cc.s
 
 # target to generate assembly for a file
 src/solve_system.cc.s:
-	$(MAKE) -f CMakeFiles/2D_advection.out.dir/build.make CMakeFiles/2D_advection.out.dir/src/solve_system.cc.s
+	$(MAKE) -f CMakeFiles/1D_advection_sin.out.dir/build.make CMakeFiles/1D_advection_sin.out.dir/src/solve_system.cc.s
 .PHONY : src/solve_system.cc.s
 
 # Help Target
@@ -239,11 +239,11 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... debug"
-	@echo "... 2D_advection.out"
 	@echo "... release"
-	@echo "... 2D_advection.o"
-	@echo "... 2D_advection.i"
-	@echo "... 2D_advection.s"
+	@echo "... 1D_advection_sin.out"
+	@echo "... 1D_advection_sin.o"
+	@echo "... 1D_advection_sin.i"
+	@echo "... 1D_advection_sin.s"
 	@echo "... src/ic_bc_base.o"
 	@echo "... src/ic_bc_base.i"
 	@echo "... src/ic_bc_base.s"

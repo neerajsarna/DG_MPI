@@ -7,7 +7,8 @@ Solve_System<dim>::Solve_System(system_data &system_mat,
 								parallel::distributed::Triangulation<dim> &triangulation,
 								const int poly_degree,
 								ic_bc_base<dim> *ic_bc,
-                std::string &foldername)
+                std::string &foldername,
+                const double min_h)
 :
 mpi_comm(MPI_COMM_WORLD),
 dof_handler(triangulation),
@@ -19,11 +20,12 @@ n_eqn(fe.n_components()),
 system_matrices(system_mat),
 output_foldername(foldername),
 this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
-pout(std::cout,this_mpi_process==0),
-computing_timer(MPI_COMM_WORLD,
-                    pout,
-                    TimerOutput::summary,
-                    TimerOutput::wall_times)
+pout(std::cout,this_mpi_process==0)
+// ,
+// computing_timer(MPI_COMM_WORLD,
+//                     pout,
+//                     TimerOutput::summary,
+//                     TimerOutput::wall_times)
 {
 	
 	  // we store data of the system ( flux matrices and boundary matrices)
@@ -44,9 +46,6 @@ computing_timer(MPI_COMM_WORLD,
 
       prescribe_initial_conditions();
       locally_relevant_solution = locally_owned_solution;
-
-
-      const double min_h = GridTools::minimal_cell_diameter(triangulation);
 
       // we need to fix this in case of moments
       max_speed = 1;
@@ -98,7 +97,7 @@ template<int dim>
 void 
 Solve_System<dim>::run_time_loop()
 {
-    TimerOutput::Scope timer_section(computing_timer,"Solving");
+    //TimerOutput::Scope timer_section(computing_timer,"Solving");
     const QGauss<dim-1> face_quadrature(1);
 
 		typename DoFHandler<dim>::cell_iterator neighbor;
@@ -131,6 +130,10 @@ Solve_System<dim>::run_time_loop()
       	std::vector<types::global_dof_index> local_dof_indices_neighbor(dofs_per_cell);
 
       	Vector<double> neighbor_values(dofs_per_cell);
+        std::vector<Vector<double>> g(4);
+
+        for (unsigned int id = 0 ; id < 4 ; id++)
+          initial_boundary->bc_inhomo(system_matrices.B[id],id,g[id],0);
 
       	double t = 0;
       	while (t < t_end)
@@ -174,19 +177,48 @@ Solve_System<dim>::run_time_loop()
 
       					if (face_itr->at_boundary())
       					{
-      						for (unsigned int m = 0 ; m < An.outerSize() ; m++)
+                  const unsigned int bc_id = face_itr->boundary_id();
+                  // only compute for times greater than zero, already computed for t= 0 before
+                    if (system_matrices.bc_inhomo_time && t > 1e-16)
+                                initial_boundary->bc_inhomo(system_matrices.B[bc_id],bc_id,
+                                                          g[bc_id],t);
+
+                  for (unsigned int m = 0 ; m < An.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(An,m); n ; ++n)
                   {
-							// 0 because of finite volume
-      							unsigned int dof_sol = component_to_system[n.row()](0);
+              // 0 because of finite volume
+                    unsigned int dof_sol = component_to_system[n.row()](0);
 
-							// the solution id which meets An
-      							unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
+              // the solution id which meets An
+                    unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
 
-							// explicit euler update
-      							flux_contri(dof_sol) -=  dt * n.value() 
+              // explicit euler update
+                    flux_contri(dof_sol) -=  n.value() * dt
                                              * locally_relevant_solution(dof_sol_col) * face_length/volume;
-      						}
+
+                  }
+
+                  // contribution from penalty_B
+                  for (unsigned int m = 0 ; m < system_matrices.penalty_B[bc_id].outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(system_matrices.penalty_B[bc_id],m); n ; ++n)
+                  {
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
+                    flux_contri(dof_sol) +=  n.value() * dt
+                                             * locally_relevant_solution(dof_sol_col) * face_length/volume;
+
+                  }
+                  // contribution from penalty * g
+                  for (unsigned int m = 0 ; m < system_matrices.penalty[bc_id].outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(system_matrices.penalty[bc_id],m); n ; ++n)
+                  {
+              
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
+                    flux_contri(dof_sol) -=  n.value() * dt
+                                             * g[bc_id](n.col()) * face_length/volume;
+
+                  }
       					}
       					else
       					{
@@ -232,10 +264,10 @@ Solve_System<dim>::run_time_loop()
 
       		}	// end of loop over time
 
-          //create_output();
+          create_output();
 
-          computing_timer.print_summary();
-          //compute_error();
+          //computing_timer.print_summary();
+          compute_error();
 
 }
 
@@ -261,12 +293,12 @@ Solve_System<dim>::create_output()
       cell->get_dof_indices(local_dof_indices);
 
       for (unsigned int space = 0 ; space < dim ; space ++)
-        fprintf(fp, "%f ",cell->center()(space));
+        fprintf(fp, "%f\t",cell->center()(space));
 
       VectorTools::point_value(dof_handler,locally_owned_solution, cell->center(),solution_value); 
 
       for (unsigned int i = 0 ; i < n_eqn; i++)
-        fprintf(fp, "%f ",solution_value(i));
+        fprintf(fp, "%f\t",solution_value(i));
 
       fprintf(fp, "\n");
     }

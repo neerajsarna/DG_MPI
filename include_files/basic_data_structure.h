@@ -1,6 +1,4 @@
-	#include <Eigen/Dense>
-	#include <Eigen/SparseCore>
-	typedef Eigen::SparseMatrix<double,Eigen::RowMajor> Sparse_Matrix;
+#include "EigenSetup.h"
 
 
 	struct system_data
@@ -15,4 +13,6 @@
 		std::vector<Sparse_Matrix> penalty;
 		std::vector<Sparse_Matrix> penalty_B;
 
+		// by default we have a false
+		bool bc_inhomo_time = false;
 	};

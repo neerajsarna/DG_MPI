@@ -1,5 +1,5 @@
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/edit_cache.dir
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/rebuild_cache.dir
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/debug.dir
-/Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/2D_advection.out.dir
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/release.dir
+/Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/1D_advection_sin.out.dir

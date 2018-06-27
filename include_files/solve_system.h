@@ -13,7 +13,8 @@ Solve_System
 						parallel::distributed::Triangulation<dim> &triangulation,
 						const int poly_degree,
 						ic_bc_base<dim> *ic_bc,
-						std::string &foldername);
+						std::string &foldername,
+						const double min_h);
 		~Solve_System();
 		
 		MPI_Comm mpi_comm;
@@ -39,10 +40,22 @@ Solve_System
 		
 		void run_time_loop();
 
-		const double CFL = 0.3;
+		const double CFL = 1.0;
 		double dt;
-		double t_end = 0.15;
+		double t_end = 1.0;
 		double max_speed;
+
+		// data structure for RK time stepping
+		struct RK
+		{
+			Vector<double> weights;	// weights of the RK stages
+			Vector<double> t_temp;  // intermidiate time steps
+			Vector<double> dt_temp; // delta_t of different RK stages
+			std::vector<LA::MPI::Vector> k_RK; // intermidate stages
+			LA::MPI::Vector locally_owned_solution_temp; // temporary variable
+		};
+
+		RK RK_data;
 
 		std::string output_foldername;
 
@@ -70,6 +83,7 @@ Solve_System
 			{}
 		};
 
+		
 		struct PerCellErrorScratch
 		{};
 
@@ -80,6 +94,6 @@ Solve_System
 		void copy_error_to_global(const PerCellError &data);
 		ConditionalOStream pout;
 
-    	TimerOutput computing_timer;
+    	//TimerOutput computing_timer;
 
 };
