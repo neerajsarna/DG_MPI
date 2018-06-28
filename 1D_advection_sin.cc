@@ -95,10 +95,10 @@ int main(int argc, char *argv[])
       p2(0) = right_edge;
       p2(1) = right_edge;
 
-      for (unsigned int i = 1 ; i < 30 ; i = i + 2)
-      {
-      //repetitions[0] = atoi(argv[2]);
-      	repetitions[0] = 15 * i;
+      // for (unsigned int i = 29 ; i < 30 ; i = i + 2)
+      // {
+      repetitions[0] = atoi(argv[2]);
+      //repetitions[0] = 15 * i;
       repetitions[1] = 2;
 
             //The diagonal of the rectangle is the line joining p1 and p2
@@ -106,7 +106,16 @@ int main(int argc, char *argv[])
       GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
       set_square_bid(triangulation);
 
-      ic_bc<dim> initial_boundary;	  
+      ic_bc<dim> initial_boundary;
+      
+      ConditionalOStream pcout(std::cout,
+          						(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD) == 0));
+  	  TimerOutput   computing_timer(MPI_COMM_WORLD,
+                    				pcout,
+                    				TimerOutput::summary,
+                    				TimerOutput::wall_times);	  
+
+  	  computing_timer.enter_subsection("solving");
 	  Solve_System<dim> solve_system(system_matrices,
 	  								 triangulation,
 	  								 poly_degree,
@@ -115,7 +124,10 @@ int main(int argc, char *argv[])
 	  								 1.0/repetitions[0]);
  
 	  solve_system.run_time_loop();
-	}
+
+	  computing_timer.leave_subsection();
+      pcout << std::endl;
+	//}
      
 }
 

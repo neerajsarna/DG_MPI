@@ -94,7 +94,34 @@ Solve_System
 		};
 
 		struct PerCellICScratch
-		{Vector<double> component;};
+		{};
+
+		struct PerCellAssemble
+		{
+			std::vector<types::global_dof_index> local_dof_indices;
+			Vector<double> local_contri;
+			unsigned int dofs_per_cell;
+		};
+
+		struct PerCellAssembleScratch
+		{
+			    PerCellAssembleScratch(const FiniteElement<dim> &fe,
+                	        		   const Quadrature<dim-1> &   quadrature); // initialisation
+
+    			PerCellAssembleScratch(const PerCellAssembleScratch &scratch);	// copy constructor
+
+    			FEFaceValues<dim> fe_v_face;    			
+		};
+
+		void assemble_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
+                                      PerCellAssembleScratch &scratch,
+                                      PerCellAssemble &data,
+                                      const Vector<double> &component,
+                                      const std::vector<Vector<double>> &component_to_system,
+                                      const double &t,
+                                      const std::vector<Vector<double>> &g);
+
+		void assemble_to_global(const PerCellAssemble &data);
 
 		void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
 									 PerCellErrorScratch &scratch,
@@ -104,7 +131,7 @@ Solve_System
 		ConditionalOStream pout;
 
 		void compute_ic_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
-                                  PerCellICScratch &scratch,PerCellIC &data);
+                                  PerCellICScratch &scratch,PerCellIC &data,const Vector<double> &component);
 
 		void copy_ic_to_global(const PerCellIC &data);
 
