@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
       // {
       repetitions[0] = atoi(argv[2]);
       //repetitions[0] = 15 * i;
-      repetitions[1] = 2;
+      repetitions[1] = repetitions[0];
 
             //The diagonal of the rectangle is the line joining p1 and p2
       triangulation.clear();

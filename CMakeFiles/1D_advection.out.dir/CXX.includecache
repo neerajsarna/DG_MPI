@@ -18744,6 +18744,16 @@ vector
 iostream
 -
 
+/Applications/deal.II.app/Contents/Resources/include/deal.II/grid/filtered_iterator.h
+deal.II/base/config.h
+-
+deal.II/base/exceptions.h
+-
+deal.II/grid/tria_iterator_base.h
+-
+set
+-
+
 /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/grid_generator.h
 deal.II/base/config.h
 -
@@ -22848,6 +22858,8 @@ deal.II/grid/tria_accessor.h
 deal.II/grid/tria_iterator.h
 -
 deal.II/grid/grid_tools.h
+-
+deal.II/grid/filtered_iterator.h
 -
 deal.II/dofs/dof_handler.h
 -

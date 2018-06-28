@@ -1604,6 +1604,7 @@ CMakeFiles/1D_advection.out.dir/1D_advection_sin.cc.o
  /Applications/deal.II.app/Contents/Resources/include/deal.II/fe/mapping_q1.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/fe/mapping_q_generic.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/cell_id.h
+ /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/filtered_iterator.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/grid_generator.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/grid_tools.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/tria.h
@@ -3723,6 +3724,7 @@ CMakeFiles/1D_advection.out.dir/src/ic_bc_base.cc.o
  /Applications/deal.II.app/Contents/Resources/include/deal.II/fe/mapping_q1.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/fe/mapping_q_generic.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/cell_id.h
+ /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/filtered_iterator.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/grid_generator.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/grid_tools.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/tria.h
@@ -5840,6 +5842,7 @@ CMakeFiles/1D_advection.out.dir/src/solve_system.cc.o
  /Applications/deal.II.app/Contents/Resources/include/deal.II/fe/mapping_q1.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/fe/mapping_q_generic.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/cell_id.h
+ /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/filtered_iterator.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/grid_generator.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/grid_tools.h
  /Applications/deal.II.app/Contents/Resources/include/deal.II/grid/tria.h

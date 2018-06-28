@@ -64,10 +64,7 @@ void
 Solve_System<dim>::prescribe_initial_conditions()
 {
 
-	const typename DoFHandler<dim>::active_cell_iterator cell =
-                                                   dof_handler.begin_active(),
-                                                 endc = dof_handler.end();
-
+  typedef FilteredIterator<typename DoFHandler<dim>::active_cell_iterator> CellFilter;
 
   PerCellIC percellIC;
   PerCellICScratch percellICScratch;
@@ -77,8 +74,9 @@ Solve_System<dim>::prescribe_initial_conditions()
   for (unsigned int i = 0 ; i < fe.dofs_per_cell ; i++)
       component[i] = fe.system_to_component_index(i).first;
 
-  WorkStream::run (cell,
-                   endc,
+  WorkStream::run (CellFilter(IteratorFilters::LocallyOwnedCell(),
+                    dof_handler.begin_active()),
+                   CellFilter(IteratorFilters::LocallyOwnedCell(), dof_handler.end()),
                    std::bind(&Solve_System<dim>::compute_ic_per_cell,
                             this,
                             std::placeholders::_1,
@@ -103,8 +101,7 @@ Solve_System<dim>::compute_ic_per_cell(const typename DoFHandler<dim>::active_ce
                                         PerCellIC &data,
                                         const Vector<double> &component)
 {
-  if(cell->is_locally_owned())
-  {
+  
           data.dofs_per_cell = fe.dofs_per_cell;
           data.local_dof_indices.resize(data.dofs_per_cell);
           data.local_contri.reinit(data.dofs_per_cell);
@@ -116,7 +113,7 @@ Solve_System<dim>::compute_ic_per_cell(const typename DoFHandler<dim>::active_ce
           
           cell->get_dof_indices(data.local_dof_indices);
 
-  }
+  
 }
 
 template<int dim>
@@ -131,8 +128,7 @@ template<int dim>
 void 
 Solve_System<dim>::run_time_loop()
  {
-  const typename DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active();
-  const typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end();
+  typedef FilteredIterator<typename DoFHandler<dim>::active_cell_iterator> CellFilter;
 
   const unsigned int dofs_per_cell = fe.dofs_per_cell;
   const unsigned int dofs_per_component = dofs_per_cell/n_eqn;
@@ -171,8 +167,10 @@ Solve_System<dim>::run_time_loop()
       if (t+dt > t_end)
         dt = t_end-t;
 
-      WorkStream::run (cell,
-                   endc,
+      WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
+                        dof_handler.begin_active()),
+                        CellFilter(IteratorFilters::LocallyOwnedCell(), 
+                        dof_handler.end()),
                    std::bind(&Solve_System<dim>::assemble_per_cell,
                             this,
                             std::placeholders::_1,
@@ -210,8 +208,7 @@ template<int dim>
                                       const double &t,
                                       const std::vector<Vector<double>> &g)
  {
-    if(cell->is_locally_owned())
-    {
+
               // operations to avoid data races
               std::vector<Vector<double>> temp_g(4);
               for (unsigned int id = 0 ; id < 4 ; id ++)
@@ -344,7 +341,7 @@ template<int dim>
 
 
               } //end of loop over the faces
-    } // end of if condition over the cell
+    
  }
 
 template<int dim>
@@ -601,8 +598,6 @@ Solve_System<dim>::compute_error_per_cell(const typename DoFHandler<dim>::active
                                           PerCellError &data)
 {
 
-    if (cell->is_locally_owned())
-    {
     data.error_value = 0;
     data.solution_value = 0;
 
@@ -620,7 +615,7 @@ Solve_System<dim>::compute_error_per_cell(const typename DoFHandler<dim>::active
 
     data.volume = cell->measure();
     
-  }
+  
 }
 
 template<int dim>
@@ -638,14 +633,20 @@ Solve_System<dim>::compute_error()
   PerCellError per_cell_error(n_eqn);
   PerCellErrorScratch per_cell_error_scratch;
 
-  const typename DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),
-                                                       endc = dof_handler.end();
+  typedef FilteredIterator<typename DoFHandler<dim>::active_cell_iterator> CellFilter;
 
-  WorkStream::run (cell,
-                   endc,
-                   *this,
-                   &Solve_System<dim>::compute_error_per_cell,
-                   &Solve_System<dim>::copy_error_to_global,
+  WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
+                    dof_handler.begin_active()),
+                    CellFilter(IteratorFilters::LocallyOwnedCell(), 
+                    dof_handler.end()),
+                    std::bind(&Solve_System<dim>::compute_error_per_cell,
+                            this,
+                            std::placeholders::_1,
+                            std::placeholders::_2,
+                            std::placeholders::_3),
+                    std::bind(&Solve_System<dim>::copy_error_to_global,
+                            this,
+                            std::placeholders::_1),
                    per_cell_error_scratch,
                    per_cell_error);
   
