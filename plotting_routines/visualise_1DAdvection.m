@@ -17,7 +17,7 @@ scatter3(X,Y,abs(Z-Zexact));
 figure(3);
 scatter3(X,Y,Z);
 
-filename = '../1D_advection_sin/error_cos.txt';
+filename = '../1D_advection_sin/error_sin.txt';
 error = dlmread(filename,'\t');
 
 % we do not take the square root because we only change the cells in the 

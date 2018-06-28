@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /Users/neerajsarna/sciebo/DG_MPI
 CMAKE_BINARY_DIR = /Users/neerajsarna/sciebo/DG_MPI
 
 #=============================================================================
-# Target rules for target CMakeFiles/2x3v_moments.out.dir
+# Target rules for target CMakeFiles/1D_advection.out.dir
 
 # All Build rule for target.
-CMakeFiles/2x3v_moments.out.dir/all:
-	$(MAKE) -f CMakeFiles/2x3v_moments.out.dir/build.make CMakeFiles/2x3v_moments.out.dir/depend
-	$(MAKE) -f CMakeFiles/2x3v_moments.out.dir/build.make CMakeFiles/2x3v_moments.out.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/neerajsarna/sciebo/DG_MPI/CMakeFiles --progress-num=1,2,3,4 "Built target 2x3v_moments.out"
-.PHONY : CMakeFiles/2x3v_moments.out.dir/all
+CMakeFiles/1D_advection.out.dir/all:
+	$(MAKE) -f CMakeFiles/1D_advection.out.dir/build.make CMakeFiles/1D_advection.out.dir/depend
+	$(MAKE) -f CMakeFiles/1D_advection.out.dir/build.make CMakeFiles/1D_advection.out.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/neerajsarna/sciebo/DG_MPI/CMakeFiles --progress-num=1,2,3,4 "Built target 1D_advection.out"
+.PHONY : CMakeFiles/1D_advection.out.dir/all
 
 # Include target in all.
-all: CMakeFiles/2x3v_moments.out.dir/all
+all: CMakeFiles/1D_advection.out.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/2x3v_moments.out.dir/rule: cmake_check_build_system
+CMakeFiles/1D_advection.out.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/2x3v_moments.out.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/1D_advection.out.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles 0
-.PHONY : CMakeFiles/2x3v_moments.out.dir/rule
+.PHONY : CMakeFiles/1D_advection.out.dir/rule
 
 # Convenience name for target.
-2x3v_moments.out: CMakeFiles/2x3v_moments.out.dir/rule
+1D_advection.out: CMakeFiles/1D_advection.out.dir/rule
 
-.PHONY : 2x3v_moments.out
-
-# clean rule for target.
-CMakeFiles/2x3v_moments.out.dir/clean:
-	$(MAKE) -f CMakeFiles/2x3v_moments.out.dir/build.make CMakeFiles/2x3v_moments.out.dir/clean
-.PHONY : CMakeFiles/2x3v_moments.out.dir/clean
+.PHONY : 1D_advection.out
 
 # clean rule for target.
-clean: CMakeFiles/2x3v_moments.out.dir/clean
+CMakeFiles/1D_advection.out.dir/clean:
+	$(MAKE) -f CMakeFiles/1D_advection.out.dir/build.make CMakeFiles/1D_advection.out.dir/clean
+.PHONY : CMakeFiles/1D_advection.out.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/1D_advection.out.dir/clean
 
 .PHONY : clean
 

@@ -30,9 +30,9 @@ pout(std::cout,this_mpi_process==0)
 	
 	  // we store data of the system ( flux matrices and boundary matrices)
 
-	  dof_handler.distribute_dofs(fe);
+      dof_handler.distribute_dofs(fe);
 	  
-	  locally_owned_dofs = dof_handler.locally_owned_dofs();
+	    locally_owned_dofs = dof_handler.locally_owned_dofs();
       DoFTools::extract_locally_relevant_dofs (dof_handler,
                           locally_relevant_dofs) ;
     
@@ -50,7 +50,7 @@ pout(std::cout,this_mpi_process==0)
       // we need to fix this in case of moments
       max_speed = compute_max_speed();
 
-      pout << "Max speed: " << max_speed << std::endl;
+      //pout << "Max speed: " << max_speed << std::endl;
 
       // an approximation to delta_t
       dt = CFL * min_h/(dim * max_speed);
@@ -64,34 +64,60 @@ void
 Solve_System<dim>::prescribe_initial_conditions()
 {
 
-	typename DoFHandler<dim>::active_cell_iterator cell =
+	const typename DoFHandler<dim>::active_cell_iterator cell =
                                                    dof_handler.begin_active(),
                                                  endc = dof_handler.end();
 
-	const unsigned int dofs_per_cell = fe.dofs_per_cell;
-    Vector<double> component(dofs_per_cell);
-    Vector<double> value(dofs_per_cell);
 
+  PerCellIC percellIC;
+  PerCellICScratch percellICScratch;
 
-    for (unsigned int i = 0 ; i < dofs_per_cell ; i++)
-      component[i] = fe.system_to_component_index(i).first;
-
-    for (; cell != endc; ++cell)
-    	if (cell->is_locally_owned())
-      	{
-      		const Point<dim> location = cell->center();
-
-      		for (unsigned int dof = 0 ; dof < dofs_per_cell ; dof++)
-      		{
-      			value[dof] = initial_boundary->ic(location,component[dof]);
-      		}
-
-      		cell->distribute_local_to_global(value,locally_owned_solution);
-
-      	}
-
+  percellICScratch.component.reinit(fe.dofs_per_cell);
   
-    locally_relevant_solution = locally_owned_solution;
+  for (unsigned int i = 0 ; i < fe.dofs_per_cell ; i++)
+      percellICScratch.component[i] = fe.system_to_component_index(i).first;
+
+  WorkStream::run (cell,
+                   endc,
+                   *this,
+                   &Solve_System<dim>::compute_ic_per_cell,
+                   &Solve_System<dim>::copy_ic_to_global,
+                   percellICScratch,
+                   percellIC);
+
+
+  locally_relevant_solution = locally_owned_solution;
+
+}
+
+template<int dim>
+void
+Solve_System<dim>::compute_ic_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
+                                        PerCellICScratch &scratch,
+                                          PerCellIC &data)
+{
+  if(cell->is_locally_owned())
+  {
+          data.dofs_per_cell = fe.dofs_per_cell;
+          data.local_dof_indices.resize(data.dofs_per_cell);
+          data.local_contri.reinit(data.dofs_per_cell);
+
+          const Point<dim> location = cell->center();
+
+          for (unsigned int dof = 0 ; dof < data.dofs_per_cell ; dof++)
+            data.local_contri[dof] = initial_boundary->ic(location,scratch.component[dof]);
+          
+          cell->get_dof_indices(data.local_dof_indices);
+
+  }
+}
+
+template<int dim>
+void
+Solve_System<dim>::copy_ic_to_global(const PerCellIC &data)
+{
+    for(unsigned int dof = 0 ; dof< data.dofs_per_cell ; dof++)
+      locally_owned_solution(data.local_dof_indices[dof]) = data.local_contri(dof);
 }
 
 
@@ -289,14 +315,14 @@ Solve_System<dim>::run_time_loop()
 
       			locally_relevant_solution = locally_owned_solution;
       			t += dt;
-      			std::cout << "time: " << t << std::endl;
+      			//pout << "time: " << t << std::endl;
 
       		}	// end of loop over time
 
-          create_output();
+          //create_output();
 
           //computing_timer.print_summary();
-          //compute_error();
+          compute_error();
 
 }
 

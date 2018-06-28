@@ -203,7 +203,7 @@ ic_bc<dim>::ic(const Point<dim> &p,const int &id)
 	const double y = p[1];
 
 	//const double density = exp(-pow((x-0.5),2)*100);
-	const double density = cos(M_PI * x);
+	const double density = sin(M_PI * x);
 	
 
 	switch (id)
@@ -225,7 +225,7 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 	const double y = p[1];
 
 	//value(0) = exp(-pow((x-t-0.5),2)*100);
-	value(0) = cos(M_PI*(x-t));
+	value(0) = sin(M_PI*(x-t));
 
 }
 
@@ -243,7 +243,7 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	{
 		case 0:
 			// only inhomogeneity for the first element
-			value(0) = cos(M_PI * t);
+			value(0) = -sin(M_PI * t);
 			//value(0) = 0;
 	}
 }

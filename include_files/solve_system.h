@@ -40,7 +40,7 @@ Solve_System
 		
 		void run_time_loop();
 
-		const double CFL = 0.5;
+		const double CFL = 1.0;
 		double dt;
 		double t_end = 0.3;
 		double max_speed;
@@ -83,9 +83,18 @@ Solve_System
 			{}
 		};
 
-		
 		struct PerCellErrorScratch
 		{};
+
+		struct PerCellIC
+		{
+			Vector<double> local_contri;
+			std::vector<types::global_dof_index> local_dof_indices;
+			unsigned int dofs_per_cell;
+		};
+
+		struct PerCellICScratch
+		{Vector<double> component;};
 
 		void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
 									 PerCellErrorScratch &scratch,
@@ -93,6 +102,11 @@ Solve_System
 
 		void copy_error_to_global(const PerCellError &data);
 		ConditionalOStream pout;
+
+		void compute_ic_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
+                                  PerCellICScratch &scratch,PerCellIC &data);
+
+		void copy_ic_to_global(const PerCellIC &data);
 
 
     	//TimerOutput computing_timer;
