@@ -45,7 +45,7 @@ Solve_System_SS
 
 		std::string output_foldername;
 
-		void create_output(const DoFHandler<dim> &dof_handler);
+		void create_output(const DoFHandler<dim> &dof_handler,const int index);
 		const unsigned int this_mpi_process;
 		void compute_error(DoFHandler<dim> &dof_handler);
 		void create_IndexSet_triangulation(IndexSet &locally_owned_cells,
@@ -109,7 +109,7 @@ Solve_System_SS
                                       const std::vector<Vector<double>> &g,
                                       const FESystem<dim> &fe);
 
-		void assemble_to_global(const PerCellAssemble &data);
+		void assemble_to_global(const PerCellAssemble &data,const Vector<double> &component);
 
 		void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
 									 PerCellErrorScratch &scratch,

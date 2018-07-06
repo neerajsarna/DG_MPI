@@ -77,13 +77,13 @@ int main(int argc, char *argv[])
       const int poly_degree = 0;
 
       // the output folder name
-      std::string foldername = "2x3v_moments";
+      std::string foldername = "2x3v_moments_HC";
 
      system_data system_matrices;
      // store the number of equations for a given M (starts at M = 3)
      const int neqn_M[18] = {13,22,34,50,70,95,125,161,203,252,308,372,444,525,615,715,825,946};
      const int nbc_M[18] = {5,8,14,20,30,40,55,70,91,112,140,168,204,240,285,330,385,440};
-     const int M = 10;
+     const int M = 3;
      const double Kn = 0.1;
 
      Assert(M<=20,ExcNotImplemented());
@@ -108,12 +108,13 @@ int main(int argc, char *argv[])
 
      
       repetitions[0] = atoi(argv[2]);
-      repetitions[1] = 2;
+      repetitions[1] = 1;
 
       //The diagonal of the rectangle is the line joining p1 and p2
       GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
       set_square_bid(triangulation);
 
+   
       ic_bc<dim> initial_boundary;	
 
 	  Solve_System_SS<dim> solve_system(system_matrices,
@@ -253,6 +254,7 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
         thetaW = exp(-1/(1-pow((t-1),2))) * exp(1);
     else
         thetaW = 1;
+
     
 	switch (bc_id)
 	{
@@ -269,7 +271,7 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
                     	if (n.col() == 3 || n.col() == 5 || n.col() == 6)
-                    		value(n.row()) += bc_normal *thetaW * n.value()/sqrt(2.0);
+                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
                     	
 			break;
 		}
@@ -280,7 +282,7 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
                     	if (n.col() == 3 || n.col() == 5 || n.col() == 6)
-                    		value(n.row()) += bc_normal *thetaW * n.value()/sqrt(2.0);
+                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
                     	
 			break;
 		}

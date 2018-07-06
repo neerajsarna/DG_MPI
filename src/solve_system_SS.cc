@@ -41,6 +41,8 @@ computing_timer(MPI_COMM_WORLD,
       // start of refinement 
       const int refine_cycles = 3;
 
+      const int times_refine = 1;
+
       double t = 0;
 
       for (int cycle = 0 ; cycle < refine_cycles ; cycle++)
@@ -90,7 +92,7 @@ computing_timer(MPI_COMM_WORLD,
           for (unsigned int id = 0 ; id < 4 ; id++)
             initial_boundary->bc_inhomo(system_matrices.B[id],id,g[id],t);
 
-    while (step_count < 100 || residual_ss > 1e-8 ) // we atleast run till t_end || residual_ss > 1e-8
+    while (step_count < 100 || residual_ss > 1e-5 ) // we atleast run till t_end || residual_ss > 1e-8
     {
       WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
         dof_handler.begin_active()),
@@ -108,47 +110,55 @@ computing_timer(MPI_COMM_WORLD,
         std::cref(fe)),
       std::bind(&Solve_System_SS<dim>::assemble_to_global,
         this,
-        std::placeholders::_1),
+        std::placeholders::_1,
+        std::cref(component)),
       per_cell_assemble_scratch,
       per_cell_assemble);
 
       residual_ss = locally_owned_residual.l2_norm();
       locally_relevant_solution = locally_owned_solution;
 
-      if (step_count%10 == 0)
+      if (step_count%100 == 0)
+      {
         pout<< "residual: " << residual_ss << "time: " << t << std::endl;
+        
+      }
 
       t += dt;
       step_count++;
 
     }
 
+    std::cout << "Steps taken: " << step_count << std::endl;
 
     if (cycle != refine_cycles-1)  // no need for the last computation
     {
 
     //we now need to interpolate onto the new mesh
     locally_relevant_solution_temp = locally_owned_solution; // initialise the temporary
-    parallel::distributed::SolutionTransfer<dim, LA::MPI::Vector> soltrans(dof_handler);
 
-    typename parallel::distributed::Triangulation<dim>::active_cell_iterator endc = triangulation.end(), 
-                                                                           cell = triangulation.begin_active();  
+    for (unsigned int i = 0 ; i < times_refine ; i++)
+    {
+     parallel::distributed::SolutionTransfer<dim, LA::MPI::Vector> soltrans(dof_handler);
 
 
-    for(; cell != endc ; cell++)
-        if (cell->is_locally_owned())
-            cell->set_refine_flag();
+     typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end(), 
+     cell = dof_handler.begin_active();  
 
-    triangulation.prepare_coarsening_and_refinement();
-    soltrans.prepare_for_coarsening_and_refinement(locally_relevant_solution_temp);
-    triangulation.execute_coarsening_and_refinement ();
-    distribute_dofs(dof_handler,fe);        // reinitialise all the vectors
-    soltrans.interpolate(locally_owned_solution); // interpolate to the new vector
-    locally_relevant_solution = locally_owned_solution; // update the locally relevant solution
+     for(; cell != endc ; cell++)
+      if (cell->is_locally_owned())
+        cell->set_refine_flag();
 
+      soltrans.prepare_for_coarsening_and_refinement(locally_relevant_solution_temp);
+      triangulation.refine_global();
+      distribute_dofs(dof_handler,fe);        // reinitialise all the vectors
+      soltrans.interpolate(locally_owned_solution); // interpolate to the new vector
+      locally_relevant_solution = locally_owned_solution; // update the locally relevant solution
+    }
   }
 }
   
+  //create_output(dof_handler,0);
   dof_handler.clear();
 
 }
@@ -393,22 +403,24 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
 
 template<int dim>
 void
-Solve_System_SS<dim>::assemble_to_global(const PerCellAssemble &data)
+Solve_System_SS<dim>::assemble_to_global(const PerCellAssemble &data,const Vector<double> &component)
  {
         for (unsigned int i = 0 ; i < data.dofs_per_cell ; i ++)
         {
               locally_owned_solution(data.local_dof_indices[i]) = locally_relevant_solution(data.local_dof_indices[i])
                                                                + data.local_contri(i);
-              locally_owned_residual(data.local_dof_indices[i]) = fabs(data.local_contri(i));          
+
+              if (component[i] <= 7) // only count till tensor degree 2
+              locally_owned_residual(data.local_dof_indices[i]) = fabs(data.local_contri(i))/dt;          
         }
 
  }
 
 template<int dim>
 void 
-Solve_System_SS<dim>::create_output(const DoFHandler<dim> &dof_handler)
+Solve_System_SS<dim>::create_output(const DoFHandler<dim> &dof_handler,const int index)
 {
-  std::string filename = output_foldername + "/result" + std::to_string(this_mpi_process) +  ".txt";
+  std::string filename = output_foldername + "/result" + std::to_string(index) +  ".txt";
 
   typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end(), cell = dof_handler.begin_active();
 
