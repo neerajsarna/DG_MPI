@@ -65,6 +65,61 @@ set_square_bid(parallel::distributed::Triangulation<2> &triangulation)
     	}
 }
 
+void count_bc_id(parallel::distributed::Triangulation<2> &triangulation)
+{
+	  typename parallel::distributed::Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
+	  													 endc = triangulation.end();
+
+
+	  
+	  int id0 = 0,id1 = 0, id2 = 0, id3 = 0; 
+
+	  for(; cell != endc ; cell++)   
+	  	if (cell->is_locally_owned())
+	  {
+
+	  	for(unsigned int face = 0 ; face < GeometryInfo<2>::faces_per_cell ; face++)
+	  		if (cell->face(face)->at_boundary())
+	  			switch (cell->face(face)->boundary_id())
+	  			{
+	  				case 0:
+	  				{
+	  					id0++;
+	  					break;
+	  				}
+
+	  				case 1:
+	  				{
+	  					id1++;
+	  					break;
+	  				}
+
+	  				case 2:
+	  				{
+	  					id2++;
+	  					break;
+	  				}
+
+	  				case 3:
+	  				{
+	  					id3++;
+	  					break;
+	  				}
+	  			}
+	  		}
+	  		
+	  
+
+	  	  	std::cout << "id0 " << id0 
+	  			<< " id1 " << id1 
+	  			<< " id2 " << id2 
+	  			<< " id3 " << id3 << std::endl;
+
+	  		fflush(stdout);
+
+
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -114,7 +169,10 @@ int main(int argc, char *argv[])
       GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
       set_square_bid(triangulation);
 
-   
+     
+      triangulation.signals.post_refinement.connect(std_cxx11::bind (&set_square_bid,
+                      								std_cxx11::ref(triangulation)));
+
       ic_bc<dim> initial_boundary;	
 
 	  Solve_System_SS<dim> solve_system(system_matrices,
@@ -122,6 +180,16 @@ int main(int argc, char *argv[])
 	  								 poly_degree,
 	  								 &initial_boundary,
 	  								 foldername);
+
+	 solve_system.run_time_loop(triangulation);
+
+	 // develop the filename for output
+	 std::string filename = "2x3v_moments_HC/M" + std::to_string(M)
+	 						 + "/result" + std::to_string(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
+	 						 + "_Kn_" + "0p1" + ".txt";
+
+
+	 solve_system.create_output(filename);
  
      
 }

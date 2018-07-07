@@ -4,44 +4,49 @@
 
 template<int dim>
 Solve_System_SS<dim>::Solve_System_SS(system_data &system_mat,
-								parallel::distributed::Triangulation<dim> &triangulation,
+                parallel::distributed::Triangulation<dim> &triangulation,
 								const int poly_degree,
 								ic_bc_base<dim> *ic_bc,
                 std::string &foldername)
 :
 mpi_comm(MPI_COMM_WORLD),
+dof_handler(triangulation),
+fe_basic(poly_degree),
+fe(fe_basic,system_mat.Ax.rows()),
 initial_boundary(ic_bc),
 system_matrices(system_mat),
 output_foldername(foldername),
 this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
-pout(std::cout,this_mpi_process==0)
-,
+pout(std::cout,this_mpi_process==0),
 computing_timer(MPI_COMM_WORLD,
                     pout,
                     TimerOutput::summary,
                     TimerOutput::wall_times)
 {
-
-      computing_timer.enter_subsection("solving");
-          
-      DoFHandler<dim> dof_handler(triangulation);
-      FE_DGQ<dim> fe_basic(poly_degree);
-      FESystem<dim> fe(fe_basic,system_mat.Ax.rows());
-	
       n_eqn = fe.n_components();
-      distribute_dofs(dof_handler,fe);
+      distribute_dofs();
 
-      prescribe_initial_conditions(dof_handler,fe);
+      prescribe_initial_conditions();
+      locally_owned_solution.compress(VectorOperation::add);
       locally_relevant_solution = locally_owned_solution;
 
-      // we need to fix this in case of moments
       max_speed = compute_max_speed();
 
+}
+
+template<int dim>
+void
+Solve_System_SS<dim>::run_time_loop(parallel::distributed::Triangulation<dim> &triangulation)
+{
+      computing_timer.enter_subsection("solving");
+          
       // do everything here 
       // start of refinement 
-      const int refine_cycles = 3;
+      const int refine_cycles = 2;
 
       const int times_refine = 1;
+
+      int total_steps = 0;
 
       double t = 0;
 
@@ -73,7 +78,7 @@ computing_timer(MPI_COMM_WORLD,
           component[i] = fe.system_to_component_index(i).first;
 
         std::vector<Vector<double>> component_to_system(n_eqn,
-          Vector<double>(dofs_per_component));
+                                    Vector<double>(dofs_per_component));
 
         for (unsigned int i = 0 ; i < n_eqn ; i ++)
           for (unsigned int j = 0 ; j < dofs_per_component ; j ++)
@@ -106,8 +111,7 @@ computing_timer(MPI_COMM_WORLD,
         std::cref(component),
         std::cref(component_to_system),
         std::cref(t),
-        std::cref(g),
-        std::cref(fe)),
+        std::cref(g)),
       std::bind(&Solve_System_SS<dim>::assemble_to_global,
         this,
         std::placeholders::_1,
@@ -115,22 +119,23 @@ computing_timer(MPI_COMM_WORLD,
       per_cell_assemble_scratch,
       per_cell_assemble);
 
+      locally_owned_solution.compress(VectorOperation::add); // synchornising 
+      locally_owned_residual.compress(VectorOperation::add);
+
       residual_ss = locally_owned_residual.l2_norm();
       locally_relevant_solution = locally_owned_solution;
-
-      if (step_count%100 == 0)
-      {
-        pout<< "residual: " << residual_ss << "time: " << t << std::endl;
-        
-      }
 
       t += dt;
       step_count++;
 
+      if (step_count%500 == 0)
+        pout<< "residual: " << residual_ss << "time: " << t << std::endl;
+
     }
 
-    std::cout << "Steps taken: " << step_count << std::endl;
+    total_steps += step_count;
 
+  
     if (cycle != refine_cycles-1)  // no need for the last computation
     {
 
@@ -151,21 +156,24 @@ computing_timer(MPI_COMM_WORLD,
 
       soltrans.prepare_for_coarsening_and_refinement(locally_relevant_solution_temp);
       triangulation.refine_global();
-      distribute_dofs(dof_handler,fe);        // reinitialise all the vectors
+      distribute_dofs();        // reinitialise all the vectors
       soltrans.interpolate(locally_owned_solution); // interpolate to the new vector
+
+      locally_owned_solution.compress(VectorOperation::insert);
       locally_relevant_solution = locally_owned_solution; // update the locally relevant solution
     }
+
   }
 }
-  
-  //create_output(dof_handler,0);
-  dof_handler.clear();
+
+  pout << "Steps taken: " << total_steps << "final residual: "<< residual_ss << std::endl;
+
 
 }
 
 template<int dim>
 void 
-Solve_System_SS<dim>::distribute_dofs(DoFHandler<dim> &dof_handler,FESystem<dim> &fe)
+Solve_System_SS<dim>::distribute_dofs()
 {
       dof_handler.distribute_dofs(fe);
     
@@ -180,7 +188,7 @@ Solve_System_SS<dim>::distribute_dofs(DoFHandler<dim> &dof_handler,FESystem<dim>
 
       // allocate the memory error 
       IndexSet locally_owned_cells(dof_handler.get_triangulation().n_active_cells()); // helpful while computing error
-      create_IndexSet_triangulation(locally_owned_cells,dof_handler); 
+      create_IndexSet_triangulation(locally_owned_cells); 
       error_per_cell.reinit(locally_owned_cells,mpi_comm);
 }
 
@@ -188,7 +196,7 @@ Solve_System_SS<dim>::distribute_dofs(DoFHandler<dim> &dof_handler,FESystem<dim>
 // prescribe the initial conditions
 template<int dim>
 void
-Solve_System_SS<dim>::prescribe_initial_conditions(DoFHandler<dim> &dof_handler,FESystem<dim> &fe)
+Solve_System_SS<dim>::prescribe_initial_conditions()
 {
 
   typedef FilteredIterator<typename DoFHandler<dim>::active_cell_iterator> CellFilter;
@@ -209,16 +217,13 @@ Solve_System_SS<dim>::prescribe_initial_conditions(DoFHandler<dim> &dof_handler,
                             std::placeholders::_1,
                             std::placeholders::_2,
                             std::placeholders::_3,
-                            std::cref(component),
-                            std::cref(fe)),
+                            std::cref(component)),
                    std::bind(&Solve_System_SS<dim>::copy_ic_to_global,
                             this,
                             std::placeholders::_1),
                    percellICScratch,
                    percellIC);
 
-
-  locally_relevant_solution = locally_owned_solution;
 
 }
 
@@ -227,8 +232,7 @@ void
 Solve_System_SS<dim>::compute_ic_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
                                         PerCellICScratch &scratch,
                                         PerCellIC &data,
-                                        const Vector<double> &component,
-                                        const FESystem<dim> &fe)
+                                        const Vector<double> &component)
 {
   
           data.dofs_per_cell = fe.dofs_per_cell;
@@ -262,8 +266,7 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
                                       const Vector<double> &component,
                                       const std::vector<Vector<double>> &component_to_system,
                                       const double &t,
-                                      const std::vector<Vector<double>> &g,
-                                      const FESystem<dim> &fe)
+                                      const std::vector<Vector<double>> &g)
  {
 
               // operations to avoid data races
@@ -397,8 +400,10 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
                 } //end of else
 
 
-              } //end of loop over the faces
-    
+              } 
+              //end of loop over the faces
+
+
  }
 
 template<int dim>
@@ -411,22 +416,29 @@ Solve_System_SS<dim>::assemble_to_global(const PerCellAssemble &data,const Vecto
                                                                + data.local_contri(i);
 
               if (component[i] <= 7) // only count till tensor degree 2
-              locally_owned_residual(data.local_dof_indices[i]) = fabs(data.local_contri(i))/dt;          
+                locally_owned_residual(data.local_dof_indices[i]) = fabs(data.local_contri(i))/dt;          
         }
 
  }
 
 template<int dim>
 void 
-Solve_System_SS<dim>::create_output(const DoFHandler<dim> &dof_handler,const int index)
+Solve_System_SS<dim>::create_output(const std::string &filename)
 {
-  std::string filename = output_foldername + "/result" + std::to_string(index) +  ".txt";
 
   typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end(), cell = dof_handler.begin_active();
 
   const unsigned int dofs_per_cell = dof_handler.get_fe().dofs_per_cell;
+  const unsigned int dofs_per_component = dofs_per_cell/n_eqn;
   std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
-  Vector<double> solution_value(n_eqn);
+  
+  std::vector<Vector<double>> component_to_system(n_eqn,Vector<double>(dofs_per_component));
+
+  for (unsigned int i = 0 ; i < n_eqn ; i ++)
+      for (unsigned int j = 0 ; j < dofs_per_component ; j ++)
+            component_to_system[i](j) = fe.component_to_system_index(i,j); 
+
+  const unsigned int to_print = 13;
 
   FILE *fp;
   fp = fopen(filename.c_str(),"w+");
@@ -440,10 +452,11 @@ Solve_System_SS<dim>::create_output(const DoFHandler<dim> &dof_handler,const int
       for (unsigned int space = 0 ; space < dim ; space ++)
         fprintf(fp, "%f\t",cell->center()(space));
 
-      VectorTools::point_value(dof_handler,locally_owned_solution,cell->center(),solution_value); 
-
-      for (unsigned int i = 0 ; i < n_eqn; i++)
-        fprintf(fp, "%f\t",solution_value(i));
+      for (unsigned int i = 0 ; i < to_print ; i++) 
+      {
+        const double sol_value =  locally_owned_solution(local_dof_indices[component_to_system[i](0)]);
+        fprintf(fp, "%f\t",sol_value);
+      }
 
       fprintf(fp, "\n");
     }
@@ -489,7 +502,7 @@ Solve_System_SS<dim>::copy_error_to_global(const PerCellError &data)
 
 template<int dim>
 void
-Solve_System_SS<dim>::compute_error(DoFHandler<dim> &dof_handler)
+Solve_System_SS<dim>::compute_error()
 {
   PerCellError per_cell_error(n_eqn);
   PerCellErrorScratch per_cell_error_scratch;
@@ -519,7 +532,7 @@ Solve_System_SS<dim>::compute_error(DoFHandler<dim> &dof_handler)
 
 template<int dim>
 void
-Solve_System_SS<dim>::create_IndexSet_triangulation(IndexSet &locally_owned_cells,const DoFHandler<dim> &dof_handler)
+Solve_System_SS<dim>::create_IndexSet_triangulation(IndexSet &locally_owned_cells)
 {
   typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end(), 
                                                  cell = dof_handler.begin_active();
@@ -578,6 +591,11 @@ fe_v_face(scratch.fe_v_face.get_fe(),
   update_normal_vectors)
 {;}
 
+template<int dim>
+Solve_System_SS<dim>::~Solve_System_SS()
+{
+  dof_handler.clear();
+}
 // explicit initiation to avoid linker error
 template class Solve_System_SS<2>;
 

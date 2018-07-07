@@ -11,12 +11,17 @@ Solve_System_SS
 {
 	public:
 		Solve_System_SS(system_data &system_mat,
-					 parallel::distributed::Triangulation<dim> &triangulation_in,
-					 const int poly_degree,
+						parallel::distributed::Triangulation<dim> &triangulation,
+					 	const int poly_degree,
 						ic_bc_base<dim> *ic_bc,
 						std::string &foldername);
 		
+		~Solve_System_SS();
+
 		MPI_Comm mpi_comm;
+		DoFHandler<dim> dof_handler;
+      	FE_DGQ<dim> fe_basic;
+      	FESystem<dim> fe;
 
 		IndexSet locally_relevant_dofs;
 		IndexSet locally_owned_dofs;
@@ -33,8 +38,8 @@ Solve_System_SS
 
 		ic_bc_base<dim> *initial_boundary;
 
-		void prescribe_initial_conditions(DoFHandler<dim> &dof_handler,FESystem<dim> &fe);
-		void distribute_dofs(DoFHandler<dim> &dof_handler,FESystem<dim> &fe);
+		void prescribe_initial_conditions();
+		void distribute_dofs();
 		unsigned int n_eqn;
 		system_data system_matrices;
 	
@@ -45,11 +50,10 @@ Solve_System_SS
 
 		std::string output_foldername;
 
-		void create_output(const DoFHandler<dim> &dof_handler,const int index);
+		void create_output(const std::string &filename);
 		const unsigned int this_mpi_process;
-		void compute_error(DoFHandler<dim> &dof_handler);
-		void create_IndexSet_triangulation(IndexSet &locally_owned_cells,
-										   const DoFHandler<dim> &dof_handler);
+		void compute_error();
+		void create_IndexSet_triangulation(IndexSet &locally_owned_cells);
 		double compute_max_speed();		
 
 		DeclException1 (ExcFileNotOpen, std::string,
@@ -106,8 +110,7 @@ Solve_System_SS
                                       const Vector<double> &component,
                                       const std::vector<Vector<double>> &component_to_system,
                                       const double &t,
-                                      const std::vector<Vector<double>> &g,
-                                      const FESystem<dim> &fe);
+                                      const std::vector<Vector<double>> &g);
 
 		void assemble_to_global(const PerCellAssemble &data,const Vector<double> &component);
 
@@ -119,8 +122,7 @@ Solve_System_SS
 		ConditionalOStream pout;
 
 		void compute_ic_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
-                                  PerCellICScratch &scratch,PerCellIC &data,const Vector<double> &component,
-                                  const FESystem<dim> &fe);
+                                  PerCellICScratch &scratch,PerCellIC &data,const Vector<double> &component);
 
 		void copy_ic_to_global(const PerCellIC &data);
 
@@ -128,5 +130,7 @@ Solve_System_SS
     	double residual_ss;
 
     	TimerOutput computing_timer;
+
+    	void run_time_loop(parallel::distributed::Triangulation<dim> &triangulation);
 
 };
