@@ -2,11 +2,17 @@ clear all;
 range = 0:1;
 
 num_proc = 1;
-M_values = [4:1:10,15];
+M_values = [4:1:15];
 
 theta_values = cell(length(M_values),1);
 for i = 1 : length(M_values)
-    [X,theta_values{i}] = get_moment(1,M_values(i),5);
+    if M_values(i) >= 11 && M_values(i) <= 14
+        num_proc = 2;
+    else 
+        num_proc = 1;
+    end
+    
+        [X,theta_values{i}] = get_moment(num_proc,M_values(i),5);
 end
 
 error = [];
@@ -20,7 +26,8 @@ for i = 1 : (length(M_values)-1)
     error = [error, compute_error(X,theta_values{i},theta_values{end})];
 end
 
-plot(error);
+loglog(M_values(1:end-1),error);
+xlim([4 15]);
 
 
 [~, hobj, ~, ~] = legend('5','7','9','15','location','best');
