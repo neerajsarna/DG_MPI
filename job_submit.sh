@@ -5,7 +5,7 @@
  
 ### File / path where STDOUT & STDERR will be written
 ###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x3v_moments_HC_M11
+#BSUB -o log_files/2x3v_moments_HC_M4
  
 ### Request the time you need for execution in minutes
 ### The format for the parameter is: [hour:]minute,
@@ -29,4 +29,4 @@ cd /home/ns179556/DG_MPI
  
 export FLAGS_MPI_BATCH="-np 8"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./heat_conduction.out 8 10 11
+mpirun $FLAGS_MPI_BATCH ./heat_conduction.out 8 500 4

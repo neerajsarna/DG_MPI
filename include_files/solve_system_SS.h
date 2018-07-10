@@ -43,7 +43,7 @@ Solve_System_SS
 		unsigned int n_eqn;
 		system_data system_matrices;
 	
-		const double CFL = 0.01;
+		const double CFL = 1.0;
 		double dt;
 		double t_end = 0.3;
 		double max_speed;
