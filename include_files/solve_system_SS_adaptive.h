@@ -12,7 +12,7 @@ Solve_System_SS_adaptive
 {
 	public:
 		Solve_System_SS_adaptive(std::vector<system_data> &system_mat,
-						parallel::distributed::Triangulation<dim> &triangulation,
+						Triangulation<dim> &triangulation,
 					 	const int poly_degree,
 						ic_bc_base<dim> *ic_bc,
 						std::string &foldername);
@@ -34,7 +34,7 @@ Solve_System_SS_adaptive
 		LA::MPI::Vector error_per_cell;  
 		LA::MPI::Vector edge_per_cell;
 
-		double min_h(parallel::distributed::Triangulation<dim> &triangulation);
+		double min_h(Triangulation<dim> &triangulation);
 		
 
 		ic_bc_base<dim> *initial_boundary;
@@ -111,7 +111,7 @@ Solve_System_SS_adaptive
 
     	TimerOutput computing_timer;
 
-    	void run_time_loop(parallel::distributed::Triangulation<dim> &triangulation);
+    	void run_time_loop(Triangulation<dim> &triangulation);
 
     	void develop_neqn();
 
@@ -124,7 +124,7 @@ Solve_System_SS_adaptive
 
     	unsigned int current_max_fe_index();
 
-    	int solve_steady_state(parallel::distributed::Triangulation<dim> &triangulation,double &t);
+    	int solve_steady_state(Triangulation<dim> &triangulation,double &t);
 
 		Sparse_Matrix construct_An_effective(const Sparse_Matrix &An_cell,const Sparse_Matrix &An_neighbor);
 

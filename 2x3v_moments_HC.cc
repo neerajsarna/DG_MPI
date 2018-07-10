@@ -223,7 +223,7 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 	filename = "3v_Moments/P/P" + std::to_string(M) + ".txt";
 	build_triplet(Row_Col_Value,filename);
 	build_matrix_from_triplet(system_matrices.P,Row_Col_Value);
-	system_matrices.P = system_matrices.P/Kn;
+	system_matrices.P = system_matrices.P/Kn;	
 	system_matrices.P.makeCompressed();
 
 	filename = "3v_Moments/Bwall/Bwall" + std::to_string(M) + ".txt";

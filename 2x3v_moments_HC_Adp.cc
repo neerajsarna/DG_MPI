@@ -19,9 +19,9 @@ ic_bc:public ic_bc_base<dim>
 
 
 void 
-set_square_bid(parallel::distributed::Triangulation<2> &triangulation)
+set_square_bid(Triangulation<2> &triangulation)
 {
-	typename parallel::distributed::Triangulation<2>::active_cell_iterator
+	typename Triangulation<2>::active_cell_iterator
 											 cell = triangulation.begin_active(),
 											 endc = triangulation.end();
 
@@ -65,9 +65,9 @@ set_square_bid(parallel::distributed::Triangulation<2> &triangulation)
     	}
 }
 
-void count_bc_id(parallel::distributed::Triangulation<2> &triangulation)
+void count_bc_id(Triangulation<2> &triangulation)
 {
-	  typename parallel::distributed::Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
+	  typename Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
 	  													 endc = triangulation.end();
 
 
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
      }
 
       // create a rectangular mesh 
-      parallel::distributed::Triangulation<dim> triangulation(MPI_COMM_WORLD);
+      Triangulation<dim> triangulation;
       Point<dim> p1;
       Point<dim> p2;
       std::vector<unsigned int> repetitions(dim);

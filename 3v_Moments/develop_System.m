@@ -62,9 +62,6 @@ dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
 end
 end
 
-function n_eqn = compute_size(M)
-n_eqn = (3 * M^2 -3*M+8)/2;
-end
 function [data] = get_sparse_data(mat)
 [ii,jj,va] = find(mat);
 

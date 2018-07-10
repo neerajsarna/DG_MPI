@@ -3,7 +3,7 @@
 
 template<int dim>
 Solve_System_SS_adaptive<dim>::Solve_System_SS_adaptive(std::vector<system_data> &system_mat,
-                parallel::distributed::Triangulation<dim> &triangulation,
+                                                        Triangulation<dim> &triangulation,
 								const int poly_degree,
 								ic_bc_base<dim> *ic_bc,
                 std::string &foldername)
@@ -28,11 +28,10 @@ computing_timer(MPI_COMM_WORLD,
       distribute_dofs();
 
       prescribe_initial_conditions();
-      locally_owned_solution.compress(VectorOperation::insert);
       locally_relevant_solution = locally_owned_solution;
 
       
-
+      max_speed = compute_max_speed();
       Assert(n_eqn.size() == fe.size(), ExcNotImplemented());
 
 }
@@ -46,9 +45,8 @@ Solve_System_SS_adaptive<dim>::distribute_dofs()
     
       locally_owned_dofs = dof_handler.locally_owned_dofs();
       DoFTools::extract_locally_relevant_dofs (dof_handler,
-                          locally_relevant_dofs) ;
+                          locally_relevant_dofs);
     
-
       locally_owned_solution.reinit(locally_owned_dofs,mpi_comm);
       locally_owned_residual.reinit(locally_owned_dofs,mpi_comm);
       locally_relevant_solution.reinit(locally_owned_dofs,locally_relevant_dofs,mpi_comm);
@@ -61,26 +59,29 @@ Solve_System_SS_adaptive<dim>::distribute_dofs()
 
 template<int dim>
 int
-Solve_System_SS_adaptive<dim>::solve_steady_state(parallel::distributed::Triangulation<dim> &triangulation,
+Solve_System_SS_adaptive<dim>::solve_steady_state(Triangulation<dim> &triangulation,
                                           double &t) 
 {
         // an approximation to delta_t
         double min_length = min_h(triangulation);
         Utilities::MPI::min(min_length,mpi_comm);
 
-        current_max_speed = max_speed[current_max_fe_index()]; 
-        // speed corresponding to the current maximum system we have
+        Assert(max_speed.size() != 0,ExcNotInitialized());
+        current_max_speed = max_speed[current_max_fe_index()]; // speed corresponding to the current maximum system we have
 
         dt = CFL * min_length/(dim * current_max_speed);
 
         pout << "total cells: " << triangulation.n_global_active_cells() << std::endl;
         pout << "total dofs: " << dof_handler.n_dofs() << std::endl;
 
-        typedef FilteredIterator<typename DoFHandler<dim>::active_cell_iterator> CellFilter;
+        typedef FilteredIterator<typename hp::DoFHandler<dim>::active_cell_iterator> CellFilter;
 
         std::vector<Vector<double>> component = return_component();
 
         std::vector<std::vector<Vector<double>>> component_to_system = return_component_to_system();
+
+        Assert(component.size() !=0 , ExcNotInitialized());
+        Assert(component_to_system.size() !=0 , ExcNotInitialized());
 
         QGauss<dim-1> face_quadrature_basic(1);
         hp::QCollection<dim-1> face_quadrature;
@@ -125,9 +126,6 @@ Solve_System_SS_adaptive<dim>::solve_steady_state(parallel::distributed::Triangu
                 per_cell_assemble_scratch,
                 per_cell_assemble);
 
-                locally_owned_solution.compress(VectorOperation::add); // synchornising 
-                locally_owned_residual.compress(VectorOperation::add);
-
                 residual_ss = locally_owned_residual.l2_norm();
                 locally_relevant_solution = locally_owned_solution;
 
@@ -144,20 +142,20 @@ Solve_System_SS_adaptive<dim>::solve_steady_state(parallel::distributed::Triangu
 }
 template<int dim>
 void
-Solve_System_SS_adaptive<dim>::run_time_loop(parallel::distributed::Triangulation<dim> &triangulation)
+Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation)
 {
       computing_timer.enter_subsection("solving");
           
       const int refine_cycles = 1;
       int total_steps = 0;
       double t = 0;
+
+      std::cout << "started solving: " << std::endl;
+      fflush(stdout);
       
       total_steps += solve_steady_state(triangulation,t);
 
-    
-
   pout << "Steps taken: " << total_steps << "final residual: "<< residual_ss << std::endl;
-
 
 }
 
@@ -252,6 +250,7 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
               data.local_contri.reinit(data.dofs_per_cell);
               data.local_contri = 0;
 
+
               // contribution from collisions P
               for (unsigned int m = 0 ; m < system_matrices[this_fe_index].P.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].P,m); n ; ++n)
@@ -272,15 +271,15 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
               for(unsigned int face  = 0; face < GeometryInfo<dim>::faces_per_cell; face++ )
               {
                 scratch.fe_v_face.reinit(cell,face);
-              
+                const FEFaceValues<dim> &fe_v_face_temp = scratch.fe_v_face.get_present_fe_values();
+                
                 // normal to the face assuming cartesian grid
-                Tensor<1,dim> normal_vec = scratch.fe_v_face.normal_vector(0);
+                Tensor<1,dim> normal_vec = fe_v_face_temp.normal_vector(0);
 
                 const double nx = normal_vec[0];
                 const double ny = normal_vec[1];
 
-
-                const typename DoFHandler<dim>::face_iterator face_itr = cell->face(face);
+                const typename hp::DoFHandler<dim>::face_iterator face_itr = cell->face(face);
                 const double face_length = face_itr->measure();
 
                   // construct An of the current cell
@@ -289,8 +288,6 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
 
                 if (face_itr->at_boundary())
                 {
-
-
 
                   const unsigned int bc_id = face_itr->boundary_id();
                   // only compute for times greater than zero, already computed for t= 0 before
@@ -337,8 +334,9 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
                 }
                 else
                 {
-                   const double diffusion = max_speed;      // we add the maximum possible diffusion
-                   typename DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
+
+                   const double diffusion = current_max_speed;      // we add the maximum possible diffusion
+                   typename hp::DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
                    const unsigned int neighbor_fe_index = neighbor->active_fe_index();
                    const unsigned int dofs_per_cell_neighbor = fe[neighbor_fe_index].dofs_per_cell;
                    std::vector<types::global_dof_index> local_dof_indices_neighbor(dofs_per_cell_neighbor);
@@ -433,7 +431,6 @@ Solve_System_SS_adaptive<dim>::create_output(const std::string &filename)
 
   AssertThrow(fp!=NULL,ExcFileNotOpen(filename));
   for(; cell != endc ; cell++)
-    if (cell->is_locally_owned())
     {
       const unsigned int this_fe_index = cell->active_fe_index();
       std::vector<types::global_dof_index> local_dof_indices(fe[this_fe_index].dofs_per_cell);
@@ -528,7 +525,6 @@ Solve_System_SS_adaptive<dim>::create_IndexSet_triangulation(IndexSet &locally_o
                                                  cell = dof_handler.begin_active();
 
   for(; cell!=endc;cell++)  
-    if(cell->is_locally_owned())
       locally_owned_cells.add_index(cell->index());
     
 }
@@ -554,17 +550,16 @@ Solve_System_SS_adaptive<dim>::compute_max_speed()
 
 template<int dim>
 double
-Solve_System_SS_adaptive<dim>::min_h(parallel::distributed::Triangulation<dim> &triangulation)
+Solve_System_SS_adaptive<dim>::min_h(Triangulation<dim> &triangulation)
 {
 
-  typename parallel::distributed::Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),
+  typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),
                                                                            endc = triangulation.end();
 
 
   double min_length = 10000;
 
   for(; cell != endc ; cell++)
-    if (cell->is_locally_owned())
       for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
         if (cell->face(face)->measure() < min_length)
           min_length = cell->face(face)->measure();
@@ -740,7 +735,6 @@ Solve_System_SS_adaptive<dim>::current_max_fe_index()
     unsigned int fe_index_max = 0;
 
     for(; cell != endc ; cell++)
-      if(cell->is_locally_owned())
         if(cell->active_fe_index() > fe_index_max)
           fe_index_max = cell->active_fe_index();
 
@@ -758,7 +752,6 @@ Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycl
 
           if (present_cycle == 0)
             for(; cell != endc ; cell++)
-              if(cell->is_locally_owned())
                 cell->set_active_fe_index(0);
             
 }
@@ -789,12 +782,12 @@ Solve_System_SS_adaptive<dim>::return_component_to_system()
       // loop over all the different systems available in the system
       for (unsigned long int i = 0 ; i < n_eqn.size(); i++)
         // loop over all the equations of the particular system
-        for (int j = 0 ; j < n_eqn[i]; j++)
+        for (unsigned int j = 0 ; j < n_eqn[i]; j++)
           component_to_system[i].push_back(Vector<double>(dofs_per_comp));
 
       // now we allocate the values for component_to_system
       for (unsigned long int i = 0 ; i < n_eqn.size(); i++)
-          for (int k = 0 ; k < n_eqn[i] ;k ++)
+          for (unsigned int k = 0 ; k < n_eqn[i] ;k ++)
               for (unsigned int j = 0 ; j < dofs_per_comp ; j++)
                 component_to_system[i][k](j) = fe[i].component_to_system_index(k,j);
 

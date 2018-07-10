@@ -1,2 +1,0 @@
-/usr/bin/ar qc libMyLib.a  CMakeFiles/MyLib.dir/src/solve_system.cc.o
-/usr/bin/ranlib libMyLib.a
