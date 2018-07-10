@@ -1,0 +1,125 @@
+Sender: LSF System <lsfadmin@linuxbmc0331>
+Subject: Job 43575603: <2x1v_moments> in cluster <rcc> Done
+
+Job <2x1v_moments> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Jul 10 20:38:22 2018
+Job was executed on host(s) <2*linuxbmc0331>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Jul 10 20:38:26 2018
+                            <2*linuxbmc0341>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Tue Jul 10 20:38:26 2018
+Terminated at Tue Jul 10 20:39:01 2018
+Results reported at Tue Jul 10 20:39:01 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_Inflow_M11
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 0:20
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 2024
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 4
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 2"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x1v_Inflow.out 2 200 11
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   101.76 sec.
+    Max Memory :                                 111 MB
+    Average Memory :                             86.00 MB
+    Total Requested Memory :                     8096.00 MB
+    Delta Memory :                               7985.00 MB
+    Max Swap :                                   -
+    Max Processes :                              7
+    Max Threads :                                9
+    Run time :                                   35 sec.
+    Turnaround time :                            39 sec.
+
+The output (if any) follows:
+
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = "UTF-8",
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+/home/ns179556/.lsbatch/1531247902.43575603.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0331.rz.RWTH-Aachen.DE:15710] MCW rank 0 is not bound (or bound to all available processors)
+[linuxbmc0331.rz.RWTH-Aachen.DE:15710] MCW rank 1 is not bound (or bound to all available processors)
+developing systems: 
+developing systems: 
+refinement cycle: 0
+total cells: 200
+total dofs: 2200
+residual: 8.27235time: 0.240941
+residual: 12.2398time: 0.481881
+residual: 11.8195time: 0.722822
+residual: 8.25659time: 0.963762
+residual: 4.62022time: 1.2047
+residual: 2.4881time: 1.44564
+residual: 1.55815time: 1.68658
+residual: 1.03677time: 1.92752
+residual: 0.681402time: 2.16847
+residual: 0.435992time: 2.40941
+residual: 0.272662time: 2.65035
+residual: 0.167304time: 2.89129
+residual: 0.101107time: 3.13223
+residual: 0.0603803time: 3.37317
+residual: 0.0357209time: 3.61411
+residual: 0.020975time: 3.85505
+residual: 0.0122428time: 4.09599
+residual: 0.0071116time: 4.33693
+residual: 0.00411488time: 4.57787
+residual: 0.00237337time: 4.81881
+residual: 0.00136535time: 5.05975
+residual: 0.000783777time: 5.30069
+residual: 0.000449136time: 5.54163
+residual: 0.000256999time: 5.78257
+residual: 0.00014688time: 6.02351
+residual: 8.3861e-05time: 6.26445
+residual: 4.78407e-05time: 6.5054
+residual: 2.72731e-05time: 6.74634
+residual: 1.5539e-05time: 6.98728
+Steps taken: 14892final residual: 9.9939e-06
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |        25s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |        25s |     1e+02% |
++---------------------------------+-----------+------------+------------+
+
