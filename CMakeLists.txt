@@ -3,7 +3,7 @@
 ##
 
 # Set the name of the project and target:
-SET(TARGET "heat_conduction_Adp")
+SET(TARGET "heat_conduction")
 
 # Declare all source files the target consists of. Here, this is only
 # the one step-X.cc file, but as you expand your project you may wish
@@ -22,8 +22,8 @@ SET(TARGET_SRC
 # Usually, you will not need to modify anything beyond this point...
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-SET(LAPTOP ON)
-SET(CLUSTER OFF)
+SET(LAPTOP OFF)
+SET(CLUSTER ON)
 
 
 IF(LAPTOP)
@@ -73,9 +73,9 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include_files)
 INCLUDE_DIRECTORIES(${EIGEN_DIR})
 FILE(GLOB TARGET_SRC  "src/*.cc")
 
-ADD_EXECUTABLE(heat_conduction_Adp.out 2x3v_moments_HC_Adp.cc ${TARGET_SRC})
+ADD_EXECUTABLE(heat_conduction.out 2x3v_moments_HC.cc ${TARGET_SRC})
 
-DEAL_II_SETUP_TARGET(heat_conduction_Adp.out)
+DEAL_II_SETUP_TARGET(heat_conduction.out)
 
 
 ADD_CUSTOM_TARGET(release

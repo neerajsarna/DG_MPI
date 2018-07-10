@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
       set_square_bid(triangulation);
 
      
-      triangulation.signals.post_refinement.connect(std_cxx11::bind (&set_square_bid,
-                      								std_cxx11::ref(triangulation)));
+      triangulation.signals.post_refinement.connect(std::bind (&set_square_bid,
+                      								std::ref(triangulation)));
 
       ic_bc<dim> initial_boundary;	
 
