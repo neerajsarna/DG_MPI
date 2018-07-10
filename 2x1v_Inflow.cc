@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
      const int M = atoi(argv[3]);
      const double Kn = 0.1;
 
-     Assert(M<=20,ExcNotImplemented());
+     Assert(M<=30,ExcNotImplemented());
      develop_system(system_matrices,M,M,int(M/2),Kn);
      system_matrices.bc_inhomo_time = true;
 

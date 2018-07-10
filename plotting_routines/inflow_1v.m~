@@ -1,0 +1,40 @@
+clear all;
+range = 0:1;
+
+num_proc = 1;
+M_values = [4:2:10,15];
+
+theta_values = cell(length(M_values),1);
+for i = 1 : length(M_values)
+    [X,theta_values{i}] = get_moment(1,M_values(i),5);
+end
+
+for i = 1 : length(M_values)
+    plot(X,theta_values{i});
+    xlim([0.75 1.0]);
+    legend(strcat('M',num2str(M_values(i))),'location','best');
+    hold on;
+end
+
+
+function [X,quantity] = get_moment(num_proc,M,id)
+
+X = [];
+quantity = [];
+
+for j = 0 : num_proc-1
+filename = strcat('../2x1v_Inflow/M',num2str(M),...
+                  '/result',num2str(j),'_Kn_0p1.txt');    
+             
+field1 = dlmread(filename,'\t');
+
+X = [X;field1(:,1)];
+
+quantity = [quantity;field1(:,id)];
+
+end
+
+end
+
+
+
