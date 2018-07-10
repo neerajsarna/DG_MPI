@@ -453,7 +453,8 @@ Solve_System_SS<dim>::create_output(const std::string &filename)
       for (unsigned int space = 0 ; space < dim ; space ++)
         fprintf(fp, "%f\t",cell->center()(space));
 
-      for (unsigned int i = 0 ; i < to_print ; i++) 
+      for (unsigned int i = 0 ; i < n_eqn ; i++)
+	if(i < to_print) 
       {
         const double sol_value =  locally_owned_solution(local_dof_indices[component_to_system[i](0)]);
         fprintf(fp, "%f\t",sol_value);
