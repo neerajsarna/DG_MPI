@@ -27,7 +27,7 @@ computing_timer(MPI_COMM_WORLD,
       distribute_dofs();
 
       prescribe_initial_conditions();
-      locally_owned_solution.compress(VectorOperation::add);
+      locally_owned_solution.compress(VectorOperation::insert);
       locally_relevant_solution = locally_owned_solution;
 
       max_speed = compute_max_speed();
@@ -42,7 +42,7 @@ Solve_System_SS<dim>::run_time_loop(parallel::distributed::Triangulation<dim> &t
           
       // do everything here 
       // start of refinement 
-      const int refine_cycles = 2;
+      const int refine_cycles = 6;
 
       const int times_refine = 1;
 
@@ -119,8 +119,8 @@ Solve_System_SS<dim>::run_time_loop(parallel::distributed::Triangulation<dim> &t
       per_cell_assemble_scratch,
       per_cell_assemble);
 
-      locally_owned_solution.compress(VectorOperation::add); // synchornising 
-      locally_owned_residual.compress(VectorOperation::add);
+      locally_owned_solution.compress(VectorOperation::insert); // synchornising 
+      locally_owned_residual.compress(VectorOperation::insert);
 
       residual_ss = locally_owned_residual.l2_norm();
       locally_relevant_solution = locally_owned_solution;

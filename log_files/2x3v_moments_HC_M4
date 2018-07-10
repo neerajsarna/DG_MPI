@@ -1,0 +1,597 @@
+Sender: LSF System <lsfadmin@linuxbmc0469>
+Subject: Job 43540923: <2x3v_moments> in cluster <rcc> Exited
+
+Job <2x3v_moments> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Jul  8 01:08:31 2018
+Job was executed on host(s) <11*linuxbmc0469>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Jul  8 01:08:34 2018
+                            <11*linuxbmc0471>
+                            <11*linuxbmc0472>
+                            <11*linuxbmc0473>
+                            <11*linuxbmc0474>
+                            <9*linuxbmc0475>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Jul  8 01:08:34 2018
+Terminated at Sun Jul  8 01:18:52 2018
+Results reported at Sun Jul  8 01:18:52 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x3v_moments
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x3v_moments_HC_M4
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 2024
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 64
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 8"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./heat_conduction.out 8 10 4
+
+------------------------------------------------------------
+
+Exited with exit code 134.
+
+Resource usage summary:
+
+    CPU time :                                   12659.00 sec.
+    Max Memory :                                 810 MB
+    Average Memory :                             756.25 MB
+    Total Requested Memory :                     129536.00 MB
+    Delta Memory :                               128726.00 MB
+    Max Swap :                                   -
+    Max Processes :                              18
+    Max Threads :                                116
+    Run time :                                   617 sec.
+    Turnaround time :                            621 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1531004911.43540923.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 7 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 0 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 1 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 2 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 3 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 4 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 5 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:03071] MCW rank 6 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+refinement cycle: 0
+total cells: 10
+total dofs: 220
+refinement cycle: 1
+total cells: 40
+total dofs: 880
+residual: 0.00091977time: 10.8332
+refinement cycle: 2
+total cells: 160
+total dofs: 3520
+residual: 0.085702time: 16.0747
+residual: 0.00398time: 18.2624
+residual: 0.000301371time: 20.45
+residual: 2.34787e-05time: 22.6376
+refinement cycle: 3
+total cells: 640
+total dofs: 14080
+residual: 0.495993time: 24.3965
+residual: 0.137503time: 25.4903
+residual: 0.0270831time: 26.5841
+residual: 0.00858161time: 27.6779
+residual: 0.00321231time: 28.7717
+residual: 0.000901595time: 29.8656
+residual: 0.000272746time: 30.9594
+residual: 9.8552e-05time: 32.0532
+residual: 2.79876e-05time: 33.147
+refinement cycle: 4
+total cells: 2560
+total dofs: 56320
+residual: 1.53944time: 34.6302
+residual: 0.558241time: 35.1771
+residual: 0.210082time: 35.724
+residual: 0.174598time: 36.2709
+residual: 0.0698742time: 36.8179
+residual: 0.0371736time: 37.3648
+residual: 0.0280921time: 37.9117
+residual: 0.0128261time: 38.4586
+residual: 0.00778174time: 39.0055
+residual: 0.00526274time: 39.5524
+residual: 0.00259065time: 40.0993
+residual: 0.00159182time: 40.6462
+residual: 0.00103734time: 41.1931
+residual: 0.000529039time: 41.74
+residual: 0.00032017time: 42.2869
+residual: 0.000207713time: 42.8338
+residual: 0.000108064time: 43.3807
+residual: 6.39895e-05time: 43.9277
+residual: 4.17683e-05time: 44.4746
+residual: 2.20696e-05time: 45.0215
+residual: 1.27686e-05time: 45.5684
+refinement cycle: 5
+total cells: 10240
+total dofs: 225280
+residual: 2.32361time: 46.112
+residual: 1.65836time: 46.3855
+residual: 1.07759time: 46.6589
+residual: 0.584502time: 46.9324
+residual: 0.315817time: 47.2058
+residual: 0.230371time: 47.4793
+residual: 0.213928time: 47.7527
+residual: 0.196148time: 48.0262
+residual: 0.137755time: 48.2996
+residual: 0.0796341time: 48.5731
+residual: 0.0577255time: 48.8465
+residual: 0.0441651time: 49.12
+residual: 0.0369811time: 49.3935
+residual: 0.034045time: 49.6669
+residual: 0.024258time: 49.9404
+residual: 0.0158917time: 50.2138
+residual: 0.0132932time: 50.4873
+residual: 0.00983382time: 50.7607
+residual: 0.00761675time: 51.0342
+residual: 0.00682428time: 51.3076
+residual: 0.0048549time: 51.5811
+residual: 0.00343858time: 51.8545
+residual: 0.00297634time: 52.128
+residual: 0.00214365time: 52.4015
+residual: 0.00162992time: 52.6749
+residual: 0.00143527time: 52.9484
+residual: 0.00101247time: 53.2218
+residual: 0.000749741time: 53.4953
+residual: 0.000651253time: 53.7687
+residual: 0.00046017time: 54.0422
+residual: 0.000352302time: 54.3156
+residual: 0.000306469time: 54.5891
+residual: 0.000213949time: 54.8625
+residual: 0.000163369time: 55.136
+residual: 0.000140998time: 55.4094
+residual: 9.82111e-05time: 55.6829
+residual: 7.64487e-05time: 55.9564
+residual: 6.57194e-05time: 56.2298
+residual: 4.54285e-05time: 56.5033
+residual: 3.55781e-05time: 56.7767
+residual: 3.03727e-05time: 57.0502
+residual: 2.09297e-05time: 57.3236
+residual: 1.66202e-05time: 57.5971
+residual: 1.40999e-05time: 57.8705
+Steps taken: 41502final residual: 9.99847e-06
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+terminate called after throwing an instance of 'Solve_System_SS<2>::ExcFileNotOpen'
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result1_Kn_0p1.txt
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result2_Kn_0p1.txt
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result3_Kn_0p1.txt
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result4_Kn_0p1.txt
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result5_Kn_0p1.txt
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result0_Kn_0p1.txt
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result7_Kn_0p1.txt
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <446> of file </home/ns179556/DG_MPI/src/solve_system_SS.cc> in function
+    void Solve_System_SS<dim>::create_output(const string&) [with int dim = 2; std::string = std::basic_string<char>]
+The violated condition was: 
+    fp!=NULL
+Additional information: 
+    Could not open: 2x3v_moments_HC/M4/result6_Kn_0p1.txt
+--------------------------------------------------------
+
+[linuxbmc0469:03074] *** Process received signal ***
+[linuxbmc0469:03082] *** Process received signal ***
+[linuxbmc0469:03075] *** Process received signal ***
+[linuxbmc0469:03076] *** Process received signal ***
+[linuxbmc0469:03077] *** Process received signal ***
+[linuxbmc0469:03079] *** Process received signal ***
+[linuxbmc0469:03081] *** Process received signal ***
+[linuxbmc0469:03077] Signal: Aborted (6)
+[linuxbmc0469:03077] Signal code:  (-6)
+[linuxbmc0469:03081] Signal: Aborted (6)
+[linuxbmc0469:03081] Signal code:  (-6)
+[linuxbmc0469:03080] *** Process received signal ***
+[linuxbmc0469:03080] Signal: Aborted (6)
+[linuxbmc0469:03080] Signal code:  (-6)
+[linuxbmc0469:03082] Signal: Aborted (6)
+[linuxbmc0469:03082] Signal code:  (-6)
+[linuxbmc0469:03075] Signal: Aborted (6)
+[linuxbmc0469:03075] Signal code:  (-6)
+[linuxbmc0469:03076] Signal: Aborted (6)
+[linuxbmc0469:03076] Signal code:  (-6)
+[linuxbmc0469:03079] Signal: Aborted (6)
+[linuxbmc0469:03079] Signal code:  (-6)
+[linuxbmc0469:03074] Signal: Aborted (6)
+[linuxbmc0469:03074] Signal code:  (-6)
+[linuxbmc0469:03075] [ 0] [linuxbmc0469:03074] [ 0] [linuxbmc0469:03079] [ 0] [linuxbmc0469:03081] [ 0] [linuxbmc0469:03080] [ 0] [linuxbmc0469:03082] [ 0] [linuxbmc0469:03077] [ 0] [linuxbmc0469:03076] [ 0] /lib64/libc.so.6(+0x35270)[0x7f079a550270]
+[linuxbmc0469:03080] [ 1] /lib64/libc.so.6(+0x35270)[0x7fd760f77270]
+[linuxbmc0469:03075] [ 1] /lib64/libc.so.6(+0x35270)[0x7f925c911270]
+[linuxbmc0469:03082] [ 1] /lib64/libc.so.6(+0x35270)[0x7fec4b4f4270]
+[linuxbmc0469:03076] [ 1] /lib64/libc.so.6(+0x35270)[0x7f05db81d270]
+[linuxbmc0469:03079] [ 1] /lib64/libc.so.6(+0x35270)[0x7fd99da94270]
+[linuxbmc0469:03081] [ 1] /lib64/libc.so.6(+0x35270)[0x7f207e703270]
+[linuxbmc0469:03077] [ 1] /lib64/libc.so.6(gsignal+0x37)[0x7f207e7031f7]
+[linuxbmc0469:03077] [ 2] /lib64/libc.so.6(+0x35270)[0x7f93425d1270]
+[linuxbmc0469:03074] [ 1] /lib64/libc.so.6(gsignal+0x37)[0x7f93425d11f7]
+[linuxbmc0469:03074] [ 2] /lib64/libc.so.6(gsignal+0x37)[0x7fec4b4f41f7]
+[linuxbmc0469:03076] [ 2] /lib64/libc.so.6(gsignal+0x37)[0x7f05db81d1f7]
+[linuxbmc0469:03079] [ 2] /lib64/libc.so.6(gsignal+0x37)[0x7f925c9111f7]
+[linuxbmc0469:03082] [ 2] /lib64/libc.so.6(gsignal+0x37)[0x7f079a5501f7]
+[linuxbmc0469:03080] [ 2] /lib64/libc.so.6(gsignal+0x37)[0x7fd760f771f7]
+[linuxbmc0469:03075] [ 2] /lib64/libc.so.6(gsignal+0x37)[0x7fd99da941f7]
+[linuxbmc0469:03081] [ 2] /lib64/libc.so.6(abort+0x148)[0x7fd99da958e8]
+[linuxbmc0469:03081] [ 3] /lib64/libc.so.6(abort+0x148)[0x7f079a5518e8]
+[linuxbmc0469:03080] [ 3] /lib64/libc.so.6(abort+0x148)[0x7fd760f788e8]
+[linuxbmc0469:03075] [ 3] /lib64/libc.so.6(abort+0x148)[0x7f207e7048e8]
+[linuxbmc0469:03077] [ 3] /lib64/libc.so.6(abort+0x148)[0x7f93425d28e8]
+[linuxbmc0469:03074] [ 3] /lib64/libc.so.6(abort+0x148)[0x7fec4b4f58e8]
+[linuxbmc0469:03076] [ 3] /lib64/libc.so.6(abort+0x148)[0x7f05db81e8e8]
+[linuxbmc0469:03079] [ 3] /lib64/libc.so.6(abort+0x148)[0x7f925c9128e8]
+[linuxbmc0469:03082] [ 3] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7f925d001ac5]
+[linuxbmc0469:03082] [ 4] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7f079ac40ac5]
+[linuxbmc0469:03080] [ 4] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7fd761667ac5]
+[linuxbmc0469:03075] [ 4] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7f207edf3ac5]
+[linuxbmc0469:03077] [ 4] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7f9342cc1ac5]
+[linuxbmc0469:03074] [ 4] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7fec4bbe4ac5]
+[linuxbmc0469:03076] [ 4] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7f05dbf0dac5]
+[linuxbmc0469:03079] [ 4] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7fd99e184ac5]
+[linuxbmc0469:03081] [ 4] /lib64/libstdc++.so.6(+0x5ea36)[0x7fec4bbe2a36]
+[linuxbmc0469:03076] [ 5] /lib64/libstdc++.so.6(+0x5ea36)[0x7f05dbf0ba36]
+[linuxbmc0469:03079] [ 5] /lib64/libstdc++.so.6(+0x5ea36)[0x7fd99e182a36]
+[linuxbmc0469:03081] [ 5] /lib64/libstdc++.so.6(+0x5ea36)[0x7f079ac3ea36]
+[linuxbmc0469:03080] [ 5] /lib64/libstdc++.so.6(+0x5ea36)[0x7fd761665a36]
+[linuxbmc0469:03075] [ 5] /lib64/libstdc++.so.6(+0x5ea36)[0x7f207edf1a36]
+[linuxbmc0469:03077] [ 5] /lib64/libstdc++.so.6(+0x5ea36)[0x7f9342cbfa36]
+[linuxbmc0469:03074] [ 5] /lib64/libstdc++.so.6(+0x5ea63)[0x7f9342cbfa63]
+[linuxbmc0469:03074] /lib64/libstdc++.so.6(+0x5ea63)[0x7f079ac3ea63]
+[linuxbmc0469:03080] [ 6] /lib64/libstdc++.so.6(+0x5ea63)[0x7fd761665a63]
+[linuxbmc0469:03075] [ 6] /lib64/libstdc++.so.6(+0x5ea63)[0x7f207edf1a63]
+[linuxbmc0469:03077] [ 6] /lib64/libstdc++.so.6(+0x5ea63)[0x7f05dbf0ba63]
+[linuxbmc0469:03079] [ 6] /lib64/libstdc++.so.6(+0x5ea63)[0x7fec4bbe2a63]
+[linuxbmc0469:03076] [ 6] [ 6] /lib64/libstdc++.so.6(+0x5ec83)[0x7f9342cbfc83]
+[linuxbmc0469:03074] [ 7] /lib64/libstdc++.so.6(+0x5ea36)[0x7f925cfffa36]
+[linuxbmc0469:03082] [ 5] /lib64/libstdc++.so.6(+0x5ea63)[0x7f925cfffa63]
+[linuxbmc0469:03082] [ 6] /lib64/libstdc++.so.6(+0x5ec83)[0x7f925cfffc83]
+[linuxbmc0469:03082] [ 7] /lib64/libstdc++.so.6(+0x5ea63)[0x7fd99e182a63]
+[linuxbmc0469:03081] [ 6] /lib64/libstdc++.so.6(+0x5ec83)[0x7fd99e182c83]
+[linuxbmc0469:03081] [ 7] /lib64/libstdc++.so.6(+0x5ec83)[0x7f079ac3ec83]
+[linuxbmc0469:03080] [ 7] /lib64/libstdc++.so.6(+0x5ec83)[0x7fd761665c83]
+[linuxbmc0469:03075] [ 7] /lib64/libstdc++.so.6(+0x5ec83)[0x7f207edf1c83]
+[linuxbmc0469:03077] [ 7] /lib64/libstdc++.so.6(+0x5ec83)[0x7f05dbf0bc83]
+[linuxbmc0469:03079] [ 7] /lib64/libstdc++.so.6(+0x5ec83)[0x7fec4bbe2c83]
+[linuxbmc0469:03076] [ 7] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03082] [ 8] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03079] [ 8] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03081] [ 8] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03080] [ 8] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03075] [ 8] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03077] [ 8] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03076] [ 8] ./heat_conduction.out(_ZN15Solve_System_SSILi2EE13create_outputERKSs+0x89a)[0x49776a]
+[linuxbmc0469:03074] [ 8] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03079] [ 9] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03081] [ 9] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03080] [ 9] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03075] [ 9] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03074] [ 9] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7f93425bdc05]
+[linuxbmc0469:03074] [10] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03076] [ 9] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7fec4b4e0c05]
+[linuxbmc0469:03076] [10] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03077] [ 9] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7f207e6efc05]
+[linuxbmc0469:03077] [10] ./heat_conduction.out(main+0x751)[0x470001]
+[linuxbmc0469:03082] [ 9] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7f925c8fdc05]
+[linuxbmc0469:03082] [10] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7fd760f63c05]
+[linuxbmc0469:03075] [10] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7f05db809c05]
+[linuxbmc0469:03079] [10] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7fd99da80c05]
+[linuxbmc0469:03081] [10] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7f079a53cc05]
+[linuxbmc0469:03080] [10] ./heat_conduction.out[0x470439]
+[linuxbmc0469:03080] *** End of error message ***
+./heat_conduction.out[0x470439]
+[linuxbmc0469:03074] *** End of error message ***
+./heat_conduction.out[0x470439]
+[linuxbmc0469:03076] *** End of error message ***
+./heat_conduction.out[0x470439]
+[linuxbmc0469:03077] *** End of error message ***
+./heat_conduction.out[0x470439]
+[linuxbmc0469:03082] *** End of error message ***
+./heat_conduction.out[0x470439]
+[linuxbmc0469:03075] *** End of error message ***
+./heat_conduction.out[0x470439]
+[linuxbmc0469:03079] *** End of error message ***
+./heat_conduction.out[0x470439]
+[linuxbmc0469:03081] *** End of error message ***
+--------------------------------------------------------------------------
+mpirun noticed that process rank 4 with PID 3079 on node linuxbmc0469 exited on signal 6 (Aborted).
+--------------------------------------------------------------------------
+Sender: LSF System <lsfadmin@linuxbmc0469>
+Subject: Job 43541173: <2x3v_moments> in cluster <rcc> Done
+
+Job <2x3v_moments> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Jul  8 01:25:42 2018
+Job was executed on host(s) <11*linuxbmc0469>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Jul  8 01:25:48 2018
+                            <11*linuxbmc0471>
+                            <11*linuxbmc0472>
+                            <11*linuxbmc0473>
+                            <11*linuxbmc0474>
+                            <9*linuxbmc0475>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Jul  8 01:25:48 2018
+Terminated at Sun Jul  8 01:36:01 2018
+Results reported at Sun Jul  8 01:36:01 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x3v_moments
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x3v_moments_HC_M4
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 2024
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 64
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 8"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./heat_conduction.out 8 10 4
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   12759.64 sec.
+    Max Memory :                                 828 MB
+    Average Memory :                             766.30 MB
+    Total Requested Memory :                     129536.00 MB
+    Delta Memory :                               128708.00 MB
+    Max Swap :                                   -
+    Max Processes :                              18
+    Max Threads :                                116
+    Run time :                                   613 sec.
+    Turnaround time :                            619 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1531005942.43541173.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 5 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 6 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 7 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 0 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 1 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 2 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 3 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0469.rz.RWTH-Aachen.DE:13568] MCW rank 4 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+refinement cycle: 0
+total cells: 10
+total dofs: 220
+refinement cycle: 1
+total cells: 40
+total dofs: 880
+residual: 0.00091977time: 10.8332
+refinement cycle: 2
+total cells: 160
+total dofs: 3520
+residual: 0.085702time: 16.0747
+residual: 0.00398time: 18.2624
+residual: 0.000301371time: 20.45
+residual: 2.34787e-05time: 22.6376
+refinement cycle: 3
+total cells: 640
+total dofs: 14080
+residual: 0.495993time: 24.3965
+residual: 0.137503time: 25.4903
+residual: 0.0270831time: 26.5841
+residual: 0.00858161time: 27.6779
+residual: 0.00321231time: 28.7717
+residual: 0.000901595time: 29.8656
+residual: 0.000272746time: 30.9594
+residual: 9.8552e-05time: 32.0532
+residual: 2.79876e-05time: 33.147
+refinement cycle: 4
+total cells: 2560
+total dofs: 56320
+residual: 1.53944time: 34.6302
+residual: 0.558241time: 35.1771
+residual: 0.210082time: 35.724
+residual: 0.174598time: 36.2709
+residual: 0.0698742time: 36.8179
+residual: 0.0371736time: 37.3648
+residual: 0.0280921time: 37.9117
+residual: 0.0128261time: 38.4586
+residual: 0.00778174time: 39.0055
+residual: 0.00526274time: 39.5524
+residual: 0.00259065time: 40.0993
+residual: 0.00159182time: 40.6462
+residual: 0.00103734time: 41.1931
+residual: 0.000529039time: 41.74
+residual: 0.00032017time: 42.2869
+residual: 0.000207713time: 42.8338
+residual: 0.000108064time: 43.3807
+residual: 6.39895e-05time: 43.9277
+residual: 4.17683e-05time: 44.4746
+residual: 2.20696e-05time: 45.0215
+residual: 1.27686e-05time: 45.5684
+refinement cycle: 5
+total cells: 10240
+total dofs: 225280
+residual: 2.32361time: 46.112
+residual: 1.65836time: 46.3855
+residual: 1.07759time: 46.6589
+residual: 0.584502time: 46.9324
+residual: 0.315817time: 47.2058
+residual: 0.230371time: 47.4793
+residual: 0.213928time: 47.7527
+residual: 0.196148time: 48.0262
+residual: 0.137755time: 48.2996
+residual: 0.0796341time: 48.5731
+residual: 0.0577255time: 48.8465
+residual: 0.0441651time: 49.12
+residual: 0.0369811time: 49.3935
+residual: 0.034045time: 49.6669
+residual: 0.024258time: 49.9404
+residual: 0.0158917time: 50.2138
+residual: 0.0132932time: 50.4873
+residual: 0.00983382time: 50.7607
+residual: 0.00761675time: 51.0342
+residual: 0.00682428time: 51.3076
+residual: 0.0048549time: 51.5811
+residual: 0.00343858time: 51.8545
+residual: 0.00297634time: 52.128
+residual: 0.00214365time: 52.4015
+residual: 0.00162992time: 52.6749
+residual: 0.00143527time: 52.9484
+residual: 0.00101247time: 53.2218
+residual: 0.000749741time: 53.4953
+residual: 0.000651253time: 53.7687
+residual: 0.00046017time: 54.0422
+residual: 0.000352302time: 54.3156
+residual: 0.000306469time: 54.5891
+residual: 0.000213949time: 54.8625
+residual: 0.000163369time: 55.136
+residual: 0.000140998time: 55.4094
+residual: 9.82111e-05time: 55.6829
+residual: 7.64487e-05time: 55.9564
+residual: 6.57194e-05time: 56.2298
+residual: 4.54285e-05time: 56.5033
+residual: 3.55781e-05time: 56.7767
+residual: 3.03727e-05time: 57.0502
+residual: 2.09297e-05time: 57.3236
+residual: 1.66202e-05time: 57.5971
+residual: 1.40999e-05time: 57.8705
+Steps taken: 41502final residual: 9.99847e-06
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       602s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |       602s |     1e+02% |
++---------------------------------+-----------+------------+------------+
+

@@ -22,8 +22,8 @@ SET(TARGET_SRC
 # Usually, you will not need to modify anything beyond this point...
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-SET(LAPTOP ON)
-SET(CLUSTER OFF)
+SET(LAPTOP OFF)
+SET(CLUSTER ON)
 
 
 IF(LAPTOP)

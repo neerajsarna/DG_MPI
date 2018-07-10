@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
      // store the number of equations for a given M (starts at M = 3)
      const int neqn_M[18] = {13,22,34,50,70,95,125,161,203,252,308,372,444,525,615,715,825,946};
      const int nbc_M[18] = {5,8,14,20,30,40,55,70,91,112,140,168,204,240,285,330,385,440};
-     const int M = 3;
+     const int M = atoi(argv[3]);
      const double Kn = 0.1;
 
      Assert(M<=20,ExcNotImplemented());
@@ -170,8 +170,8 @@ int main(int argc, char *argv[])
       set_square_bid(triangulation);
 
      
-      triangulation.signals.post_refinement.connect(std_cxx11::bind (&set_square_bid,
-                      								std_cxx11::ref(triangulation)));
+      triangulation.signals.post_refinement.connect(std::bind (&set_square_bid,
+                      								std::ref(triangulation)));
 
       ic_bc<dim> initial_boundary;	
 
