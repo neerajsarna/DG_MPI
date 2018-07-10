@@ -45,6 +45,7 @@ pout(std::cout,this_mpi_process==0)
       error_per_cell.reinit(locally_owned_cells,mpi_comm); //allocate memory for error per cell
 
       prescribe_initial_conditions();
+      locally_owned_solution.compress(VectorOperation::add);
       locally_relevant_solution = locally_owned_solution;
 
       // we need to fix this in case of moments
@@ -89,8 +90,6 @@ Solve_System<dim>::prescribe_initial_conditions()
                    percellICScratch,
                    percellIC);
 
-
-  locally_relevant_solution = locally_owned_solution;
 
 }
 
@@ -187,6 +186,7 @@ Solve_System<dim>::run_time_loop()
                    per_cell_assemble);
 
 
+      locally_owned_solution.compress(VectorOperation::add);
       locally_relevant_solution = locally_owned_solution;
       t += dt;
 
@@ -353,207 +353,6 @@ template<int dim>
                                                                + data.local_contri(i);
  }
 
-// template<int dim>
-// void 
-// Solve_System<dim>::run_time_loop()
-// {
-//     //TimerOutput::Scope timer_section(computing_timer,"Solving");
-//     const QGauss<dim-1> face_quadrature(1);
-
-// 		typename DoFHandler<dim>::cell_iterator neighbor;
-// 		typename DoFHandler<dim>::active_cell_iterator endc = dof_handler.end();
-
-//     const UpdateFlags face_update_flags =  update_normal_vectors;
-
-//     FEFaceValues<dim> fe_v_face(fe, face_quadrature, face_update_flags);
-
-// 		const unsigned int dofs_per_cell = fe.dofs_per_cell;
-// 		const unsigned int dofs_per_component = dofs_per_cell/n_eqn;
-
-// 		// only implemented a finite volume scheme
-// 		Assert(dofs_per_component == 1,ExcNotImplemented());
-// 		Assert(dofs_per_cell == n_eqn,ExcNotImplemented());
-  		
-//   		Vector<double> component(dofs_per_cell);
-    
-//     	for (unsigned int i = 0 ; i < dofs_per_cell ; i++)
-//       		component[i] = fe.system_to_component_index(i).first;
-
-//       	std::vector<Vector<double>> component_to_system(n_eqn,
-//                                                           Vector<double>(dofs_per_component));
-
-//       for (unsigned int i = 0 ; i < n_eqn ; i ++)
-//         for (unsigned int j = 0 ; j < dofs_per_component ; j ++)
-//           	component_to_system[i](j) = fe.component_to_system_index(i,j); 
-
-//         std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
-//       	std::vector<types::global_dof_index> local_dof_indices_neighbor(dofs_per_cell);
-
-//         std::vector<Vector<double>> g(4);
-
-//         for (unsigned int id = 0 ; id < 4 ; id++)
-//           initial_boundary->bc_inhomo(system_matrices.B[id],id,g[id],0);
-
-//       	double t = 0;
-//       	while (t < t_end)
-//       	{
-//       		if (t+dt > t_end)
-//       			dt = t_end-t;
-
-//           // we need to initialise the iterator again and again
-//           typename DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active();
-
-//       		for (; cell != endc; ++cell)
-//       			if (cell->is_locally_owned())
-//       			{
-//               // no hanging nodes check
-//       				Assert(!cell->has_children(), ExcInternalError());
-      				
-//       				cell->get_dof_indices(local_dof_indices);
-//       				const double volume = cell->measure();
-
-//               Vector<double> flux_contri(dofs_per_cell);
-
-//               flux_contri = 0;
-
-//               // contribution from collisions P
-//               for (unsigned int m = 0 ; m < system_matrices.P.outerSize() ; m++)
-//                     for (Sparse_Matrix::InnerIterator n(system_matrices.P,m); n ; ++n)
-//                   {
-//               // 0 because of finite volume
-//                     unsigned int dof_sol = component_to_system[n.row()](0);
-
-//               // the solution id which meets An
-//                     unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
-
-//               // explicit euler update, 
-//                     flux_contri(dof_sol) +=  n.value() * dt
-//                                              * locally_relevant_solution(dof_sol_col);
-
-//                   }
-
-
-//           // loop over the faces, we assume no hanging nodes 
-//       				for(unsigned int face  = 0; face< GeometryInfo<dim>::faces_per_cell; face++ )
-//       				{
-//                 fe_v_face.reinit(cell,face);
-              
-//       		   		// normal to the face assuming cartesian grid
-//       				 	Tensor<1,dim> normal_vec = fe_v_face.normal_vector(0);
-
-//       					const double nx = normal_vec[0];
-//       					const double ny = normal_vec[1];
-
-// 					     // construct An
-//       				 	Sparse_Matrix An = system_matrices.Ax * nx + system_matrices.Ay * ny;
-
-//       					const typename DoFHandler<dim>::face_iterator face_itr = cell->face(face);
-
-//                 const double face_length = face_itr->measure();
-
-//       					if (face_itr->at_boundary())
-//       					{
-//                   const unsigned int bc_id = face_itr->boundary_id();
-//                   // only compute for times greater than zero, already computed for t= 0 before
-//                     if (system_matrices.bc_inhomo_time && t > 1e-16)
-//                                 initial_boundary->bc_inhomo(system_matrices.B[bc_id],bc_id,
-//                                                           g[bc_id],t);
-
-//                   for (unsigned int m = 0 ; m < An.outerSize() ; m++)
-//                     for (Sparse_Matrix::InnerIterator n(An,m); n ; ++n)
-//                   {
-//               // 0 because of finite volume
-//                     unsigned int dof_sol = component_to_system[n.row()](0);
-
-//               // the solution id which meets An
-//                     unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
-
-//               // explicit euler update
-//                     flux_contri(dof_sol) -=  n.value() * dt
-//                                              * locally_relevant_solution(dof_sol_col) * face_length/volume;
-
-//                   }
-
-//                   // contribution from penalty_B
-//                   for (unsigned int m = 0 ; m < system_matrices.penalty_B[bc_id].outerSize() ; m++)
-//                     for (Sparse_Matrix::InnerIterator n(system_matrices.penalty_B[bc_id],m); n ; ++n)
-//                   {
-//                     unsigned int dof_sol = component_to_system[n.row()](0);
-//                     unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
-//                     flux_contri(dof_sol) +=  n.value() * dt
-//                                              * locally_relevant_solution(dof_sol_col) * face_length/volume;
-
-//                   }
-//                   // contribution from penalty * g
-//                   for (unsigned int m = 0 ; m < system_matrices.penalty[bc_id].outerSize() ; m++)
-//                     for (Sparse_Matrix::InnerIterator n(system_matrices.penalty[bc_id],m); n ; ++n)
-//                   {
-              
-//                     unsigned int dof_sol = component_to_system[n.row()](0);
-//                     unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
-//                     flux_contri(dof_sol) -=  n.value() * dt
-//                                              * g[bc_id](n.col()) * face_length/volume;
-
-//                   }
-//       					}
-//       					else
-//       					{
-//                    neighbor = cell->neighbor(face);
-
-//       						 neighbor->get_dof_indices(local_dof_indices_neighbor);
-
-// 							     Assert(!neighbor->has_children(), ExcInternalError());
-
-//                   for (unsigned int m = 0 ; m < An.outerSize() ; m++)
-//                     for (Sparse_Matrix::InnerIterator n(An,m); n ; ++n)
-//                   {
-// 								// 0 because of finite volume
-//       							unsigned int dof_sol = component_to_system[n.row()](0);
-
-// 								// the solution part which meets An
-//       							unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
-//       							unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n.col()](0)];
-
-// 					 		// explicit euler update, the two comes from the flux 
-//       							flux_contri(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col)
-//       								                       + locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
-
-//       						}
-
-//                   // we add the diffusion now
-//                   for (unsigned int id = 0 ; id < n_eqn ; id++)
-//                   {
-//                       unsigned int dof_sol = component_to_system[id](0);                    
-//                       unsigned int dof_sol_col = local_dof_indices[component_to_system[id](0)];
-//                       unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
-
-//                       flux_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
-//                                           - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
-//                   }
-//        					} //end of else
-
-
-//        				} //end of loop over the faces
-
-//               // update the solution with the fluxes
-//               for (unsigned int i = 0 ; i < dofs_per_cell ; i ++)
-//                 locally_owned_solution(local_dof_indices[i]) = locally_relevant_solution(local_dof_indices[i])
-//                                                                + flux_contri(i);
-
-//       			} // end of loop over cells
-
-//       			locally_relevant_solution = locally_owned_solution;
-//       			t += dt;
-//       			//pout << "time: " << t << std::endl;
-
-//       		}	// end of loop over time
-
-//           //create_output();
-
-//           //computing_timer.print_summary();
-//           compute_error();
-
-// }
 
 template<int dim>
 void 

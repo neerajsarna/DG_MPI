@@ -98,7 +98,7 @@ Solve_System_SS<dim>::run_time_loop(parallel::distributed::Triangulation<dim> &t
           for (unsigned int id = 0 ; id < 4 ; id++)
             initial_boundary->bc_inhomo(system_matrices.B[id],id,g[id],t);
 
-    while (step_count < 10000 || residual_ss > 1e-5 ) // we atleast run till t_end || residual_ss > 1e-8
+    while (step_count < 100 || residual_ss > 1e-5 ) // we atleast run till t_end || residual_ss > 1e-8
     {
       WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
         dof_handler.begin_active()),
