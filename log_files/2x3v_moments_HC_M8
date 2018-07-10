@@ -1,0 +1,248 @@
+Sender: LSF System <lsfadmin@linuxbmc0531>
+Subject: Job 43548607: <2x3v_moments> in cluster <rcc> Done
+
+Job <2x3v_moments> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Jul  8 11:22:48 2018
+Job was executed on host(s) <11*linuxbmc0531>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Jul  8 11:22:51 2018
+                            <11*linuxbmc0532>
+                            <11*linuxbmc0533>
+                            <11*linuxbmc0535>
+                            <11*linuxbmc0538>
+                            <9*linuxbmc0539>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Jul  8 11:22:51 2018
+Terminated at Sun Jul  8 12:56:56 2018
+Results reported at Sun Jul  8 12:56:56 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x3v_moments
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x3v_moments_HC_M8
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 2024
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 64
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 8"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./heat_conduction.out 8 10 8
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   121920.06 sec.
+    Max Memory :                                 984 MB
+    Average Memory :                             932.09 MB
+    Total Requested Memory :                     129536.00 MB
+    Delta Memory :                               128552.00 MB
+    Max Swap :                                   1 MB
+    Max Processes :                              18
+    Max Threads :                                122
+    Run time :                                   5644 sec.
+    Turnaround time :                            5648 sec.
+
+The output (if any) follows:
+
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = "UTF-8",
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+/home/ns179556/.lsbatch/1531041768.43548607.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 7 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 0 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 1 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 2 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 3 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 4 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 5 bound to socket 1[core 6[hwt 0-1]], socket 1[core 7[hwt 0-1]], socket 1[core 8[hwt 0-1]], socket 1[core 9[hwt 0-1]], socket 1[core 10[hwt 0-1]], socket 1[core 11[hwt 0-1]]: [../../../../../..][BB/BB/BB/BB/BB/BB]
+[linuxbmc0531.rz.RWTH-Aachen.DE:09354] MCW rank 6 bound to socket 0[core 0[hwt 0-1]], socket 0[core 1[hwt 0-1]], socket 0[core 2[hwt 0-1]], socket 0[core 3[hwt 0-1]], socket 0[core 4[hwt 0-1]], socket 0[core 5[hwt 0-1]]: [BB/BB/BB/BB/BB/BB][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+refinement cycle: 0
+total cells: 10
+total dofs: 950
+refinement cycle: 1
+total cells: 40
+total dofs: 3800
+residual: 0.00576529time: 7.95525
+residual: 3.12495e-05time: 10.7252
+refinement cycle: 2
+total cells: 160
+total dofs: 15200
+residual: 0.185944time: 12.7029
+residual: 0.0260206time: 14.0879
+residual: 0.00394113time: 15.4728
+residual: 0.000485757time: 16.8578
+residual: 6.10114e-05time: 18.2428
+refinement cycle: 3
+total cells: 640
+total dofs: 60800
+residual: 1.50365time: 20.2787
+residual: 0.307372time: 20.9712
+residual: 0.150269time: 21.6636
+residual: 0.059156time: 22.3561
+residual: 0.0261082time: 23.0486
+residual: 0.0125205time: 23.7411
+residual: 0.00538971time: 24.4336
+residual: 0.00220165time: 25.1261
+residual: 0.000871578time: 25.8185
+residual: 0.000372211time: 26.511
+residual: 0.000173002time: 27.2035
+residual: 7.96305e-05time: 27.896
+residual: 3.41428e-05time: 28.5885
+residual: 1.36715e-05time: 29.281
+refinement cycle: 4
+total cells: 2560
+total dofs: 243200
+residual: 2.67423time: 29.9416
+residual: 1.75782time: 30.2878
+residual: 0.802661time: 30.6341
+residual: 0.40716time: 30.9803
+residual: 0.275635time: 31.3265
+residual: 0.222549time: 31.6728
+residual: 0.167169time: 32.019
+residual: 0.0923461time: 32.3653
+residual: 0.0707904time: 32.7115
+residual: 0.0442179time: 33.0578
+residual: 0.0324568time: 33.404
+residual: 0.0231822time: 33.7502
+residual: 0.0139453time: 34.0965
+residual: 0.0110814time: 34.4427
+residual: 0.00660864time: 34.789
+residual: 0.00500462time: 35.1352
+residual: 0.00338048time: 35.4814
+residual: 0.00215495time: 35.8277
+residual: 0.00167774time: 36.1739
+residual: 0.000984982time: 36.5202
+residual: 0.000773764time: 36.8664
+residual: 0.000494919time: 37.2127
+residual: 0.000335396time: 37.5589
+residual: 0.000250614time: 37.9051
+residual: 0.000148555time: 38.2514
+residual: 0.000118814time: 38.5976
+residual: 7.25815e-05time: 38.9439
+residual: 5.23138e-05time: 39.2901
+residual: 3.70882e-05time: 39.6363
+residual: 2.27146e-05time: 39.9826
+residual: 1.80716e-05time: 40.3288
+residual: 1.07075e-05time: 40.6751
+refinement cycle: 5
+total cells: 10240
+total dofs: 972800
+residual: 4.01167time: 40.8987
+residual: 2.88468time: 41.0719
+residual: 2.40721time: 41.245
+residual: 1.87312time: 41.4181
+residual: 1.31101time: 41.5912
+residual: 0.859721time: 41.7643
+residual: 0.593854time: 41.9375
+residual: 0.481021time: 42.1106
+residual: 0.404251time: 42.2837
+residual: 0.331311time: 42.4568
+residual: 0.290769time: 42.6299
+residual: 0.276938time: 42.8031
+residual: 0.252914time: 42.9762
+residual: 0.206185time: 43.1493
+residual: 0.153262time: 43.3224
+residual: 0.118218time: 43.4956
+residual: 0.10454time: 43.6687
+residual: 0.093662time: 43.8418
+residual: 0.0764726time: 44.0149
+residual: 0.0588157time: 44.188
+residual: 0.0490271time: 44.3612
+residual: 0.0453146time: 44.5343
+residual: 0.0402811time: 44.7074
+residual: 0.0321685time: 44.8805
+residual: 0.0243578time: 45.0536
+residual: 0.0202587time: 45.2268
+residual: 0.0186162time: 45.3999
+residual: 0.0163192time: 45.573
+residual: 0.0128967time: 45.7461
+residual: 0.0098788time: 45.9192
+residual: 0.00845841time: 46.0924
+residual: 0.00780847time: 46.2655
+residual: 0.00674325time: 46.4386
+residual: 0.0052564time: 46.6117
+residual: 0.00404801time: 46.7848
+residual: 0.00352297time: 46.958
+residual: 0.00324145time: 47.1311
+residual: 0.00275648time: 47.3042
+residual: 0.00212793time: 47.4773
+residual: 0.00166035time: 47.6505
+residual: 0.00147226time: 47.8236
+residual: 0.00134769time: 47.9967
+residual: 0.00112785time: 48.1698
+residual: 0.000863494time: 48.3429
+residual: 0.00068365time: 48.5161
+residual: 0.000615051time: 48.6892
+residual: 0.000558383time: 48.8623
+residual: 0.000459947time: 49.0354
+residual: 0.000350346time: 49.2085
+residual: 0.000282391time: 49.3817
+residual: 0.000257066time: 49.5548
+residual: 0.00023095time: 49.7279
+residual: 0.000187302time: 49.901
+residual: 0.000142366time: 50.0741
+residual: 0.000117009time: 50.2473
+residual: 0.000107373time: 50.4204
+residual: 9.52774e-05time: 50.5935
+residual: 7.61386e-05time: 50.7666
+residual: 5.79527e-05time: 50.9397
+residual: 4.86177e-05time: 51.1129
+residual: 4.48096e-05time: 51.286
+residual: 3.92145e-05time: 51.4591
+residual: 3.09132e-05time: 51.6322
+residual: 2.3648e-05time: 51.8053
+residual: 2.02471e-05time: 51.9785
+residual: 1.86748e-05time: 52.1516
+residual: 1.61007e-05time: 52.3247
+residual: 1.25401e-05time: 52.4978
+Steps taken: 62286final residual: 9.99557e-06
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |  5.63e+03s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |  5.63e+03s |     1e+02% |
++---------------------------------+-----------+------------+------------+
+
