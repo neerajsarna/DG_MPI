@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named heat_conduction.out
+# Target rules for targets named heat_conduction_Adp.out
 
 # Build rule for target.
-heat_conduction.out: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 heat_conduction.out
-.PHONY : heat_conduction.out
+heat_conduction_Adp.out: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 heat_conduction_Adp.out
+.PHONY : heat_conduction_Adp.out
 
 # fast build rule for target.
-heat_conduction.out/fast:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/build
-.PHONY : heat_conduction.out/fast
+heat_conduction_Adp.out/fast:
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/build
+.PHONY : heat_conduction_Adp.out/fast
 
 #=============================================================================
 # Target rules for targets named debug
@@ -149,32 +149,32 @@ release/fast:
 	$(MAKE) -f CMakeFiles/release.dir/build.make CMakeFiles/release.dir/build
 .PHONY : release/fast
 
-2x3v_moments_HC.o: 2x3v_moments_HC.cc.o
+2x3v_moments_HC_Adp.o: 2x3v_moments_HC_Adp.cc.o
 
-.PHONY : 2x3v_moments_HC.o
+.PHONY : 2x3v_moments_HC_Adp.o
 
 # target to build an object file
-2x3v_moments_HC.cc.o:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/2x3v_moments_HC.cc.o
-.PHONY : 2x3v_moments_HC.cc.o
+2x3v_moments_HC_Adp.cc.o:
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/2x3v_moments_HC_Adp.cc.o
+.PHONY : 2x3v_moments_HC_Adp.cc.o
 
-2x3v_moments_HC.i: 2x3v_moments_HC.cc.i
+2x3v_moments_HC_Adp.i: 2x3v_moments_HC_Adp.cc.i
 
-.PHONY : 2x3v_moments_HC.i
+.PHONY : 2x3v_moments_HC_Adp.i
 
 # target to preprocess a source file
-2x3v_moments_HC.cc.i:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/2x3v_moments_HC.cc.i
-.PHONY : 2x3v_moments_HC.cc.i
+2x3v_moments_HC_Adp.cc.i:
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/2x3v_moments_HC_Adp.cc.i
+.PHONY : 2x3v_moments_HC_Adp.cc.i
 
-2x3v_moments_HC.s: 2x3v_moments_HC.cc.s
+2x3v_moments_HC_Adp.s: 2x3v_moments_HC_Adp.cc.s
 
-.PHONY : 2x3v_moments_HC.s
+.PHONY : 2x3v_moments_HC_Adp.s
 
 # target to generate assembly for a file
-2x3v_moments_HC.cc.s:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/2x3v_moments_HC.cc.s
-.PHONY : 2x3v_moments_HC.cc.s
+2x3v_moments_HC_Adp.cc.s:
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/2x3v_moments_HC_Adp.cc.s
+.PHONY : 2x3v_moments_HC_Adp.cc.s
 
 src/ic_bc_base.o: src/ic_bc_base.cc.o
 
@@ -182,7 +182,7 @@ src/ic_bc_base.o: src/ic_bc_base.cc.o
 
 # target to build an object file
 src/ic_bc_base.cc.o:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/ic_bc_base.cc.o
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/ic_bc_base.cc.o
 .PHONY : src/ic_bc_base.cc.o
 
 src/ic_bc_base.i: src/ic_bc_base.cc.i
@@ -191,7 +191,7 @@ src/ic_bc_base.i: src/ic_bc_base.cc.i
 
 # target to preprocess a source file
 src/ic_bc_base.cc.i:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/ic_bc_base.cc.i
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/ic_bc_base.cc.i
 .PHONY : src/ic_bc_base.cc.i
 
 src/ic_bc_base.s: src/ic_bc_base.cc.s
@@ -200,7 +200,7 @@ src/ic_bc_base.s: src/ic_bc_base.cc.s
 
 # target to generate assembly for a file
 src/ic_bc_base.cc.s:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/ic_bc_base.cc.s
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/ic_bc_base.cc.s
 .PHONY : src/ic_bc_base.cc.s
 
 src/solve_system.o: src/solve_system.cc.o
@@ -209,7 +209,7 @@ src/solve_system.o: src/solve_system.cc.o
 
 # target to build an object file
 src/solve_system.cc.o:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/solve_system.cc.o
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system.cc.o
 .PHONY : src/solve_system.cc.o
 
 src/solve_system.i: src/solve_system.cc.i
@@ -218,7 +218,7 @@ src/solve_system.i: src/solve_system.cc.i
 
 # target to preprocess a source file
 src/solve_system.cc.i:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/solve_system.cc.i
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system.cc.i
 .PHONY : src/solve_system.cc.i
 
 src/solve_system.s: src/solve_system.cc.s
@@ -227,7 +227,7 @@ src/solve_system.s: src/solve_system.cc.s
 
 # target to generate assembly for a file
 src/solve_system.cc.s:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/solve_system.cc.s
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system.cc.s
 .PHONY : src/solve_system.cc.s
 
 src/solve_system_SS.o: src/solve_system_SS.cc.o
@@ -236,7 +236,7 @@ src/solve_system_SS.o: src/solve_system_SS.cc.o
 
 # target to build an object file
 src/solve_system_SS.cc.o:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/solve_system_SS.cc.o
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system_SS.cc.o
 .PHONY : src/solve_system_SS.cc.o
 
 src/solve_system_SS.i: src/solve_system_SS.cc.i
@@ -245,7 +245,7 @@ src/solve_system_SS.i: src/solve_system_SS.cc.i
 
 # target to preprocess a source file
 src/solve_system_SS.cc.i:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/solve_system_SS.cc.i
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system_SS.cc.i
 .PHONY : src/solve_system_SS.cc.i
 
 src/solve_system_SS.s: src/solve_system_SS.cc.s
@@ -254,8 +254,35 @@ src/solve_system_SS.s: src/solve_system_SS.cc.s
 
 # target to generate assembly for a file
 src/solve_system_SS.cc.s:
-	$(MAKE) -f CMakeFiles/heat_conduction.out.dir/build.make CMakeFiles/heat_conduction.out.dir/src/solve_system_SS.cc.s
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system_SS.cc.s
 .PHONY : src/solve_system_SS.cc.s
+
+src/solve_system_SS_adaptive.o: src/solve_system_SS_adaptive.cc.o
+
+.PHONY : src/solve_system_SS_adaptive.o
+
+# target to build an object file
+src/solve_system_SS_adaptive.cc.o:
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system_SS_adaptive.cc.o
+.PHONY : src/solve_system_SS_adaptive.cc.o
+
+src/solve_system_SS_adaptive.i: src/solve_system_SS_adaptive.cc.i
+
+.PHONY : src/solve_system_SS_adaptive.i
+
+# target to preprocess a source file
+src/solve_system_SS_adaptive.cc.i:
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system_SS_adaptive.cc.i
+.PHONY : src/solve_system_SS_adaptive.cc.i
+
+src/solve_system_SS_adaptive.s: src/solve_system_SS_adaptive.cc.s
+
+.PHONY : src/solve_system_SS_adaptive.s
+
+# target to generate assembly for a file
+src/solve_system_SS_adaptive.cc.s:
+	$(MAKE) -f CMakeFiles/heat_conduction_Adp.out.dir/build.make CMakeFiles/heat_conduction_Adp.out.dir/src/solve_system_SS_adaptive.cc.s
+.PHONY : src/solve_system_SS_adaptive.cc.s
 
 # Help Target
 help:
@@ -263,14 +290,14 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... heat_conduction_Adp.out"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... heat_conduction.out"
 	@echo "... debug"
 	@echo "... release"
-	@echo "... 2x3v_moments_HC.o"
-	@echo "... 2x3v_moments_HC.i"
-	@echo "... 2x3v_moments_HC.s"
+	@echo "... 2x3v_moments_HC_Adp.o"
+	@echo "... 2x3v_moments_HC_Adp.i"
+	@echo "... 2x3v_moments_HC_Adp.s"
 	@echo "... src/ic_bc_base.o"
 	@echo "... src/ic_bc_base.i"
 	@echo "... src/ic_bc_base.s"
@@ -280,6 +307,9 @@ help:
 	@echo "... src/solve_system_SS.o"
 	@echo "... src/solve_system_SS.i"
 	@echo "... src/solve_system_SS.s"
+	@echo "... src/solve_system_SS_adaptive.o"
+	@echo "... src/solve_system_SS_adaptive.i"
+	@echo "... src/solve_system_SS_adaptive.s"
 .PHONY : help
 
 

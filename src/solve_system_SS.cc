@@ -30,6 +30,7 @@ computing_timer(MPI_COMM_WORLD,
       locally_owned_solution.compress(VectorOperation::add);
       locally_relevant_solution = locally_owned_solution;
 
+      
       max_speed = compute_max_speed();
 
 }
