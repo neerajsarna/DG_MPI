@@ -34,7 +34,6 @@ computing_timer(MPI_COMM_WORLD,
       max_speed = compute_max_speed();
 
       Ax_mod = compute_Amod(system_matrices.Ax);
-      Ax_mod.makeCompressed();
 
 }
 
@@ -402,19 +401,19 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
                     //                         - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
                     // }
 
-                   for (unsigned int m = 0 ; m < Ax_mod.outerSize() ; m++)
-                    for (Sparse_Matrix::InnerIterator n(Ax_mod,m); n ; ++n)
+                   for (unsigned int m = 0 ; m < Ax_mod.rows() ; m++)
+                    for (unsigned int n = 0; n < Ax_mod.cols() ; ++n)
                   {
                 // 0 because of finite volume
-                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_sol = component_to_system[m](0);
 
                 // the solution part which meets An
-                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n.col()](0)];
-                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n.col()](0)];
+                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n](0)];
+                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n](0)];
 
               // explicit euler update, the two comes from the flux 
               // myself-my neighbor
-                    data.local_contri(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col)
+                    data.local_contri(dof_sol) -=  dt * Ax_mod(m,n) * (locally_relevant_solution(dof_sol_col)
                                              - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
 
                   }
@@ -599,14 +598,14 @@ Solve_System_SS<dim>::min_h(parallel::distributed::Triangulation<dim> &triangula
 }
 
 template<int dim>
-Sparse_Matrix
+Full_matrix
 Solve_System_SS<dim>::compute_Amod(const Sparse_Matrix &A)
 {
       EigenSolver<MatrixXd> ES(system_matrices.Ax);
       Full_matrix vecs = ES.pseudoEigenvectors();
       VectorXd vals = ES.pseudoEigenvalueMatrix().diagonal();
 
-      Sparse_Matrix Amod = vecs*vals.cwiseAbs().asDiagonal()*vecs.inverse();
+      Full_matrix Amod = vecs*vals.cwiseAbs().asDiagonal()*vecs.inverse();
 
       return(Amod);
 
