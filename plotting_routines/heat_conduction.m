@@ -115,7 +115,7 @@ plot(x,rho,'-',...
  
 legend('M=8','M=8sbp','M=4',...
        'M=4sbp','M45','location','best');
-%xlim([0.5 1]);
+xlim([0.85 1]);
 
 % develop x y and theta from the 2D data
 function [x,theta] = compute_theta(X,Y,theta,Nx)

@@ -7,8 +7,7 @@ Solve_System<dim>::Solve_System(system_data &system_mat,
 								parallel::distributed::Triangulation<dim> &triangulation,
 								const int poly_degree,
 								ic_bc_base<dim> *ic_bc,
-                std::string &foldername,
-                const double min_h)
+                std::string &foldername)
 :
 mpi_comm(MPI_COMM_WORLD),
 dof_handler(triangulation),
@@ -51,10 +50,8 @@ pout(std::cout,this_mpi_process==0)
       // we need to fix this in case of moments
       max_speed = compute_max_speed();
 
-      //pout << "Max speed: " << max_speed << std::endl;
-
       // an approximation to delta_t
-      dt = CFL * min_h/(dim * max_speed);
+      dt = CFL * min_h(triangulation)/(dim * max_speed);
 
 }
 
@@ -161,6 +158,8 @@ Solve_System<dim>::run_time_loop()
 
 
     double t = 0;
+    int step_count = 0;
+
     while (t < t_end)
     {
       if (t+dt > t_end)
@@ -189,6 +188,10 @@ Solve_System<dim>::run_time_loop()
       locally_owned_solution.compress(VectorOperation::add);
       locally_relevant_solution = locally_owned_solution;
       t += dt;
+      step_count++;
+
+      if(step_count%500 == 0)
+        std::cout << "time: " << t << "steps: " << step_count << std::endl;
 
     }
 
@@ -224,6 +227,12 @@ template<int dim>
 
               data.local_contri.reinit(data.dofs_per_cell);
               data.local_contri = 0;
+
+              Vector<double> force_value(n_eqn);
+              initial_boundary->force(cell->center(),force_value,t);
+
+              for(unsigned int i = 0 ; i < n_eqn ; i++)
+                data.local_contri(component_to_system[i](0)) = dt * force_value(i);
 
               // contribution from collisions P
               for (unsigned int m = 0 ; m < system_matrices.P.outerSize() ; m++)
@@ -402,6 +411,7 @@ Solve_System<dim>::compute_error_per_cell(const typename DoFHandler<dim>::active
 
     VectorTools::point_value(dof_handler,locally_owned_solution, 
                              cell->center(),data.solution_value); 
+
     initial_boundary->exact_solution(cell->center(),data.exact_solution,t_end);
 
     // overwrite the solution value with the error in this cell
@@ -450,7 +460,7 @@ Solve_System<dim>::compute_error()
                    per_cell_error);
   
   double errorTot = error_per_cell.l2_norm();
-  pout << dof_handler.n_dofs() << "\t" << errorTot << std::endl;
+  pout << "num dofs:  " << dof_handler.n_dofs()<< "\t" << errorTot << std::endl;
 
 }
 
@@ -478,6 +488,28 @@ Solve_System<dim>::compute_max_speed()
 
     return(vals.maxCoeff());
 }
+
+template<int dim>
+double
+Solve_System<dim>::min_h(const parallel::distributed::Triangulation<dim> &triangulation)
+{
+
+  typename parallel::distributed::Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),
+                                                                           endc = triangulation.end();
+
+
+  double min_length = 10000;
+
+  for(; cell != endc ; cell++)
+    if (cell->is_locally_owned())
+      for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
+        if (cell->face(face)->measure() < min_length)
+          min_length = cell->face(face)->measure();
+
+
+  return(min_length);
+}
+
 
 template<int dim>
 Solve_System<dim>::~Solve_System()

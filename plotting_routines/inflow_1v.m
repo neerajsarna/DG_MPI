@@ -30,9 +30,9 @@ loglog(M_values(1:end-1),error);
 xlim([4 15]);
 
 
-[~, hobj, ~, ~] = legend('5','7','9','15','location','best');
-hl = findobj(hobj,'type','line');
-set(hl,'LineWidth',2)
+% [~, hobj, ~, ~] = legend('5','7','9','15','location','best');
+% hl = findobj(hobj,'type','line');
+% set(hl,'LineWidth',2)
 
 function [X,quantity] = get_moment(num_proc,M,id)
 X = [];

@@ -13,8 +13,7 @@ Solve_System
 						parallel::distributed::Triangulation<dim> &triangulation,
 						const int poly_degree,
 						ic_bc_base<dim> *ic_bc,
-						std::string &foldername,
-						const double min_h);
+						std::string &foldername);
 		~Solve_System();
 		
 		MPI_Comm mpi_comm;
@@ -42,7 +41,7 @@ Solve_System
 
 		const double CFL = 1.0;
 		double dt;
-		double t_end = 0.3;
+		double t_end = 1.0;
 		double max_speed;
 
 		// data structure for RK time stepping
@@ -134,6 +133,8 @@ Solve_System
                                   PerCellICScratch &scratch,PerCellIC &data,const Vector<double> &component);
 
 		void copy_ic_to_global(const PerCellIC &data);
+
+		double min_h(const parallel::distributed::Triangulation<dim> &triangulation);
 
 
     	//TimerOutput computing_timer;
