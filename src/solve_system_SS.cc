@@ -388,16 +388,16 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
 
                   }
 
-                  // we add the diffusion now
-                   // for (unsigned int id = 0 ; id < n_eqn ; id++)
-                   // {
-                   //     unsigned int dof_sol = component_to_system[id](0);                    
-                   //     unsigned int dof_sol_col = data.local_dof_indices[component_to_system[id](0)];
-                   //     unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
+                   //we add the diffusion now
+                    for (unsigned int id = 0 ; id < n_eqn ; id++)
+                    {
+                        unsigned int dof_sol = component_to_system[id](0);                    
+                        unsigned int dof_sol_col = data.local_dof_indices[component_to_system[id](0)];
+                        unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
 
-                   //     data.local_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
-                   //                         - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
-                   // }
+                        data.local_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
+                                            - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+                    }
                 } //end of else
 
 
