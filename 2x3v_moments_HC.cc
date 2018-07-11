@@ -13,6 +13,7 @@ ic_bc:public ic_bc_base<dim>
 		ic_bc() {;};
 		virtual double ic(const Point<dim> &p,const int &id);
 		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
+		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 								Vector<double> &value,const double &t);
 };
@@ -268,7 +269,6 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 
 }
 
-
 template<int dim>
 double 
 ic_bc<dim>::ic(const Point<dim> &p,const int &id)
@@ -306,6 +306,11 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 	value(0) = 0;
 
 }
+
+template<int dim>
+void 
+ic_bc<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
+{;}
 
 template<int dim>
 void 

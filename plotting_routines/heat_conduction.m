@@ -53,7 +53,7 @@ thetaM2 = [thetaM2;sqrt(2) * (field1(:,IDtheta(1))+field1(:,IDtheta(2))...
 rhoM2 = [rhoM2; field1(:,3)];
 end
 
-for j = 0 : num_proc-1
+for j = 0 : 0
 filename = strcat('../2x3v_moments_HC/M',num2str(M3),...
                   '/result',num2str(j),'_Kn_0p1.txt');    
              
@@ -94,11 +94,11 @@ rho_sbpM3 = field(2,:);
 
 [x,theta] = compute_theta(X,Y,theta,Nx);
 [~,thetaM2] = compute_theta(X,Y,thetaM2,Nx);
-[xM3,thetaM3] = compute_theta(XM3,YM3,thetaM3,500);
+[xM3,thetaM3] = compute_theta(XM3,YM3,thetaM3,100);
 
 [~,rho] = compute_theta(X,Y,rho,Nx);
 [~,rhoM2] = compute_theta(X,Y,rhoM2,Nx);
-[~,rhoM3] = compute_theta(XM3,YM3,rhoM3,500);
+[~,rhoM3] = compute_theta(XM3,YM3,rhoM3,100);
 
 %plot(X,theta,'-',X2,theta2,'-',X2,theta3,'-');
 % plot(x,theta,'-',...

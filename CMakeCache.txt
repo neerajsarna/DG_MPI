@@ -20,6 +20,12 @@
 //Value Computed by CMake
 2x3v_MS_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
 
+//Value Computed by CMake
+2x3v_moments_HC_BINARY_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
+
+//Value Computed by CMake
+2x3v_moments_HC_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
+
 //Choose the type of build, options are: Debug, Release, DebugRelease
 CMAKE_BUILD_TYPE:STRING=Release
 
@@ -118,7 +124,7 @@ CMAKE_OSX_DEPLOYMENT_TARGET:STRING=
 CMAKE_OSX_SYSROOT:STRING=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=2x3v_MS
+CMAKE_PROJECT_NAME:STATIC=2x3v_moments_HC
 
 //Flags used by the linker during the creation of dll's.
 CMAKE_SHARED_LINKER_FLAGS:STRING=

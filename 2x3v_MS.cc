@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
       std::string foldername = "2x3v_moments_HC";
 
      system_data system_matrices;
-     // store the number of equations for a given M (starts at M = 3)
+     // store the number of equations for a given M (starts at M = 3).
      const int neqn_M = 22;
      const int nbc_M = 8;
      const int M = 4;

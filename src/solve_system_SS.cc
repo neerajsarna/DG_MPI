@@ -98,7 +98,7 @@ Solve_System_SS<dim>::run_time_loop(parallel::distributed::Triangulation<dim> &t
           for (unsigned int id = 0 ; id < 4 ; id++)
             initial_boundary->bc_inhomo(system_matrices.B[id],id,g[id],t);
 
-    while (step_count < 100 || residual_ss > 1e-5 ) // we atleast run till t_end || residual_ss > 1e-8
+    while (step_count < 1000 || residual_ss > 1e-5 ) // we atleast run till t_end || residual_ss > 1e-8
     {
       WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
         dof_handler.begin_active()),
@@ -389,15 +389,15 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
                   }
 
                   // we add the diffusion now
-                   for (unsigned int id = 0 ; id < n_eqn ; id++)
-                   {
-                       unsigned int dof_sol = component_to_system[id](0);                    
-                       unsigned int dof_sol_col = data.local_dof_indices[component_to_system[id](0)];
-                       unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
+                   // for (unsigned int id = 0 ; id < n_eqn ; id++)
+                   // {
+                   //     unsigned int dof_sol = component_to_system[id](0);                    
+                   //     unsigned int dof_sol_col = data.local_dof_indices[component_to_system[id](0)];
+                   //     unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
 
-                       data.local_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
-                                           - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
-                   }
+                   //     data.local_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
+                   //                         - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+                   // }
                 } //end of else
 
 
