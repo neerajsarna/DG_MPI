@@ -33,6 +33,9 @@ computing_timer(MPI_COMM_WORLD,
       
       max_speed = compute_max_speed();
 
+      Ax_mod = compute_Amod(system_matrices.Ax);
+      Ax_mod.makeCompressed();
+
 }
 
 template<int dim>
@@ -389,15 +392,32 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
                   }
 
                    //we add the diffusion now
-                    for (unsigned int id = 0 ; id < n_eqn ; id++)
-                    {
-                        unsigned int dof_sol = component_to_system[id](0);                    
-                        unsigned int dof_sol_col = data.local_dof_indices[component_to_system[id](0)];
-                        unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
+                    // for (unsigned int id = 0 ; id < n_eqn ; id++)
+                    // {
+                    //     unsigned int dof_sol = component_to_system[id](0);                    
+                    //     unsigned int dof_sol_col = data.local_dof_indices[component_to_system[id](0)];
+                    //     unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
 
-                        data.local_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
-                                            - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
-                    }
+                    //     data.local_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
+                    //                         - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+                    // }
+
+                   for (unsigned int m = 0 ; m < Ax_mod.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(Ax_mod,m); n ; ++n)
+                  {
+                // 0 because of finite volume
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+
+                // the solution part which meets An
+                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n.col()](0)];
+                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n.col()](0)];
+
+              // explicit euler update, the two comes from the flux 
+              // myself-my neighbor
+                    data.local_contri(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col)
+                                             - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
+
+                  }
                 } //end of else
 
 
@@ -576,6 +596,20 @@ Solve_System_SS<dim>::min_h(parallel::distributed::Triangulation<dim> &triangula
 
 
   return(min_length);
+}
+
+template<int dim>
+Sparse_Matrix
+Solve_System_SS<dim>::compute_Amod(const Sparse_Matrix &A)
+{
+      EigenSolver<MatrixXd> ES(system_matrices.Ax);
+      Full_matrix vecs = ES.pseudoEigenvectors();
+      VectorXd vals = ES.pseudoEigenvalueMatrix().diagonal();
+
+      Sparse_Matrix Amod = vecs*vals.cwiseAbs().asDiagonal()*vecs.inverse();
+
+      return(Amod);
+
 }
 
 template<int dim>
