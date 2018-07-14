@@ -1,9 +1,5 @@
-##
-#  CMake script for the step-40 tutorial program:
-##
-
 # Set the name of the project and target:
-SET(TARGET "2x3v_moments_HC")
+SET(TARGET "2x3v_moments_HC_Adp")
 
 # Declare all source files the target consists of. Here, this is only
 # the one step-X.cc file, but as you expand your project you may wish

@@ -140,22 +140,53 @@ Solve_System_SS_adaptive<dim>::solve_steady_state(Triangulation<dim> &triangulat
     return(step_count);
 
 }
+
 template<int dim>
 void
 Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation)
-{
+{      
+      std::vector<std::vector<Vector<double>>> component_to_system = return_component_to_system();   
+
       computing_timer.enter_subsection("solving");
           
-      const int refine_cycles = 1;
-      int total_steps = 0;
+      const int refine_cycles = 2;
       double t = 0;
 
-      std::cout << "started solving: " << std::endl;
-      fflush(stdout);
+      for (unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
+      {
+        int total_steps = 0;
+        std::cout << "cycle: " << cycle << std::endl;
+        fflush(stdout);
       
-      total_steps += solve_steady_state(triangulation,t);
+        total_steps += solve_steady_state(triangulation,t);
 
-  pout << "Steps taken: " << total_steps << "final residual: "<< residual_ss << std::endl;
+        pout << "Steps taken: " << total_steps << "final residual: "<< residual_ss << std::endl;
+
+        if(cycle != refine_cycles-1)  // if we are not in the last stage
+        {
+          LA::MPI::Vector cellwise_sol;
+          cellwise_sol = locally_owned_solution;
+          cellwise_sol = 0;
+
+          const std::vector<unsigned int> cell_fe_index = create_cell_fe_index();
+
+          std::string filename = 'before';
+          create_output(filename);
+
+          allocate_fe_index(cycle);
+          distribute_dofs();
+
+          // interpolate onto the current solution
+
+          interpolate_higher_fe_index(cellwise_sol,cell_fe_index,
+                                      locally_owned_solution,component_to_system);
+
+
+          locally_relevant_solution = locally_owned_solution;
+        }
+
+      }
+
 
 }
 
@@ -335,7 +366,6 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
                 else
                 {
 
-                   const double diffusion = current_max_speed;      // we add the maximum possible diffusion
                    typename hp::DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
                    const unsigned int neighbor_fe_index = neighbor->active_fe_index();
                    const unsigned int dofs_per_cell_neighbor = fe[neighbor_fe_index].dofs_per_cell;
@@ -348,6 +378,13 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
                                               + system_matrices[neighbor_fe_index].Ay * ny;
 
                    Sparse_Matrix An_effective = construct_An_effective(An_cell,An_neighbor);
+
+                   Sparse_Matrix Amod;
+
+                   if (fabs(ny) < 1e-16)
+                        Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ax_mod;
+                   else
+                        Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ay_mod;
 
                    Assert(!neighbor->has_children(), ExcInternalError());
 
@@ -363,12 +400,15 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
                   }
 
                   // we add the diffusion now
-                  for (unsigned int id = 0 ; id < n_eqn[this_fe_index] ; id++)
+                  for (unsigned int m = 0 ; m < Amod.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(Amod,m); n ; ++n)
+                      if(n.row() < n_eqn[this_fe_index] && n.col() < n_eqn[this_fe_index])
                   {
-                      unsigned int dof_sol = component_to_system[this_fe_index][id](0);                    
-                      unsigned int dof_sol_col = data.local_dof_indices[component_to_system[this_fe_index][id](0)];
+                    unsigned int dof_sol = component_to_system[this_fe_index][n.row()](0);
+                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[this_fe_index][n.col()](0)];
+                    data.local_contri(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col))
+                                                   * face_length/(2 * volume);
 
-                      data.local_contri(dof_sol) -= diffusion * dt * (locally_relevant_solution(dof_sol_col)) * face_length/(2 * volume);
                   }
 
                   // contribution from the neighboring cell
@@ -382,17 +422,18 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
 
                   }
 
-                  // adding the diffusion 
-                  for (unsigned int id = 0 ; id < n_eqn[this_fe_index] ; id++)
-                    if(id < n_eqn[neighbor_fe_index]) // cannot loop over all of them
+                  // diffusion with the neighbouring cell
+                  for (unsigned int m = 0 ; m < Amod.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(Amod,m); n ; ++n)
+                      if(n.row() < n_eqn[this_fe_index] && n.col() < n_eqn[neighbor_fe_index])
                   {
-                      unsigned int dof_sol = component_to_system[this_fe_index][id](0);                    
-                      unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[neighbor_fe_index][id](0)];
+                    unsigned int dof_sol = component_to_system[this_fe_index][n.row()](0);
+                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[neighbor_fe_index][n.col()](0)];
+                    data.local_contri(dof_sol) -=  dt * n.value() * (-locally_relevant_solution(dof_neighbor_col))
+                                                   * face_length/(2 * volume);
 
-                      data.local_contri(dof_sol) -= -diffusion * dt * (locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
                   }
 
-                  // contribution from the neighbor
                 } //end of else
 
 
@@ -743,16 +784,15 @@ Solve_System_SS_adaptive<dim>::current_max_fe_index()
 
 }
 
-
+// set the fe index as the present cycle
 template<int dim>
 void
 Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycle)
 {
   typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(), endc = dof_handler.end();
 
-          if (present_cycle == 0)
-            for(; cell != endc ; cell++)
-                cell->set_active_fe_index(0);
+  for(; cell != endc ; cell++)
+          cell->set_active_fe_index(present_cycle);
             
 }
 
@@ -844,6 +884,92 @@ Solve_System_SS_adaptive<dim>::construct_An_effective(const Sparse_Matrix &An_ce
 
 }
 
+// store the center corresponding to the index
+template<int dim>
+void 
+Solve_System_SS_adaptive<dim>::store_cell_index_center()
+{
+    
+      typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin(), endc = dof_handler.end();
+
+      for(; cell != endc ; cell++)
+        cell_index_center.push_back(cell->center());
+}
+
+template<int dim>
+std::vector<unsigned int>
+Solve_System_SS_adaptive<dim>::create_cell_fe_index()
+{
+  std::vector<unsigned int> cell_fe_index(dof_handler.get_triangulation().n_active_cells());
+
+  typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin(), endc = dof_handler.end();  
+
+  for(; cell != endc ; cell++)
+    cell_fe_index[cell->index()] = cell->active_fe_index();
+
+
+  return(cell_fe_index);
+
+}
+// takes in a solution based upon the dof and returns the cellwise solution
+template<int dim>
+void 
+Solve_System_SS_adaptive<dim>::create_cellwise_solution(const LA::MPI::Vector &dofwise_sol,
+                                                        LA::MPI::Vector &cellwise_sol,
+                                                        const std::vector<std::vector<Vector<double>>> &component_to_system)
+{
+
+    typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin(), endc = dof_handler.end();  
+    unsigned int shift = 0;
+
+    Assert(dofwise_sol.size() == cellwise_sol.size(),ExcNotInitialized());
+    Assert(dofwise_sol.size() == dof_handler.n_dofs(),ExcNotInitialized());
+
+    for(; cell != endc ; cell++)
+    {
+      std::vector<types::global_dof_index> local_dof_indices(cell->get_fe().dofs_per_cell);
+      cell->get_dof_indices(local_dof_indices);
+      const unsigned int this_fe_index = cell->active_fe_index();
+
+      for(unsigned int i = 0 ; i < n_eqn[this_fe_index]; i++)
+        cellwise_sol(shift + i) = dofwise_sol(local_dof_indices[component_to_system[this_fe_index][i](0)]);
+
+      shift += n_eqn[this_fe_index];
+    }
+}
+
+template<int dim>
+void 
+Solve_System_SS_adaptive<dim>::interpolate_higher_fe_index(const LA::MPI::Vector &cellwise_sol,
+                                                           const std::vector<unsigned int> &cell_fe_index,
+                                                           LA::MPI::Vector &new_vec,
+                                                           const std::vector<std::vector<Vector<double>>> &component_to_system)
+{
+    Assert(cellwise_sol.size() <= new_vec.size(),ExcNotInitialized());
+
+    typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin(), endc = dof_handler.end();
+    unsigned int shift = 0;
+
+    Assert(dof_handler.n_dofs() == new_vec.size(),ExcNotInitialized());
+
+    for(;cell != endc ; cell++)
+    {
+      // check whether the indexing has been preserved
+      // or not during polynomial increase.
+      std::vector<types::global_dof_index> local_dof_indices(cell->get_fe().dofs_per_cell);
+      cell->get_dof_indices(local_dof_indices);
+      const unsigned int this_fe_index = cell->active_fe_index();
+
+      // loop over the old fe index
+      for(unsigned int i = 0 ; i < n_eqn[cell_fe_index[cell->index()]] ; i ++)
+        new_vec(local_dof_indices[component_to_system[this_fe_index][i](0)]) = cellwise_sol(shift + i);
+
+      shift += n_eqn[cell_fe_index[cell->index()]];
+
+    }
+
+
+}
 template<int dim>
 Solve_System_SS_adaptive<dim>::~Solve_System_SS_adaptive()
 {

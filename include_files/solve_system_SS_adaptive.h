@@ -131,6 +131,20 @@ Solve_System_SS_adaptive
 		std::vector<Vector<double>> return_component();
 		std::vector<std::vector<Vector<double>>> return_component_to_system();
 
+		std::vector<Point<dim>> cell_index_center;
+
+
+    	void store_cell_index_center();
+    	std::vector<unsigned int> create_cell_fe_index();
+    	void interpolate_higher_fe_index(const LA::MPI::Vector &cellwise_sol,
+                                         const std::vector<unsigned int> &cell_fe_index,
+                                         LA::MPI::Vector &new_vec,
+                                         const std::vector<std::vector<Vector<double>>> &component_to_system);	// interpolates to higher fe index
+    	
+    	void create_cellwise_solution(const LA::MPI::Vector &dofwise_sol,
+                                      LA::MPI::Vector &cellwise_sol,
+                                      const std::vector<std::vector<Vector<double>>> &component_to_system);
+
 		// void refine_and_interpolate(parallel::distributed::Triangulation<dim> &triangulation);
 
 		// void compute_error();

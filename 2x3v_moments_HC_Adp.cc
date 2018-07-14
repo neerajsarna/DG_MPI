@@ -13,10 +13,22 @@ ic_bc:public ic_bc_base<dim>
 		ic_bc() {;};
 		virtual double ic(const Point<dim> &p,const int &id);
 		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
+		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 								Vector<double> &value,const double &t);
 };
 
+Full_matrix compute_Amod(const Sparse_Matrix &A)
+{
+      EigenSolver<MatrixXd> ES(A);
+      Full_matrix vecs = ES.pseudoEigenvectors();
+      VectorXd vals = ES.pseudoEigenvalueMatrix().diagonal();
+
+      Full_matrix Amod = vecs*vals.cwiseAbs().asDiagonal()*vecs.inverse();
+
+      return(Amod);
+
+}
 
 void 
 set_square_bid(Triangulation<2> &triangulation)
@@ -140,8 +152,9 @@ int main(int argc, char *argv[])
      const int nbc_M[18] = {5,8,14,20,30,40,55,70,91,112,140,168,204,240,285,330,385,440};
      const double Kn = 0.1;
 
-     std::vector<int> M(1);
+     std::vector<int> M(2);
      M[0] = 3;
+     M[1] = 3;
      std::vector<system_data> system_matrices(M.size());
 
      Assert(*std::max_element(M.begin(),M.end())<=20,ExcNotImplemented());
@@ -150,6 +163,11 @@ int main(int argc, char *argv[])
      {
      	develop_system(system_matrices[i],M[i],neqn_M[M[i]-3],nbc_M[M[i]-3],Kn);
      	system_matrices[i].bc_inhomo_time = true;
+
+     	system_matrices[i].Ax_mod = compute_Amod(system_matrices[i].Ax).sparseView();
+      	system_matrices[i].Ay_mod = compute_Amod(system_matrices[i].Ay).sparseView();
+      	system_matrices[i].Ax_mod.makeCompressed();
+      	system_matrices[i].Ay_mod.makeCompressed();
      }
 
       // create a rectangular mesh 
@@ -181,6 +199,7 @@ int main(int argc, char *argv[])
                       								std::ref(triangulation)));
 
       ic_bc<dim> initial_boundary;	
+
 
 	  Solve_System_SS_adaptive<dim> solve_system(system_matrices,
 	  								 triangulation,
@@ -306,6 +325,17 @@ ic_bc<dim>::ic(const Point<dim> &p,const int &id)
 template<int dim>
 void 
 ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
+{
+	const double x = p[0];
+	const double y = p[1];
+
+	value(0) = 0;
+
+}
+
+template<int dim>
+void 
+ic_bc<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
 {
 	const double x = p[0];
 	const double y = p[1];
