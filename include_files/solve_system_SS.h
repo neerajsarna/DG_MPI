@@ -133,8 +133,5 @@ Solve_System_SS
 
     	void run_time_loop(parallel::distributed::Triangulation<dim> &triangulation);
 
-    	Full_matrix Ax_mod;
-
-    	Full_matrix compute_Amod(const Sparse_Matrix &A);
 
 };

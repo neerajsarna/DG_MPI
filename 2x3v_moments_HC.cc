@@ -19,6 +19,19 @@ ic_bc:public ic_bc_base<dim>
 };
 
 
+Full_matrix compute_Amod(const Sparse_Matrix &A)
+{
+      EigenSolver<MatrixXd> ES(A);
+      Full_matrix vecs = ES.pseudoEigenvectors();
+      VectorXd vals = ES.pseudoEigenvalueMatrix().diagonal();
+
+      Full_matrix Amod = vecs*vals.cwiseAbs().asDiagonal()*vecs.inverse();
+
+      return(Amod);
+
+}
+
+
 void 
 set_square_bid(parallel::distributed::Triangulation<2> &triangulation)
 {
@@ -144,6 +157,12 @@ int main(int argc, char *argv[])
 
      Assert(M<=20,ExcNotImplemented());
      develop_system(system_matrices,M,neqn_M[M-3],nbc_M[M-3],Kn);
+
+      system_matrices.Ax_mod = compute_Amod(system_matrices.Ax).sparseView();
+      system_matrices.Ay_mod = compute_Amod(system_matrices.Ay).sparseView();
+      system_matrices.Ax_mod.makeCompressed();
+      system_matrices.Ay_mod.makeCompressed();
+      
      system_matrices.bc_inhomo_time = true;
 
       // create a rectangular mesh 
@@ -185,12 +204,12 @@ int main(int argc, char *argv[])
 	 solve_system.run_time_loop(triangulation);
 
 	 // develop the filename for output
-	 std::string filename = "2x3v_moments_HC/M_upwind" + std::to_string(M)
-	 						 + "/result" + std::to_string(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
-	 						 + "_Kn_" + "0p1" + ".txt";
+	 // std::string filename = "2x3v_moments_HC/M_upwind" + std::to_string(M)
+	 // 						 + "/result" + std::to_string(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
+	 // 						 + "_Kn_" + "0p1" + ".txt";
 
 
-	 solve_system.create_output(filename);
+	 // solve_system.create_output(filename);
  
      
 }

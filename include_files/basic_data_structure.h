@@ -7,6 +7,9 @@
 		Sparse_Matrix Ax;
 		Sparse_Matrix Ay;
 		Sparse_Matrix P;
+
+		Sparse_Matrix Ax_mod;
+		Sparse_Matrix Ay_mod;
 		
 		// boundary matrix
 		std::vector<Sparse_Matrix> B; 

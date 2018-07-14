@@ -33,8 +33,6 @@ computing_timer(MPI_COMM_WORLD,
       
       max_speed = compute_max_speed();
 
-      Ax_mod = compute_Amod(system_matrices.Ax);
-
 }
 
 template<int dim>
@@ -315,6 +313,7 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
                 const double nx = normal_vec[0];
                 const double ny = normal_vec[1];
 
+                Assert(fabs(nx) < 1e-16 || fabs(ny) < 1e-16,ExcNotImplemented()); // cartesian grid
                // construct An
                 Sparse_Matrix An = system_matrices.Ax * nx + system_matrices.Ay * ny;
                 const typename DoFHandler<dim>::face_iterator face_itr = cell->face(face);
@@ -390,30 +389,27 @@ Solve_System_SS<dim>::assemble_per_cell(const typename DoFHandler<dim>::active_c
 
                   }
 
-                   //we add the diffusion now
-                    // for (unsigned int id = 0 ; id < n_eqn ; id++)
-                    // {
-                    //     unsigned int dof_sol = component_to_system[id](0);                    
-                    //     unsigned int dof_sol_col = data.local_dof_indices[component_to_system[id](0)];
-                    //     unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[id](0)];
 
-                    //     data.local_contri(dof_sol) -= max_speed * dt * (locally_relevant_solution(dof_sol_col)
-                    //                         - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
-                    // }
+                  Sparse_Matrix Amod;
 
-                   for (unsigned int m = 0 ; m < Ax_mod.rows() ; m++)
-                    for (unsigned int n = 0; n < Ax_mod.cols() ; ++n)
+                  if (fabs(ny) < 1e-16)
+                    Amod = system_matrices.Ax_mod;
+                  else
+                    Amod = system_matrices.Ay_mod;
+                  
+
+                  for (unsigned int m = 0 ; m < Amod.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(Amod,m); n ; ++n)
                   {
-                // 0 because of finite volume
-                    unsigned int dof_sol = component_to_system[m](0);
+                    // 0 because of finite volume
+                    unsigned int dof_sol = component_to_system[n.row()](0);
 
-                // the solution part which meets An
-                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n](0)];
-                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n](0)];
+                    // the solution part which meets An
+                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n.col()](0)];
+                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n.col()](0)];
 
-              // explicit euler update, the two comes from the flux 
-              // myself-my neighbor
-                    data.local_contri(dof_sol) -=  dt * Ax_mod(m,n) * (locally_relevant_solution(dof_sol_col)
+                    // explicit euler update, the two comes from the flux 
+                    data.local_contri(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col)
                                              - locally_relevant_solution(dof_neighbor_col)) * face_length/(2 * volume);
 
                   }
@@ -595,20 +591,6 @@ Solve_System_SS<dim>::min_h(parallel::distributed::Triangulation<dim> &triangula
 
 
   return(min_length);
-}
-
-template<int dim>
-Full_matrix
-Solve_System_SS<dim>::compute_Amod(const Sparse_Matrix &A)
-{
-      EigenSolver<MatrixXd> ES(system_matrices.Ax);
-      Full_matrix vecs = ES.pseudoEigenvectors();
-      VectorXd vals = ES.pseudoEigenvalueMatrix().diagonal();
-
-      Full_matrix Amod = vecs*vals.cwiseAbs().asDiagonal()*vecs.inverse();
-
-      return(Amod);
-
 }
 
 template<int dim>
