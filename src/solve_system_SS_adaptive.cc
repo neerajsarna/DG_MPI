@@ -799,8 +799,19 @@ Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycl
 {
   typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(), endc = dof_handler.end();
 
-  for(; cell != endc ; cell++)
-          cell->set_active_fe_index(present_cycle);
+  if(present_cycle == 0)
+    for(; cell != endc ; cell++)
+            cell->set_active_fe_index(present_cycle);
+  else
+    for(; cell != endc ; cell++)
+      if(fabs(cell->center()(0)-1) < 0.2 || fabs(cell->center()(0)) < 0.2) // increase the index if close to the wall
+      {
+        const int current_index = cell->active_fe_index();
+
+        if(current_index < fe.size()) // else do nothing
+          cell->set_active_fe_index(current_index + 1);
+      }
+
             
 }
 
