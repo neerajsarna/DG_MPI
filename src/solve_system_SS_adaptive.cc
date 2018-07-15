@@ -154,7 +154,7 @@ Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation)
 
       std::vector<unsigned int> M(2);
       M[0] = 3;
-      M[1] = 4;
+      M[1] = 5;
 
       for (unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
       {
