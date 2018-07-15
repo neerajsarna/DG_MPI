@@ -3,6 +3,8 @@ range = 0:1;
 
 num_proc = 8;
 
+%% moment solution
+
 M = 3;
 M2 = 7;
 Nx = 300;
@@ -12,9 +14,14 @@ Y = [];
 
 theta = [];
 rho = [];
+sigma11 = [];
+qx = [];
 
 thetaM2 = [];
 rhoM2 = [];
+
+thetaAdp = [];
+rhoAdp = [];
 
 
 for j = 0 : 0
@@ -29,9 +36,7 @@ Y = [Y;field1(:,2)];
 IDtheta = [6,8,9];
 theta = [theta;sqrt(2) * (field1(:,IDtheta(1))+field1(:,IDtheta(2))...
                         +field1(:,IDtheta(3)))/3];
-
 rho = [rho; field1(:,3)];
-
 end
 
 for j = 0 : 0
@@ -43,8 +48,20 @@ field1 = dlmread(filename,'\t');
 IDtheta = [6,8,9];
 thetaM2 = [thetaM2;sqrt(2) * (field1(:,IDtheta(1))+field1(:,IDtheta(2))...
                         +field1(:,IDtheta(3)))/3];
-
 rhoM2 = [rhoM2; field1(:,3)];
+end
+
+for j = 0 : 0
+filename = strcat('../2x3v_moments_HC_Adp/M_3_7',...
+                  '/result',num2str(j),'_Kn_0p1.txt');    
+             
+field1 = dlmread(filename,'\t');
+
+IDtheta = [6,8,9];
+thetaAdp = [thetaAdp;sqrt(2) * (field1(:,IDtheta(1))+field1(:,IDtheta(2))...
+                        +field1(:,IDtheta(3)))/3];
+
+rhoAdp = [rhoAdp; field1(:,3)];
 end
 
 %% sbp results
@@ -64,12 +81,17 @@ theta_sbpM2 = sqrt(2) * (field(IDtheta(1),:)+field(IDtheta(2),:)...
 rho_sbpM2 = field(2,:);                  
 
 
-plot(X,theta,...
-     X,thetaM2,...
-     field(1,:),theta_sbpM2);
+plot(X,abs(theta-thetaM2),...
+     X,abs(thetaAdp-thetaM2));
 
-legend('M3','M7','M7sbp');
-xlim([0.5 1]);
+disp('error M3');
+disp(sqrt(trapz(X,abs(theta-thetaM2).^2)));
+
+disp('error M37');
+disp(sqrt(trapz(X,abs(thetaAdp-thetaM2).^2)));
+
+legend('error M3','error M37');
+xlim([0 1]);
  
 
 % develop x y and theta from the 2D data
