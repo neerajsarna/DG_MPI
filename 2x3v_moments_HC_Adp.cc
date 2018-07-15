@@ -209,13 +209,11 @@ int main(int argc, char *argv[])
 
 	 solve_system.run_time_loop(triangulation);
 
-	 std::string filename = "2x3v_moments_HC_Adp/M_3_7" + 
-                                +"/result" + std::to_string(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
-                                + "_Kn_" + "0p1" + ".txt";
+	 std::string filename = "2x3v_moments_HC_Adp/M_3_7" + std::string("/result0")
+                                + "_Kn_" + "0p1" + std::string(".txt");
 
-     create_output(filename);
+         solve_system.create_output(filename);
 
-     
 }
 
 
