@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
  
 ### Job name
-#BSUB -J 2x1v_moments_HC
+#BSUB -J 2x1v_moments_Adp
  
 ### File / path where STDOUT & STDERR will be written
 ###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_HC_M4
+#BSUB -o log_files/2x1v_moments_HC_Adp
  
 ### Request the time you need for execution in minutes
 ### The format for the parameter is: [hour:]minute,
@@ -13,10 +13,10 @@
 #BSUB -W 1:20
  
 ### Request memory you need for your job per PROCESS in MB
-#BSUB -M 2024
+#BSUB -M 1000
  
 ### Request the number of compute slots you want to use
-#BSUB -n 8
+#BSUB -n 16
  
 ### Use esub for Open MPI
 #BSUB -a openmpi
@@ -27,6 +27,6 @@ module load openmpi/1.10.2
 
 cd /home/ns179556/DG_MPI
  
-export FLAGS_MPI_BATCH="-np 2"
+export FLAGS_MPI_BATCH="-np 1"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2x3v_moments_HC.out 4 200 4
+mpirun $FLAGS_MPI_BATCH ./2x3v_moments_HC_Adp.out 16 300 3

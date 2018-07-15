@@ -1,0 +1,309 @@
+Sender: LSF System <lsfadmin@linuxbmc0271>
+Subject: Job 43606497: <2x1v_moments_Adp> in cluster <rcc> Exited
+
+Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Jul 15 12:04:08 2018
+Job was executed on host(s) <6*linuxbmc0271>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Jul 15 12:04:13 2018
+                            <2*linuxbmc0277>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Jul 15 12:04:13 2018
+Terminated at Sun Jul 15 12:04:23 2018
+Results reported at Sun Jul 15 12:04:23 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_HC_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 1:20
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 1000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 8
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 2"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x3v_moments_HC_Adp.out 4 300 3
+
+------------------------------------------------------------
+
+Exited with exit code 134.
+
+Resource usage summary:
+
+    CPU time :                                   6.08 sec.
+    Max Memory :                                 105 MB
+    Average Memory :                             105.00 MB
+    Total Requested Memory :                     8000.00 MB
+    Delta Memory :                               7895.00 MB
+    Max Swap :                                   -
+    Max Processes :                              7
+    Max Threads :                                9
+    Run time :                                   9 sec.
+    Turnaround time :                            15 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1531649048.43606497.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0271.rz.RWTH-Aachen.DE:22663] MCW rank 0 is not bound (or bound to all available processors)
+[linuxbmc0271.rz.RWTH-Aachen.DE:22663] MCW rank 1 is not bound (or bound to all available processors)
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+cycle: 0
+cycle: 0
+total cells: 300
+total dofs: 3900
+terminate called after throwing an instance of 'dealii::TrilinosWrappers::MPI::Vector::ExcTrilinosError'
+terminate called after throwing an instance of 'dealii::TrilinosWrappers::MPI::Vector::ExcTrilinosError'
+  what():  
+--------------------------------------------------------
+An error occurred in line <1831> of file </home/ns179556/dealii/include/deal.II/lac/trilinos_vector.h> in function
+    dealii::TrilinosWrappers::MPI::Vector::real_type dealii::TrilinosWrappers::MPI::Vector::l2_norm() const
+The violated condition was: 
+    ierr == 0
+Additional information: 
+    An error with error number -1 occurred while calling a Trilinos function
+--------------------------------------------------------
+
+  what():  
+--------------------------------------------------------
+An error occurred in line <1831> of file </home/ns179556/dealii/include/deal.II/lac/trilinos_vector.h> in function
+    dealii::TrilinosWrappers::MPI::Vector::real_type dealii::TrilinosWrappers::MPI::Vector::l2_norm() const
+The violated condition was: 
+    ierr == 0
+Additional information: 
+    An error with error number -1 occurred while calling a Trilinos function
+--------------------------------------------------------
+
+[linuxbmc0271:22667] *** Process received signal ***
+[linuxbmc0271:22666] *** Process received signal ***
+[linuxbmc0271:22667] Signal: Aborted (6)
+[linuxbmc0271:22667] Signal code:  (-6)
+[linuxbmc0271:22666] Signal: Aborted (6)
+[linuxbmc0271:22666] Signal code:  (-6)
+[linuxbmc0271:22667] [ 0] [linuxbmc0271:22666] [ 0] /lib64/libc.so.6(+0x35270)[0x7f82c26d7270]
+[linuxbmc0271:22667] [ 1] /lib64/libc.so.6(gsignal+0x37)[0x7f82c26d71f7]
+[linuxbmc0271:22667] [ 2] /lib64/libc.so.6(+0x35270)[0x7f1a4156b270]
+[linuxbmc0271:22666] [ 1] /lib64/libc.so.6(abort+0x148)[0x7f82c26d88e8]
+[linuxbmc0271:22667] [ 3] /lib64/libc.so.6(gsignal+0x37)[0x7f1a4156b1f7]
+[linuxbmc0271:22666] [ 2] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7f82c2dc7ac5]
+[linuxbmc0271:22667] [ 4] /lib64/libc.so.6(abort+0x148)[0x7f1a4156c8e8]
+[linuxbmc0271:22666] [ 3] /lib64/libstdc++.so.6(+0x5ea36)[0x7f82c2dc5a36]
+[linuxbmc0271:22667] [ 5] /lib64/libstdc++.so.6(+0x5ea63)[0x7f82c2dc5a63]
+[linuxbmc0271:22667] [ 6] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7f1a41c5bac5]
+[linuxbmc0271:22666] [ 4] /lib64/libstdc++.so.6(+0x5ec83)[0x7f82c2dc5c83]
+[linuxbmc0271:22667] [ 7] /lib64/libstdc++.so.6(+0x5ea36)[0x7f1a41c59a36]
+[linuxbmc0271:22666] [ 5] ./2x3v_moments_HC_Adp.out(_ZN6dealii18deal_II_exceptions9internals20issue_error_noreturnINS_16TrilinosWrappers3MPI6Vector16ExcTrilinosErrorEEEvNS1_17ExceptionHandlingEPKciS9_S9_S9_T_+0xc5)[0x4d3d15]
+[linuxbmc0271:22667] [ 8] /lib64/libstdc++.so.6(+0x5ea63)[0x7f1a41c59a63]
+[linuxbmc0271:22666] [ 6] ./2x3v_moments_HC_Adp.out(_ZN24Solve_System_SS_adaptiveILi2EE18solve_steady_stateERN6dealii13TriangulationILi2ELi2EEERd+0x980)[0x4f5e60]
+[linuxbmc0271:22667] [ 9] /lib64/libstdc++.so.6(+0x5ec83)[0x7f1a41c59c83]
+[linuxbmc0271:22666] [ 7] ./2x3v_moments_HC_Adp.out(_ZN24Solve_System_SS_adaptiveILi2EE13run_time_loopERN6dealii13TriangulationILi2ELi2EEE+0x352)[0x4f78c2]
+[linuxbmc0271:22667] [10] ./2x3v_moments_HC_Adp.out(main+0x578)[0x48f338]
+[linuxbmc0271:22667] [11] ./2x3v_moments_HC_Adp.out(_ZN6dealii18deal_II_exceptions9internals20issue_error_noreturnINS_16TrilinosWrappers3MPI6Vector16ExcTrilinosErrorEEEvNS1_17ExceptionHandlingEPKciS9_S9_S9_T_+0xc5)[0x4d3d15]
+[linuxbmc0271:22666] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7f82c26c3c05]
+[linuxbmc0271:22667] [12] ./2x3v_moments_HC_Adp.out[0x48f609]
+[linuxbmc0271:22667] *** End of error message ***
+./2x3v_moments_HC_Adp.out(_ZN24Solve_System_SS_adaptiveILi2EE18solve_steady_stateERN6dealii13TriangulationILi2ELi2EEERd+0x980)[0x4f5e60]
+[linuxbmc0271:22666] [ 9] ./2x3v_moments_HC_Adp.out(_ZN24Solve_System_SS_adaptiveILi2EE13run_time_loopERN6dealii13TriangulationILi2ELi2EEE+0x352)[0x4f78c2]
+[linuxbmc0271:22666] [10] ./2x3v_moments_HC_Adp.out(main+0x578)[0x48f338]
+[linuxbmc0271:22666] [11] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7f1a41557c05]
+[linuxbmc0271:22666] [12] ./2x3v_moments_HC_Adp.out[0x48f609]
+[linuxbmc0271:22666] *** End of error message ***
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 22666 on node linuxbmc0271 exited on signal 6 (Aborted).
+--------------------------------------------------------------------------
+Sender: LSF System <lsfadmin@linuxbmc0276>
+Subject: Job 43606506: <2x1v_moments_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Jul 15 12:13:48 2018
+Job was executed on host(s) <12*linuxbmc0276>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Jul 15 12:13:51 2018
+                            <4*linuxbmc0281>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Jul 15 12:13:51 2018
+Terminated at Sun Jul 15 12:24:42 2018
+Results reported at Sun Jul 15 12:24:42 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_HC_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 1:20
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 1000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x3v_moments_HC_Adp.out 16 300 3
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1274.28 sec.
+    Max Memory :                                 509 MB
+    Average Memory :                             487.48 MB
+    Total Requested Memory :                     16000.00 MB
+    Delta Memory :                               15491.00 MB
+    Max Swap :                                   -
+    Max Processes :                              7
+    Max Threads :                                19
+    Run time :                                   650 sec.
+    Turnaround time :                            654 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1531649628.43606506.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0276.rz.RWTH-Aachen.DE:19566] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+cycle: 0
+total cells: 300
+total dofs: 3900
+residual: 14.9487time: 0.356977
+residual: 13.8528time: 0.713955
+residual: 12.1785time: 1.07093
+residual: 9.96732time: 1.42791
+residual: 5.68064time: 1.78489
+residual: 4.07075time: 2.14186
+residual: 3.09548time: 2.49884
+residual: 1.80092time: 2.85582
+residual: 1.52512time: 3.2128
+residual: 0.966297time: 3.56977
+residual: 0.659352time: 3.92675
+residual: 0.528213time: 4.28373
+residual: 0.30401time: 4.64071
+residual: 0.250099time: 4.99768
+residual: 0.168119time: 5.35466
+residual: 0.107091time: 5.71164
+residual: 0.0892304time: 6.06862
+residual: 0.0520422time: 6.42559
+residual: 0.0406997time: 6.78257
+residual: 0.029138time: 7.13955
+residual: 0.017555time: 7.49653
+residual: 0.0149165time: 7.8535
+residual: 0.00900377time: 8.21048
+residual: 0.00659123time: 8.56746
+residual: 0.00501522time: 8.92444
+residual: 0.00291723time: 9.28141
+residual: 0.00246818time: 9.63839
+residual: 0.00156612time: 9.99537
+residual: 0.00106645time: 10.3523
+residual: 0.000855528time: 10.7093
+residual: 0.000492419time: 11.0663
+residual: 0.00040462time: 11.4233
+residual: 0.000272475time: 11.7803
+residual: 0.000173249time: 12.1372
+residual: 0.000144479time: 12.4942
+residual: 8.43256e-05time: 12.8512
+residual: 6.58334e-05time: 13.2082
+residual: 4.72173e-05time: 13.5651
+residual: 2.84096e-05time: 13.9221
+residual: 2.41451e-05time: 14.2791
+residual: 1.45924e-05time: 14.6361
+residual: 1.06607e-05time: 14.9931
+Steps taken: 21215
+cycle: 1
+total cells: 300
+total dofs: 6600
+residual: 0.26117time: 15.4382
+residual: 0.162896time: 15.7299
+residual: 0.139226time: 16.0216
+residual: 0.0918766time: 16.3133
+residual: 0.0605166time: 16.605
+residual: 0.049918time: 16.8967
+residual: 0.0352673time: 17.1883
+residual: 0.0306923time: 17.48
+residual: 0.0248119time: 17.7717
+residual: 0.0160712time: 18.0634
+residual: 0.0132662time: 18.3551
+residual: 0.0101365time: 18.6468
+residual: 0.00720279time: 18.9385
+residual: 0.00639698time: 19.2301
+residual: 0.00456637time: 19.5218
+residual: 0.00327435time: 19.8135
+residual: 0.00282227time: 20.1052
+residual: 0.00194423time: 20.3969
+residual: 0.00153956time: 20.6886
+residual: 0.00128582time: 20.9802
+residual: 0.000857841time: 21.2719
+residual: 0.000710978time: 21.5636
+residual: 0.000561006time: 21.8553
+residual: 0.000381128time: 22.147
+residual: 0.000331844time: 22.4387
+residual: 0.000246092time: 22.7303
+residual: 0.000173139time: 23.022
+residual: 0.000151394time: 23.3137
+residual: 0.000106367time: 23.6054
+residual: 8.01259e-05time: 23.8971
+residual: 6.85518e-05time: 24.1888
+residual: 4.63463e-05time: 24.4805
+residual: 3.72957e-05time: 24.7721
+residual: 3.043e-05time: 25.0638
+residual: 2.04064e-05time: 25.3555
+residual: 1.73803e-05time: 25.6472
+residual: 1.33609e-05time: 25.9389
+Steps taken: 18850
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       638s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |       638s |     1e+02% |
++---------------------------------+-----------+------------+------------+
+
