@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 
      std::vector<int> M(2);
      M[0] = 3;
-     M[1] = 3;
+     M[1] = 4;
      std::vector<system_data> system_matrices(M.size());
 
      Assert(*std::max_element(M.begin(),M.end())<=20,ExcNotImplemented());

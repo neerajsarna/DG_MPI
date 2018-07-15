@@ -27,7 +27,7 @@
 2x3v_moments_HC_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
 
 //Choose the type of build, options are: Debug, Release, DebugRelease
-CMAKE_BUILD_TYPE:STRING=Debug
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON

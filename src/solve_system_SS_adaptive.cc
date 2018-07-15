@@ -152,6 +152,10 @@ Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation)
       const int refine_cycles = 2;
       double t = 0;
 
+      std::vector<unsigned int> M(2);
+      M[0] = 3;
+      M[1] = 4;
+
       for (unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
       {
         int total_steps = 0;
@@ -160,29 +164,33 @@ Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation)
       
         total_steps += solve_steady_state(triangulation,t);
 
-        pout << "Steps taken: " << total_steps << "final residual: "<< residual_ss << std::endl;
+        pout << "Steps taken: " << total_steps << std::endl;
+
+        std::string filename = "2x3v_moments_HC_Adp/M_" + std::to_string(M[cycle])
+                                +"/result" + std::to_string(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
+                                + "_Kn_" + "0p1" + ".txt";
+
+        create_output(filename);
 
         if(cycle != refine_cycles-1)  // if we are not in the last stage
         {
           LA::MPI::Vector cellwise_sol;
           cellwise_sol = locally_owned_solution;
           cellwise_sol = 0;
+          create_cellwise_solution(locally_owned_solution,cellwise_sol,component_to_system);
 
           const std::vector<unsigned int> cell_fe_index = create_cell_fe_index();
 
-          std::string filename = 'before';
-          create_output(filename);
-
-          allocate_fe_index(cycle);
+          allocate_fe_index(cycle + 1);
           distribute_dofs();
 
           // interpolate onto the current solution
-
           interpolate_higher_fe_index(cellwise_sol,cell_fe_index,
                                       locally_owned_solution,component_to_system);
 
 
           locally_relevant_solution = locally_owned_solution;
+
         }
 
       }
