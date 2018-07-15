@@ -4,7 +4,7 @@ range = 0:1;
 num_proc = 8;
 
 M = 3;
-M2 = 4;
+M2 = 7;
 Nx = 300;
 
 X = [];
@@ -64,11 +64,12 @@ theta_sbpM2 = sqrt(2) * (field(IDtheta(1),:)+field(IDtheta(2),:)...
 rho_sbpM2 = field(2,:);                  
 
 
-plot(field(1,:),theta_sbpM,...
-     field(1,:),theta_sbpM2,'-');
+plot(X,theta,...
+     X,thetaM2,...
+     field(1,:),theta_sbpM2);
 
-legend('M3sbp','M4sbp');
-xlim([0.85 1]);
+legend('M3','M7','M7sbp');
+xlim([0.5 1]);
  
 
 % develop x y and theta from the 2D data

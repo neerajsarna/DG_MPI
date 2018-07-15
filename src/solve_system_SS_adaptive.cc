@@ -152,10 +152,6 @@ Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation)
       const int refine_cycles = 2;
       double t = 0;
 
-      std::vector<unsigned int> M(2);
-      M[0] = 3;
-      M[1] = 7;
-
       for (unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
       {
         int total_steps = 0;
@@ -165,12 +161,6 @@ Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation)
         total_steps += solve_steady_state(triangulation,t);
 
         pout << "Steps taken: " << total_steps << std::endl;
-
-        std::string filename = "2x3v_moments_HC_Adp/M_" + std::to_string(M[cycle])
-                                +"/result" + std::to_string(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
-                                + "_Kn_" + "0p1" + ".txt";
-
-        create_output(filename);
 
         if(cycle != refine_cycles-1)  // if we are not in the last stage
         {
