@@ -1044,3 +1044,140 @@ Steps taken: 8359
 | solving                         |         1 |       122s |     1e+02% |
 +---------------------------------+-----------+------------+------------+
 
+Sender: LSF System <lsfadmin@linuxbmc0326>
+Subject: Job 43618842: <2x1v_moments_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Mon Jul 16 21:31:22 2018
+Job was executed on host(s) <12*linuxbmc0326>, in queue <normal>, as user <ns179556> in cluster <rcc> at Mon Jul 16 21:31:27 2018
+                            <12*linuxbmc0329>
+                            <8*linuxbmc0330>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Mon Jul 16 21:31:27 2018
+Terminated at Mon Jul 16 21:33:40 2018
+Results reported at Mon Jul 16 21:33:40 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_HC_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 1:20
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 1000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 32
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x3v_moments_HC_Adp.out 32 100 3
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   244.12 sec.
+    Max Memory :                                 487 MB
+    Average Memory :                             372.50 MB
+    Total Requested Memory :                     32000.00 MB
+    Delta Memory :                               31513.00 MB
+    Max Swap :                                   -
+    Max Processes :                              8
+    Max Threads :                                20
+    Run time :                                   133 sec.
+    Turnaround time :                            138 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1531769482.43618842.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0326.rz.RWTH-Aachen.DE:05022] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+solving primal: 
+cycle: 0
+total cells: 100
+total dofs: 1300
+residual: 6.93184time: 1.07093
+residual: 2.27247time: 2.14186
+residual: 0.83525time: 3.2128
+residual: 0.284846time: 4.28373
+residual: 0.0895035time: 5.35466
+residual: 0.027215time: 6.42559
+residual: 0.00890402time: 7.49653
+residual: 0.00325117time: 8.56746
+residual: 0.00120171time: 9.63839
+residual: 0.000415138time: 10.7093
+residual: 0.000131863time: 11.7803
+residual: 4.00558e-05time: 12.8512
+residual: 1.28792e-05time: 13.9221
+Steps taken: 6712
+solving adjoint: 
+cycle: 0
+total cells: 100
+total dofs: 3400
+residual: 1.82849time: 15.1282
+residual: 0.737739time: 15.8803
+residual: 0.331788time: 16.6323
+residual: 0.169775time: 17.3844
+residual: 0.0818129time: 18.1364
+residual: 0.0383571time: 18.8885
+residual: 0.0172055time: 19.6405
+residual: 0.00755025time: 20.3926
+residual: 0.00336139time: 21.1446
+residual: 0.00157467time: 21.8967
+residual: 0.000773629time: 22.6487
+residual: 0.000383429time: 23.4008
+residual: 0.000185082time: 24.1528
+residual: 8.56837e-05time: 24.9049
+residual: 3.81705e-05time: 25.6569
+residual: 1.67396e-05time: 26.409
+Steps taken: 8359
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       122s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |       104s |        85% |
++---------------------------------+-----------+------------+------------+
+
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       122s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |       122s |     1e+02% |
++---------------------------------+-----------+------------+------------+
+
