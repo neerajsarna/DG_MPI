@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
      M[0] = 3;
      M[1] = 5;
 
-     M_adjoint[0] = 5;
+     M_adjoint[0] = 4;
      M_adjoint[1] = 7;
 
 	 std::vector<system_data> system_matrices = develop_complete_system(M,neqn_M,nbc_M,Kn);
