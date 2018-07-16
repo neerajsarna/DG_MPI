@@ -1,8 +1,26 @@
-#include "solve_system_SS_adaptive.h"
+#include "run_problem.h"
 #include "read_matrices.h"
 
 using namespace dealii;
-void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,const int &nbc_M,const double &Kn);
+
+void develop_system_adjoint(system_data &system_matrices,const int &M,
+					const int &neqn_M,const int &nbc_M,const double &Kn);	// develop the adjiont system
+
+void develop_system(system_data &system_matrices,const int &M,
+					const int &neqn_M,const int &nbc_M,const double &Kn);	// develop the primal system
+
+
+std::vector<system_data>
+develop_complete_system(const std::vector<int> &M,
+						const std::vector<int> &neqn_M,
+						const std::vector<int> &nbc_M,
+						const double Kn);
+
+std::vector<system_data>
+develop_complete_system_adjoint(const std::vector<int> &M,
+						const std::vector<int> &neqn_M,
+						const std::vector<int> &nbc_M,
+						const double Kn);
 
 // now we specify the iniital and the boundary conditions
 template<int dim>
@@ -14,6 +32,23 @@ ic_bc:public ic_bc_base<dim>
 		virtual double ic(const Point<dim> &p,const int &id);
 		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
+		virtual void force(Vector<double> &value,
+						   const Vector<double> &force_vec);
+		virtual void bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
+								Vector<double> &value,const double &t);
+};
+
+template<int dim>
+class
+ic_bc_adjoint:public ic_bc_base<dim>
+{
+	public:
+		ic_bc_adjoint() {;};
+		virtual double ic(const Point<dim> &p,const int &id);
+		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
+		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
+		virtual void force(Vector<double> &value,
+						   const Vector<double> &force_vec);
 		virtual void bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 								Vector<double> &value,const double &t);
 };
@@ -143,33 +178,23 @@ int main(int argc, char *argv[])
       const int dim = 2;
       const int poly_degree = 0;
 
-      // the output folder name
-      std::string foldername = "2x3v_moments_HC";
-
      
      // store the number of equations for a given M (starts at M = 3)
-     const int neqn_M[18] = {13,22,34,50,70,95,125,161,203,252,308,372,444,525,615,715,825,946};
-     const int nbc_M[18] = {5,8,14,20,30,40,55,70,91,112,140,168,204,240,285,330,385,440};
+     const std::vector<int> neqn_M = {13,22,34,50,70,95,125,161,203,252,308,372,444,525,615,715,825,946};
+     const std::vector<int> nbc_M = {5,8,14,20,30,40,55,70,91,112,140,168,204,240,285,330,385,440};
      const double Kn = 0.1;
 
      std::vector<int> M(2);
+     std::vector<int> M_adjoint(2);
      M[0] = 3;
-     M[1] = 7;
-     std::vector<system_data> system_matrices(M.size());
+     M[1] = 5;
 
-     Assert(*std::max_element(M.begin(),M.end())<=20,ExcNotImplemented());
+     M_adjoint[0] = 5;
+     M_adjoint[1] = 7;
 
-     for(unsigned int i = 0 ; i < M.size(); i++)
-     {
-     	develop_system(system_matrices[i],M[i],neqn_M[M[i]-3],nbc_M[M[i]-3],Kn);
-     	system_matrices[i].bc_inhomo_time = true;
-
-     	system_matrices[i].Ax_mod = compute_Amod(system_matrices[i].Ax).sparseView();
-      	system_matrices[i].Ay_mod = compute_Amod(system_matrices[i].Ay).sparseView();
-      	system_matrices[i].Ax_mod.makeCompressed();
-      	system_matrices[i].Ay_mod.makeCompressed();
-     }
-
+	 std::vector<system_data> system_matrices = develop_complete_system(M,neqn_M,nbc_M,Kn);
+     std::vector<system_data> system_matrices_adjoint = develop_complete_system_adjoint(M_adjoint,neqn_M,nbc_M,Kn);
+     
       // create a rectangular mesh 
       Triangulation<dim> triangulation;
       Point<dim> p1;
@@ -199,20 +224,15 @@ int main(int argc, char *argv[])
                       								std::ref(triangulation)));
 
       ic_bc<dim> initial_boundary;	
+      ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
 
-	  Solve_System_SS_adaptive<dim> solve_system(system_matrices,
-	  								 triangulation,
-	  								 poly_degree,
-	  								 &initial_boundary,
-	  								 foldername);
-
-	 solve_system.run_time_loop(triangulation);
-
-	 std::string filename = "2x3v_moments_HC_Adp/M_3_7" + std::string("/result0")
-                                + "_Kn_" + "0p1" + std::string(".txt");
-
-         solve_system.create_output(filename);
+	  run_problem<dim>::run_problem(system_matrices,	  // system data
+				  			  		system_matrices_adjoint, // adjoint data
+							  		triangulation, // triangulation
+							  		poly_degree,
+							  		&initial_boundary,
+					          		&initial_boundary_adjoint);
 
 }
 
@@ -285,9 +305,108 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 		system_matrices.penalty_B[i].makeCompressed();
 	}
 
+}
 
 
+void develop_system_adjoint(system_data &system_matrices,const int &M,const int &neqn_M,
+							const int &nbc_M,const double &Kn)
+{
+	system_data temp;
+	develop_system(temp,M,neqn_M,nbc_M,Kn);
 
+	// allocate memory
+	system_matrices.Ax.resize(neqn_M,neqn_M);
+	system_matrices.Ay.resize(neqn_M,neqn_M);
+	system_matrices.P.resize(neqn_M,neqn_M);
+
+	system_matrices.B.resize(4);
+	system_matrices.penalty_B.resize(4);
+	system_matrices.penalty.resize(4);
+
+	for(unsigned int id = 0 ; id < 4 ; id ++)
+	{
+		system_matrices.B[id].resize(nbc_M,neqn_M);
+		system_matrices.penalty_B[id].resize(neqn_M,neqn_M);
+		system_matrices.penalty[id].resize(neqn_M,nbc_M);
+	}
+
+	// reverse the direction of advection
+	system_matrices.Ax = - temp.Ax;
+	system_matrices.Ay = - temp.Ay;
+
+	system_matrices.Ax.makeCompressed();
+	system_matrices.Ay.makeCompressed();
+
+	// production remains the same
+	system_matrices.P = temp.P;
+	system_matrices.P.makeCompressed();
+
+	// boundary conditions also flip signs
+	std::vector<int> bc_id_primal(4); // the id of primal which is the id of adjoint
+	bc_id_primal[0] = 2;
+	bc_id_primal[1] = 3;
+	bc_id_primal[2] = 0;
+	bc_id_primal[3] = 1;
+
+	for(unsigned int i = 0 ; i < 4 ; i++)
+	{
+		system_matrices.B[i] = system_matrices.B[bc_id_primal[i]];
+		system_matrices.penalty_B[i] = system_matrices.penalty_B[bc_id_primal[i]];
+		system_matrices.penalty[i] = system_matrices.penalty[bc_id_primal[i]];
+
+		system_matrices.B[i].makeCompressed();
+		system_matrices.penalty_B[i].makeCompressed();
+		system_matrices.penalty[i].makeCompressed();
+	}
+
+
+}
+
+std::vector<system_data>
+develop_complete_system(const std::vector<int> &M,
+						const std::vector<int> &neqn_M,
+						const std::vector<int> &nbc_M,
+						const double Kn)
+{
+     std::vector<system_data> system_matrices(M.size());
+     Assert(*std::max_element(M.begin(),M.end())<=20,ExcNotImplemented());
+
+     for(unsigned int i = 0 ; i < M.size(); i++)
+     {
+     	develop_system(system_matrices[i],M[i],neqn_M[M[i]-3],nbc_M[M[i]-3],Kn);
+     	system_matrices[i].bc_inhomo_time = true;
+
+     	system_matrices[i].Ax_mod = compute_Amod(system_matrices[i].Ax).sparseView();
+      	system_matrices[i].Ay_mod = compute_Amod(system_matrices[i].Ay).sparseView();
+      	system_matrices[i].Ax_mod.makeCompressed();
+      	system_matrices[i].Ay_mod.makeCompressed();
+     }
+
+     return(system_matrices);
+}
+
+std::vector<system_data>
+develop_complete_system_adjoint(const std::vector<int> &M,
+						const std::vector<int> &neqn_M,
+						const std::vector<int> &nbc_M,
+						const double Kn)
+{
+     std::vector<system_data> system_matrices(M.size());
+     Assert(*std::max_element(M.begin(),M.end())<=20,ExcNotImplemented());
+
+     for(unsigned int i = 0 ; i < M.size(); i++)
+     {
+     	develop_system_adjoint(system_matrices[i],M[i],neqn_M[M[i]-3],nbc_M[M[i]-3],Kn);
+     	system_matrices[i].bc_inhomo_time = false;
+     	system_matrices[i].have_force = true;
+
+     	system_matrices[i].Ax_mod = compute_Amod(system_matrices[i].Ax).sparseView();
+      	system_matrices[i].Ay_mod = compute_Amod(system_matrices[i].Ay).sparseView();
+      	system_matrices[i].Ax_mod.makeCompressed();
+      	system_matrices[i].Ay_mod.makeCompressed();
+     }
+
+     return(system_matrices);
 }
 
 
@@ -336,9 +455,21 @@ ic_bc<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
 	const double x = p[0];
 	const double y = p[1];
 
+	Assert(value.size() != 0 ,ExcNotImplemented());
 	value(0) = 0;
 
 }
+
+template<int dim>
+void 
+ic_bc<dim>::force(Vector<double> &value,
+				  		 const Vector<double> &force_vec)
+{
+	Assert(value.size() != 0,ExcNotImplemented());
+	value = 0;
+}
+
+
 
 template<int dim>
 void 
@@ -397,6 +528,84 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 
 }
 
+template<int dim>
+double 
+ic_bc_adjoint<dim>::ic(const Point<dim> &p,const int &id)
+{
+	const double x = p[0];
+	const double y = p[1];
+
+	const double density = 0;	
+	// const double density = exp(-pow((x-0.5),2)*100);	
+
+	switch (id)
+	{
+		case 0:
+		{
+			return(density);
+			break;
+		}
+		default:
+		{
+			return(0);
+			break;
+		}
+	}
+	
+	return 0;
+}
+
+template<int dim>
+void 
+ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
+{
+	const double x = p[0];
+	const double y = p[1];
+
+	value(0) = 0;
+
+}
 
 
+
+template<int dim>
+void 
+ic_bc_adjoint<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
+								Vector<double> &value,const double &t)
+{
+
+	const int num_bc = B.rows();
+	double thetaW;
+	value.reinit(num_bc);
+	value = 0;
+
+}
+
+template<int dim>
+void 
+ic_bc_adjoint<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
+{
+	const double x = p[0];
+	const double y = p[1];
+
+	Assert(value.size() != 0,ExcNotImplemented());
+	value(0) = 0;
+
+}
+
+
+template<int dim>
+void 
+ic_bc_adjoint<dim>::force(Vector<double> &value,
+				  		 const Vector<double> &force_vec)
+{
+	Assert(value.size() != 0,ExcNotImplemented());
+	Assert(force_vec.size() != 0,ExcNotImplemented());
+	value = 0;
+
+	// provide a value to the theta variables
+	value(3) = force_vec(3);
+	value(5) = force_vec(5);
+	value(6) = force_vec(6);
+}
 

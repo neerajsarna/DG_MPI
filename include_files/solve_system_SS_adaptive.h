@@ -14,8 +14,7 @@ Solve_System_SS_adaptive
 		Solve_System_SS_adaptive(std::vector<system_data> &system_mat,
 						Triangulation<dim> &triangulation,
 					 	const int poly_degree,
-						ic_bc_base<dim> *ic_bc,
-						std::string &foldername);
+						ic_bc_base<dim> *ic_bc);
 		
 		~Solve_System_SS_adaptive();
 
@@ -29,10 +28,11 @@ Solve_System_SS_adaptive
 		
 		LA::MPI::Vector locally_relevant_solution;
 		LA::MPI::Vector locally_owned_solution;
+		std::vector<Vector<double>> cellwise_sol;
 		LA::MPI::Vector locally_owned_residual;
 		LA::MPI::Vector locally_relevant_solution_temp;
 		LA::MPI::Vector error_per_cell;  
-		LA::MPI::Vector edge_per_cell;
+		std::vector<unsigned int> cell_fe_index;
 
 		double min_h(Triangulation<dim> &triangulation);
 		
@@ -50,7 +50,6 @@ Solve_System_SS_adaptive
 		std::vector<double> max_speed;
 		double current_max_speed;
 
-		std::string output_foldername;
 
 		void create_output(const std::string &filename);
 		const unsigned int this_mpi_process;
@@ -88,12 +87,14 @@ Solve_System_SS_adaptive
     			hp::FEFaceValues<dim> fe_v_face;    			
 		};
 
+
 		void assemble_per_cell(const typename hp::DoFHandler<dim>::active_cell_iterator &cell,
                                       PerCellAssembleScratch &scratch,
                                       PerCellAssemble &data,
                                       const std::vector<std::vector<Vector<double>>> &component_to_system,
                                       const double &t,
-                                      const std::vector<std::vector<Vector<double>>> &g);
+                                      const std::vector<std::vector<Vector<double>>> &g,
+                                      const std::vector<Vector<double>> &force_vector);
 
 		void assemble_to_global(const PerCellAssemble &data,const std::vector<Vector<double>> &component);
 
@@ -111,7 +112,12 @@ Solve_System_SS_adaptive
 
     	TimerOutput computing_timer;
 
-    	void run_time_loop(Triangulation<dim> &triangulation);
+
+    	void run_time_loop(Triangulation<dim> &triangulation,
+    					   const unsigned int &cycle,
+    					   const unsigned int &refine_cycles,
+    					   double &t,
+    					   const std::vector<Vector<double>> &force_vector);
 
     	void develop_neqn();
 
@@ -124,7 +130,8 @@ Solve_System_SS_adaptive
 
     	unsigned int current_max_fe_index();
 
-    	int solve_steady_state(Triangulation<dim> &triangulation,double &t);
+    	int solve_steady_state(Triangulation<dim> &triangulation,double &t,
+    							const std::vector<Vector<double>> &force_vector);
 
 		Sparse_Matrix construct_An_effective(const Sparse_Matrix &An_cell,const Sparse_Matrix &An_neighbor);
 
@@ -136,13 +143,13 @@ Solve_System_SS_adaptive
 
     	void store_cell_index_center();
     	std::vector<unsigned int> create_cell_fe_index();
-    	void interpolate_higher_fe_index(const LA::MPI::Vector &cellwise_sol,
+    	void interpolate_higher_fe_index(const std::vector<Vector<double>> &cellwise_sol,
                                          const std::vector<unsigned int> &cell_fe_index,
                                          LA::MPI::Vector &new_vec,
                                          const std::vector<std::vector<Vector<double>>> &component_to_system);	// interpolates to higher fe index
-    	
+
     	void create_cellwise_solution(const LA::MPI::Vector &dofwise_sol,
-                                      LA::MPI::Vector &cellwise_sol,
+                                      std::vector<Vector<double>> &cellwise_sol,
                                       const std::vector<std::vector<Vector<double>>> &component_to_system);
 
 		// void refine_and_interpolate(parallel::distributed::Triangulation<dim> &triangulation);
