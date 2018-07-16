@@ -189,10 +189,11 @@ int main(int argc, char *argv[])
      M[0] = 3;
      M[1] = 5;
 
-     M_adjoint[0] = 4;
+     M_adjoint[0] = 5;
      M_adjoint[1] = 7;
 
 	 std::vector<system_data> system_matrices = develop_complete_system(M,neqn_M,nbc_M,Kn);
+	 std::vector<system_data> system_matrices_error = develop_complete_system(M_adjoint,neqn_M,nbc_M,Kn);	// required for error computation
      std::vector<system_data> system_matrices_adjoint = develop_complete_system_adjoint(M_adjoint,neqn_M,nbc_M,Kn);
      
       // create a rectangular mesh 
@@ -229,6 +230,7 @@ int main(int argc, char *argv[])
 
 
        run_problem<dim> Run_Problem(system_matrices,	  // system data
+       								system_matrices_error,
 				  			  		system_matrices_adjoint, // adjoint data
 							  		triangulation, // triangulation
 							  		poly_degree,

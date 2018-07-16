@@ -7,6 +7,7 @@ run_problem
 {
 	public:
 		run_problem(std::vector<system_data> &system_mat,	  // system data
+					std::vector<system_data> &system_mat_error,	  // system data
 				    std::vector<system_data> &system_mat_adj, // adjoint data
 					Triangulation<dim> &triangulation, // triangulation
 					const int poly_degree,

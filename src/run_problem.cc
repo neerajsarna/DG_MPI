@@ -2,7 +2,8 @@
 
 template<int dim>
 run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // system data
-				  			  std::vector<system_data> &system_mat_adjoint, // adjoint data
+                              std::vector<system_data> &system_mat_error_comp,    // system data to compute error
+				  			              std::vector<system_data> &system_mat_adjoint, // adjoint data
 							  Triangulation<dim> &triangulation, // triangulation
 							  const int poly_degree,
 							  ic_bc_base<dim> *ic_bc_primal,
@@ -41,7 +42,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 	   			solve_adjoint.run_time_loop(triangulation,cycle,refine_cycles,t,solve_primal.cellwise_sol);
 
 	   			compute_error(solve_adjoint.dof_handler,
-	   						  solve_adjoint.system_matrices,
+	   						      system_mat_error_comp,
 	   					  	  solve_primal.n_eqn,
 	   					  	  solve_adjoint.n_eqn,
 	   					  	  solve_primal.initial_boundary,
