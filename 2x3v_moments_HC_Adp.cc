@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
 
-	  run_problem<dim>::run_problem(system_matrices,	  // system data
+       run_problem<dim> Run_Problem(system_matrices,	  // system data
 				  			  		system_matrices_adjoint, // adjoint data
 							  		triangulation, // triangulation
 							  		poly_degree,

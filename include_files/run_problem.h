@@ -58,5 +58,5 @@ run_problem
 
 		Sparse_Matrix construct_An_effective(const Sparse_Matrix &An_cell,const Sparse_Matrix &An_neighbor);
 
-		void write_error(const std::string &filename);
+		void write_error(const std::string &filename,const Triangulation<dim> &triangulation);
 };
