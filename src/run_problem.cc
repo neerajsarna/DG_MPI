@@ -35,15 +35,17 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 	   		solve_primal.run_time_loop(triangulation,cycle,refine_cycles,t,temp);
 
 
-
 	   		if(cycle != refine_cycles-1)
 	   		{
 	   			std::cout << "solving adjoint: " << std::endl;
 	   			solve_adjoint.run_time_loop(triangulation,cycle,refine_cycles,t,solve_primal.cellwise_sol);
 
-	   			compute_error(solve_primal.dof_handler,solve_primal.system_matrices,
-	   					  	solve_primal.n_eqn,solve_primal.initial_boundary,
-	   					  	solve_adjoint.cellwise_sol,solve_primal.cellwise_sol);
+	   			compute_error(solve_adjoint.dof_handler,
+	   						  solve_adjoint.system_matrices,
+	   					  	  solve_primal.n_eqn,
+	   					  	  solve_adjoint.n_eqn,
+	   					  	  solve_primal.initial_boundary,
+	   					  	  solve_adjoint.cellwise_sol,solve_primal.cellwise_sol);
 	   		}
 
 
@@ -74,29 +76,30 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 
 template<int dim>
 void 
-run_problem<dim>::compute_error(const hp::DoFHandler<dim> &dof_handler_primal,
+run_problem<dim>::compute_error(const hp::DoFHandler<dim> &dof_handler,
 										 const std::vector<system_data> &system_matrices,
-										 const std::vector<unsigned int> &n_eqn,
+										 const std::vector<unsigned int> &n_eqn_primal,
+										 const std::vector<unsigned int> &n_eqn_adjoint,
 										 ic_bc_base<dim> *ic_bc,
                                         const std::vector<Vector<double>> &adjoint_solution,
                                         const std::vector<Vector<double>> &primal_solution)
 {
-	const typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler_primal.begin_active(),
-													   endc = dof_handler_primal.end();												   
+	const typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),
+													 	     endc = dof_handler.end();												   
 	error_per_cell = 0;
 
 	QGauss<dim-1> face_quadrature_basic(1);
 	hp::QCollection<dim-1> face_quadrature;
 
-	for (unsigned int i = 0 ; i < dof_handler_primal.get_fe().size() ; i++)
+	for (unsigned int i = 0 ; i < dof_handler.get_fe().size() ; i++)
 		face_quadrature.push_back(face_quadrature_basic);
 
 	PerCellError per_cell_error;
-	PerCellErrorScratch per_cell_error_scratch(dof_handler_primal.get_fe(),face_quadrature);
+	PerCellErrorScratch per_cell_error_scratch(dof_handler.get_fe(),face_quadrature);
 
-    std::vector<std::vector<Vector<double>>> g(n_eqn.size());
+    std::vector<std::vector<Vector<double>>> g(n_eqn_adjoint.size());
 
-    for (unsigned int i = 0 ; i < n_eqn.size() ; i ++)
+    for (unsigned int i = 0 ; i < n_eqn_adjoint.size() ; i ++)
     {
           g[i].resize(4);
           for (unsigned int id = 0 ; id < 4 ; id++)
@@ -112,7 +115,8 @@ run_problem<dim>::compute_error(const hp::DoFHandler<dim> &dof_handler_primal,
 			std::placeholders::_3,
 			std::cref(g),
 			std::cref(system_matrices),
-			std::cref(n_eqn),
+			std::cref(n_eqn_primal),
+			std::cref(n_eqn_adjoint),
 			std::cref(adjoint_solution),
 			std::cref(primal_solution)),
 		std::bind(&run_problem<dim>::assemble_to_global,
@@ -130,7 +134,8 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                                       	PerCellError &data,
                                         const std::vector<std::vector<Vector<double>>> &g,
                                         const std::vector<system_data> &system_matrices,
-                                        const std::vector<unsigned int> &n_eqn,
+                                        const std::vector<unsigned int> &n_eqn_primal,
+										const std::vector<unsigned int> &n_eqn_adjoint,
                                         const std::vector<Vector<double>> &adjoint_solution,
                                         const std::vector<Vector<double>> &primal_solution)
  {
@@ -152,6 +157,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
               // contribution from collisions P
               for (unsigned int m = 0 ; m < system_matrices[this_fe_index].P.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].P,m); n ; ++n)
+                    	if(n.col() < n_eqn_primal[this_fe_index])
                   {
               // 0 because of finite volume
                     const double adjoint_value = adjoint_solution[index](n.row());
@@ -189,6 +195,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
 
                   for (unsigned int m = 0 ; m < An_cell.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(An_cell,m); n ; ++n)
+                    	if(n.col() < n_eqn_primal[this_fe_index])
                   {
                       // 0 because of finite volume
               		 // 0 because of finite volume
@@ -203,6 +210,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                   // contribution from penalty_B
                   for (unsigned int m = 0 ; m < system_matrices[this_fe_index].penalty_B[bc_id].outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].penalty_B[bc_id],m); n ; ++n)
+                    	if(n.col() < n_eqn_primal[this_fe_index])
                   {
                     // 0 because of finite volume
                     const double adjoint_value = adjoint_solution[index](n.row());
@@ -250,6 +258,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                    // contribution from the present cell
                   for (unsigned int m = 0 ; m < An_cell.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(An_cell,m); n ; ++n)
+                    	if(n.col() < n_eqn_primal[this_fe_index])
                   {
                                   // 0 because of finite volume
                     const double adjoint_value = adjoint_solution[index](n.row());
@@ -263,7 +272,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                   // we add the diffusion now
                   for (unsigned int m = 0 ; m < Amod.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(Amod,m); n ; ++n)
-                      if(n.row() < n_eqn[this_fe_index] && n.col() < n_eqn[this_fe_index])
+                      if(n.row() < n_eqn_adjoint[this_fe_index] && n.col() < n_eqn_primal[this_fe_index])
                   {
                     const double adjoint_value = adjoint_solution[index](n.row());
                     const double solution_value = primal_solution[index](n.col());
@@ -276,6 +285,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                   // contribution from the neighboring cell
                   for (unsigned int m = 0 ; m < An_effective.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(An_effective,m); n ; ++n)
+                    	if(n.col() < n_eqn_primal[neighbor_fe_index])
                   {
                     const double adjoint_value = adjoint_solution[index](n.row());
                     const double neighbor_value = primal_solution[index_neighbor](n.col());
@@ -288,7 +298,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                   // diffusion with the neighbouring cell
                   for (unsigned int m = 0 ; m < Amod.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(Amod,m); n ; ++n)
-                      if(n.row() < n_eqn[this_fe_index] && n.col() < n_eqn[neighbor_fe_index])
+                      if(n.row() < n_eqn_adjoint[this_fe_index] && n.col() < n_eqn_primal[neighbor_fe_index])
                   {
                     const double adjoint_value = adjoint_solution[index](n.row());
                     const double neighbor_value = primal_solution[index_neighbor](n.col());
@@ -364,7 +374,7 @@ run_problem<dim>::write_error(const std::string &filename,const Triangulation<di
 		 for (unsigned int space = 0 ; space < dim ; space ++)
         		fprintf(fp, "%f\t",cell->center()(space));
 
-         fprintf(fp, "%f\n",error_per_cell(cell->index()));
+         fprintf(fp, "%0.16f\n",error_per_cell(cell->index()));
 	}
 
 	fclose(fp);

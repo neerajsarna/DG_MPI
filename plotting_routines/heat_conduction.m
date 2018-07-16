@@ -6,7 +6,7 @@ num_proc = 8;
 %% moment solution
 
 M = 3;
-M2 = 7;
+M2 = 5;
 Nx = 300;
 
 X = [];
@@ -81,8 +81,7 @@ theta_sbpM2 = sqrt(2) * (field(IDtheta(1),:)+field(IDtheta(2),:)...
 rho_sbpM2 = field(2,:);                  
 
 
-plot(X,abs(theta-thetaM2),...
-     X,abs(thetaAdp-thetaM2));
+plot(X,(theta-thetaM2));
 
 disp('error M3');
 disp(sqrt(trapz(X,abs(theta-thetaM2).^2)));

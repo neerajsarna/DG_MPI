@@ -287,7 +287,7 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
                 initial_boundary->force(force_value,force_vector[cell->index()]);
 
                 for(unsigned int i = 0 ; i < n_eqn[this_fe_index] ; i++)
-                    data.local_contri(component_to_system[this_fe_index][i](0)) = dt * force_value(i);                
+                    data.local_contri(component_to_system[this_fe_index][i](0)) += dt * force_value(i);                
               }
 
 

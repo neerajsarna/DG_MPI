@@ -16,7 +16,8 @@ run_problem
 
 		void compute_error(const hp::DoFHandler<dim> &dof_handler_primal,
 						   const std::vector<system_data> &system_matrices,
-						   const std::vector<unsigned int> &n_eqn,
+						   const std::vector<unsigned int> &n_eqn_primal,
+							const std::vector<unsigned int> &n_eqn_adjoint,
 						   ic_bc_base<dim> *ic_bc,
 						   const std::vector<Vector<double>> &adjoint_solution,
 						   const std::vector<Vector<double>> &primal_solution);
@@ -49,7 +50,8 @@ run_problem
                                       	PerCellError &data,
                                         const std::vector<std::vector<Vector<double>>> &g,
                                         const std::vector<system_data> &system_matrices,
-                                        const std::vector<unsigned int> &n_eqn,
+                                        const std::vector<unsigned int> &n_eqn_primal,
+                                        const std::vector<unsigned int> &n_eqn_adjoint,
                                         const std::vector<Vector<double>> &adjoint_solution,
 						   				const std::vector<Vector<double>> &primal_solution);
 

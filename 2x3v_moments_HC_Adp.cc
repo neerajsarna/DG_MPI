@@ -227,6 +227,7 @@ int main(int argc, char *argv[])
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
 
+
        run_problem<dim> Run_Problem(system_matrices,	  // system data
 				  			  		system_matrices_adjoint, // adjoint data
 							  		triangulation, // triangulation
@@ -343,16 +344,16 @@ void develop_system_adjoint(system_data &system_matrices,const int &M,const int 
 
 	// boundary conditions also flip signs
 	std::vector<int> bc_id_primal(4); // the id of primal which is the id of adjoint
-	bc_id_primal[0] = 2;
+	bc_id_primal[0] = 2;	// adjoint boundary at x = 1 is the primal boundary at x = 0 (reversal in advection direction)
 	bc_id_primal[1] = 3;
 	bc_id_primal[2] = 0;
 	bc_id_primal[3] = 1;
 
 	for(unsigned int i = 0 ; i < 4 ; i++)
 	{
-		system_matrices.B[i] = system_matrices.B[bc_id_primal[i]];
-		system_matrices.penalty_B[i] = system_matrices.penalty_B[bc_id_primal[i]];
-		system_matrices.penalty[i] = system_matrices.penalty[bc_id_primal[i]];
+		system_matrices.B[i] = temp.B[bc_id_primal[i]];
+		system_matrices.penalty_B[i] = temp.penalty_B[bc_id_primal[i]];
+		system_matrices.penalty[i] = temp.penalty[bc_id_primal[i]];
 
 		system_matrices.B[i].makeCompressed();
 		system_matrices.penalty_B[i].makeCompressed();
