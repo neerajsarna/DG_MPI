@@ -609,8 +609,10 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	// provide a value to the theta variables
 	for(unsigned int i = 0 ; i < force_vec.size(); i++)
 	{
-		value(i) = force_vec(i);
-		//value(3) = force_vec(3);
+		//value(i) = force_vec(i);
+		value(3) = 2*(force_vec(3) + force_vec(5) + force_vec(6))/9;
+		value(5) = 2*(force_vec(3) + force_vec(5) + force_vec(6))/9;
+		value(6) = 2*(force_vec(3) + force_vec(5) + force_vec(6))/9;
 		//value(5) = force_vec(5);
 		//value(6) = force_vec(6);
 	}
