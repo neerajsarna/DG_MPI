@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
      M[0] = 3;
      M[1] = 5;
 
-     M_adjoint[0] = 4;
+     M_adjoint[0] = 5;
      M_adjoint[1] = 7;
 
 	 std::vector<system_data> system_matrices = develop_complete_system(M,neqn_M,nbc_M,Kn);
@@ -607,8 +607,12 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	value = 0;
 
 	// provide a value to the theta variables
-	value(3) = force_vec(3);
-	value(5) = force_vec(5);
-	value(6) = force_vec(6);
+	for(unsigned int i = 0 ; i < force_vec.size(); i++)
+	{
+		value(i) = force_vec(i);
+		//value(3) = force_vec(3);
+		//value(5) = force_vec(5);
+		//value(6) = force_vec(6);
+	}
 }
 
