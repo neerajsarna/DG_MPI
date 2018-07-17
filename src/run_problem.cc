@@ -24,7 +24,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 	   const double tolerance = 5e-2;		// tolerance
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<std::vector<Vector<double>>> component_to_system = solve_primal.return_component_to_system(); 
-		error_per_cell.reinit(triangulation.n_active_cells());
+		 error_per_cell.reinit(triangulation.n_active_cells());
 	   std::vector<Vector<double>> temp;
 
 	   for(unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
@@ -46,7 +46,10 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 	   					  	  solve_primal.n_eqn,
 	   					  	  solve_adjoint.n_eqn,
 	   					  	  solve_primal.initial_boundary,
-	   					  	  solve_adjoint.cellwise_sol,solve_primal.cellwise_sol);
+	   					  	  solve_adjoint.cellwise_sol,
+                    solve_primal.cellwise_sol,
+                    solve_primal.cell_index_center,
+                    solve_adjoint.cell_index_center);
 	   		}
 
 
@@ -82,11 +85,13 @@ run_problem<dim>::compute_error(const hp::DoFHandler<dim> &dof_handler,
 										 const std::vector<unsigned int> &n_eqn_primal,
 										 const std::vector<unsigned int> &n_eqn_adjoint,
 										 ic_bc_base<dim> *ic_bc,
-                                        const std::vector<Vector<double>> &adjoint_solution,
-                                        const std::vector<Vector<double>> &primal_solution)
+                     const std::vector<Vector<double>> &adjoint_solution,
+                     const std::vector<Vector<double>> &primal_solution,
+                     const std::vector<Point<dim>> &cell_index_primal,
+                     const std::vector<Point<dim>> &cell_index_adjoint)
 {
 	const typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),
-													 	     endc = dof_handler.end();												   
+													 	                               endc = dof_handler.end();												   
 	error_per_cell = 0;
 
 	QGauss<dim-1> face_quadrature_basic(1);
@@ -119,7 +124,9 @@ run_problem<dim>::compute_error(const hp::DoFHandler<dim> &dof_handler,
 			std::cref(n_eqn_primal),
 			std::cref(n_eqn_adjoint),
 			std::cref(adjoint_solution),
-			std::cref(primal_solution)),
+			std::cref(primal_solution),
+      std::cref(cell_index_primal),
+      std::cref(cell_index_adjoint)),
 		std::bind(&run_problem<dim>::assemble_to_global,
 			this,
 			std::placeholders::_1),
@@ -136,13 +143,16 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                                         const std::vector<std::vector<Vector<double>>> &g,
                                         const std::vector<system_data> &system_matrices,
                                         const std::vector<unsigned int> &n_eqn_primal,
-										const std::vector<unsigned int> &n_eqn_adjoint,
+										                    const std::vector<unsigned int> &n_eqn_adjoint,
                                         const std::vector<Vector<double>> &adjoint_solution,
-                                        const std::vector<Vector<double>> &primal_solution)
+                                        const std::vector<Vector<double>> &primal_solution,
+                                        const std::vector<Point<dim>> &cell_index_primal,
+                                        const std::vector<Point<dim>> &cell_index_adjoint)
  {
 
               // operations to avoid data races, computations are in steady state so we do not need to
- 			  // change the value of temp_g.
+ 			        // change the value of temp_g.
+              Assert(cell_index_adjoint[cell->index()].distance(cell_index_primal[cell->index()]));
               std::vector<std::vector<Vector<double>>> temp_g = g;
               const unsigned int this_fe_index = cell->active_fe_index();
 

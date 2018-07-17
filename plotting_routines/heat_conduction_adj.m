@@ -35,7 +35,7 @@ end
 filename = strcat('../2x3v_moments_HC_Adp/error_M3.txt');                 
 error = dlmread(filename,'\t');
 
-plot(X,abs(error(:,3)));
+plot(X(2:end-1),abs(error(2:end-1,3)),'-*');
     
 % develop x y and theta from the 2D data
 function [x,theta] = compute_theta(X,Y,theta,Nx)

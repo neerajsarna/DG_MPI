@@ -21,7 +21,9 @@ run_problem
 							const std::vector<unsigned int> &n_eqn_adjoint,
 						   ic_bc_base<dim> *ic_bc,
 						   const std::vector<Vector<double>> &adjoint_solution,
-						   const std::vector<Vector<double>> &primal_solution);
+						   const std::vector<Vector<double>> &primal_solution,
+						   const std::vector<Point<dim>> &cell_index_primal,
+                           const std::vector<Point<dim>> &cell_index_adjoint);
 
 		Vector<double> error_per_cell;
 
@@ -54,7 +56,9 @@ run_problem
                                         const std::vector<unsigned int> &n_eqn_primal,
                                         const std::vector<unsigned int> &n_eqn_adjoint,
                                         const std::vector<Vector<double>> &adjoint_solution,
-						   				const std::vector<Vector<double>> &primal_solution);
+						   				const std::vector<Vector<double>> &primal_solution,
+						   				const std::vector<Point<dim>> &cell_index_primal,
+                                        const std::vector<Point<dim>> &cell_index_adjoint);
 
 
 		void assemble_to_global(const PerCellError &data);
