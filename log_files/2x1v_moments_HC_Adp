@@ -1384,3 +1384,202 @@ Steps taken: 26876
 | solving                         |         1 |       952s |     1e+02% |
 +---------------------------------+-----------+------------+------------+
 
+Sender: LSF System <lsfadmin@linuxbmc0325>
+Subject: Job 43624870: <2x1v_moments_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Jul 17 16:18:36 2018
+Job was executed on host(s) <12*linuxbmc0325>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Jul 17 16:18:41 2018
+                            <12*linuxbmc0326>
+                            <8*linuxbmc0328>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Tue Jul 17 16:18:41 2018
+Terminated at Tue Jul 17 16:27:29 2018
+Results reported at Tue Jul 17 16:27:29 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_HC_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 1:20
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 1000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 32
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x3v_moments_HC_Adp.out 32 300 3
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1028.73 sec.
+    Max Memory :                                 485 MB
+    Average Memory :                             460.35 MB
+    Total Requested Memory :                     32000.00 MB
+    Delta Memory :                               31515.00 MB
+    Max Swap :                                   -
+    Max Processes :                              8
+    Max Threads :                                20
+    Run time :                                   527 sec.
+    Turnaround time :                            533 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1531837116.43624870.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0325.rz.RWTH-Aachen.DE:15434] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+developing systems: 
+solving primal: 
+cycle: 0
+total cells: 300
+total dofs: 3900
+residual: 14.9487time: 0.356977
+residual: 13.8528time: 0.713955
+residual: 12.1785time: 1.07093
+residual: 9.96732time: 1.42791
+residual: 5.68064time: 1.78489
+residual: 4.07075time: 2.14186
+residual: 3.09548time: 2.49884
+residual: 1.80092time: 2.85582
+residual: 1.52512time: 3.2128
+residual: 0.966297time: 3.56977
+residual: 0.659352time: 3.92675
+residual: 0.528213time: 4.28373
+residual: 0.30401time: 4.64071
+residual: 0.250099time: 4.99768
+residual: 0.168119time: 5.35466
+residual: 0.107091time: 5.71164
+residual: 0.0892304time: 6.06862
+residual: 0.0520422time: 6.42559
+residual: 0.0406997time: 6.78257
+residual: 0.029138time: 7.13955
+residual: 0.017555time: 7.49653
+residual: 0.0149165time: 7.8535
+residual: 0.00900377time: 8.21048
+residual: 0.00659123time: 8.56746
+residual: 0.00501522time: 8.92444
+residual: 0.00291723time: 9.28141
+residual: 0.00246818time: 9.63839
+residual: 0.00156612time: 9.99537
+residual: 0.00106645time: 10.3523
+residual: 0.000855528time: 10.7093
+residual: 0.000492419time: 11.0663
+residual: 0.00040462time: 11.4233
+residual: 0.000272475time: 11.7803
+residual: 0.000173249time: 12.1372
+residual: 0.000144479time: 12.4942
+residual: 8.43256e-05time: 12.8512
+residual: 6.58334e-05time: 13.2082
+residual: 4.72173e-05time: 13.5651
+residual: 2.84096e-05time: 13.9221
+residual: 2.41451e-05time: 14.2791
+residual: 1.45924e-05time: 14.6361
+residual: 1.06607e-05time: 14.9931
+Steps taken: 21215
+solving adjoint: 
+cycle: 0
+total cells: 300
+total dofs: 6600
+residual: 4.98083time: 15.4382
+residual: 3.99799time: 15.7299
+residual: 3.83925time: 16.0216
+residual: 3.0261time: 16.3133
+residual: 1.75434time: 16.605
+residual: 1.08071time: 16.8967
+residual: 0.820082time: 17.1883
+residual: 0.674358time: 17.48
+residual: 0.633416time: 17.7717
+residual: 0.45033time: 18.0634
+residual: 0.283742time: 18.3551
+residual: 0.232271time: 18.6468
+residual: 0.167203time: 18.9385
+residual: 0.138284time: 19.2301
+residual: 0.118437time: 19.5218
+residual: 0.0775445time: 19.8135
+residual: 0.0602307time: 20.1052
+residual: 0.0484516time: 20.3969
+residual: 0.0333969time: 20.6886
+residual: 0.0293101time: 20.9802
+residual: 0.0221847time: 21.2719
+residual: 0.0150723time: 21.5636
+residual: 0.0130687time: 21.8553
+residual: 0.00938765time: 22.147
+residual: 0.0069724time: 22.4387
+residual: 0.00605526time: 22.7303
+residual: 0.00412656time: 23.022
+residual: 0.0032166time: 23.3137
+residual: 0.00267418time: 23.6054
+residual: 0.00179778time: 23.8971
+residual: 0.00150957time: 24.1888
+residual: 0.00118724time: 24.4805
+residual: 0.000802492time: 24.7721
+residual: 0.000696223time: 25.0638
+residual: 0.00051522time: 25.3555
+residual: 0.000365216time: 25.6472
+residual: 0.000319812time: 25.9389
+residual: 0.000223915time: 26.2306
+residual: 0.000168754time: 26.5222
+residual: 0.000144017time: 26.8139
+residual: 9.73472e-05time: 27.1056
+residual: 7.87322e-05time: 27.3973
+residual: 6.40641e-05time: 27.689
+residual: 4.29417e-05time: 27.9807
+residual: 3.66194e-05time: 28.2723
+residual: 2.80648e-05time: 28.564
+residual: 1.93068e-05time: 28.8557
+residual: 1.69013e-05time: 29.1474
+residual: 1.21983e-05time: 29.4391
+Steps taken: 24744
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       517s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |       380s |        74% |
++---------------------------------+-----------+------------+------------+
+
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       517s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| solving                         |         1 |       517s |     1e+02% |
++---------------------------------+-----------+------------+------------+
+
