@@ -152,7 +152,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
 
               // operations to avoid data races, computations are in steady state so we do not need to
  			        // change the value of temp_g.
-              Assert(cell_index_adjoint[cell->index()].distance(cell_index_primal[cell->index()]));
+              Assert(cell_index_adjoint[cell->index()].distance(cell_index_primal[cell->index()])<1e-15,ExcMessage("indexing changed"));
               std::vector<std::vector<Vector<double>>> temp_g = g;
               const unsigned int this_fe_index = cell->active_fe_index();
 
@@ -231,13 +231,13 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                     data.local_contri +=  n.value() * adjoint_value * solution_value * face_length;
 
                   }
+
                   // contribution from penalty * g
                   for (unsigned int m = 0 ; m < system_matrices[this_fe_index].penalty[bc_id].outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].penalty[bc_id],m); n ; ++n)
                   {
                             // 0 because of finite volume
                     const double adjoint_value = adjoint_solution[index](n.row());
-                    const double solution_value = primal_solution[index](n.col());
 
                     data.local_contri -=  n.value()
                                           * temp_g[this_fe_index][bc_id](n.col()) 
