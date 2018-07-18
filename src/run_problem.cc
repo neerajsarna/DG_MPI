@@ -227,7 +227,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                     const double adjoint_value = adjoint_solution[index](n.row());
                     const double solution_value = primal_solution[index](n.col());
 
-              		// explicit euler update, 
+              		// explicit euler update
                     data.local_contri +=  n.value() * adjoint_value * solution_value * face_length;
 
                   }
@@ -236,7 +236,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                   for (unsigned int m = 0 ; m < system_matrices[this_fe_index].penalty[bc_id].outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].penalty[bc_id],m); n ; ++n)
                   {
-                            // 0 because of finite volume
+                    // 0 because of finite volume
                     const double adjoint_value = adjoint_solution[index](n.row());
 
                     data.local_contri -=  n.value()
