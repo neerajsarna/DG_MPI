@@ -33,7 +33,8 @@ ic_bc:public ic_bc_base<dim>
 		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void force(Vector<double> &value,
-						   const Vector<double> &force_vec);
+						   const Vector<double> &force_vec,
+						   const Point<dim> &p,const double &t);
 		virtual void bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 								Vector<double> &value,const double &t);
 };
@@ -466,7 +467,8 @@ ic_bc<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
 template<int dim>
 void 
 ic_bc<dim>::force(Vector<double> &value,
-				  		 const Vector<double> &force_vec)
+				  		 const Vector<double> &force_vec,
+				  		 const Point<dim> &p,const double &t)
 {
 	Assert(value.size() != 0,ExcNotImplemented());
 	value = 0;
@@ -600,7 +602,8 @@ ic_bc_adjoint<dim>::force(const Point<dim> &p,Vector<double> &value,const double
 template<int dim>
 void 
 ic_bc_adjoint<dim>::force(Vector<double> &value,
-				  		 const Vector<double> &force_vec)
+				  		 const Vector<double> &force_vec,
+				  		 const Point<dim> &p,const double &t)
 {
 	Assert(value.size() != 0,ExcNotImplemented());
 	Assert(force_vec.size() != 0,ExcNotImplemented());

@@ -284,7 +284,8 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
               if(system_matrices[this_fe_index].have_force)
               {
                 Vector<double> force_value(n_eqn[this_fe_index]);
-                initial_boundary->force(force_value,force_vector[cell->index()]);
+                initial_boundary->force(force_value,force_vector[cell->index()],
+                                        cell->center(),t);
 
                 for(unsigned int i = 0 ; i < n_eqn[this_fe_index] ; i++)
                     data.local_contri(component_to_system[this_fe_index][i](0)) += dt * force_value(i);                
@@ -318,6 +319,7 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename hp::DoFHandler<d
                     if (system_matrices[this_fe_index].bc_inhomo_time && t > 1e-16)
                                 initial_boundary->bc_inhomo(system_matrices[this_fe_index].B[bc_id],bc_id,
                                                           temp_g[this_fe_index][bc_id],t);
+
 
                   for (unsigned int m = 0 ; m < An_cell.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(An_cell,m); n ; ++n)
@@ -474,7 +476,8 @@ Solve_System_SS_adaptive<dim>::create_output(const std::string &filename)
       for (unsigned int space = 0 ; space < dim ; space ++)
         fprintf(fp, "%f\t",cell->center()(space));
 
-      for (unsigned int i = 0 ; i < to_print ; i++) 
+      for (unsigned int i = 0 ; i < n_eqn[this_fe_index] ; i++) 
+        if(i < to_print)
       {
         const double sol_value =  locally_owned_solution(local_dof_indices[component_to_system[this_fe_index][i](0)]);
         fprintf(fp, "%f\t",sol_value);

@@ -13,7 +13,9 @@ ic_bc_base
 		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t) = 0;
 		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t) = 0;
 		virtual void force(Vector<double> &value,
-						const Vector<double> &force_vec) = 0;
+						const Vector<double> &force_vec,
+						const Point<dim> &p,
+						const double &t) = 0;
 		virtual void bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 								Vector<double> &value,const double &t) = 0;
 };

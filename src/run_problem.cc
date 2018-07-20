@@ -52,7 +52,15 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
                     solve_adjoint.cell_index_center);
 	   		}
 
+        std::string filename = "primal";
+        solve_primal.create_output(filename);
 
+        filename = "adjoint";
+        solve_adjoint.create_output(filename);
+
+
+        filename = "error";
+        write_error(filename,triangulation);
 	   		// solve_primal.allocate_fe_index(cycle + 1);
       //   	solve_primal.distribute_dofs();
 
@@ -66,14 +74,14 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 
 	 	
 
-	std::string filename = "2x3v_moments_HC_Adp/M_4Adj" + std::string("/result0")
-                                + "_Kn_" + "0p1" + std::string(".txt");
+	// std::string filename = "2x3v_moments_HC_Adp/M_4Adj" + std::string("/result0")
+ //                                + "_Kn_" + "0p1" + std::string(".txt");
 
-    solve_adjoint.create_output(filename);
+ //    solve_adjoint.create_output(filename);
 
-    filename = "2x3v_moments_HC_Adp/error_M3.txt";
+ //    filename = "2x3v_moments_HC_Adp/error_M3.txt";
 
-    write_error(filename,triangulation);
+ //    write_error(filename,triangulation);
 
 
 }

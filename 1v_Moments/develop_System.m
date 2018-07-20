@@ -10,9 +10,13 @@ P(2,2) = 0;
 P(3,3) = 0;
 
 Binflow = dvlp_BInflow1D(M);
+Bwall = dvlp_BWall1D(M);
+
 Binflow =  stabilize_boundary(Ax,Binflow);
+Bwall = stabilize_boundary(Ax,Bwall);
 
 penaltyInflow = dvlp_penalty(Ax,Binflow);
+penaltyWall = dvlp_penalty(Ax,Bwall);
 
 rotator = cell(4,1);
 
@@ -48,9 +52,22 @@ filename = strcat('Binflow/Binflow',num2str(M),'.txt');
 dlmwrite(filename,size(data,1),'precision',16);
 dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
 
+%% write Bwall
+data = get_sparse_data(Bwall);
+mkdir Bwall;
+filename = strcat('Bwall/Bwall',num2str(M),'.txt');
+dlmwrite(filename,size(data,1),'precision',16);
+dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
+
 %% write penaltyInflow
 data = get_sparse_data(penaltyInflow);
 filename = strcat('Binflow/penalty_inflow',num2str(M),'.txt');
+dlmwrite(filename,size(data,1),'precision',16);
+dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
+
+%% write penaltyWall
+data = get_sparse_data(penaltyWall);
+filename = strcat('Bwall/penalty_wall',num2str(M),'.txt');
 dlmwrite(filename,size(data,1),'precision',16);
 dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
 
