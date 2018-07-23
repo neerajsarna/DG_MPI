@@ -25,6 +25,10 @@ run_problem
 						   const std::vector<Point<dim>> &cell_index_primal,
                            const std::vector<Point<dim>> &cell_index_adjoint);
 
+
+		DeclException1 (ExcOrderingChanged, double,
+                        << "distance between cells : " << arg1);
+
 		Vector<double> error_per_cell;
 
 		double t;		// time of the computation
@@ -66,4 +70,9 @@ run_problem
 		Sparse_Matrix construct_An_effective(const Sparse_Matrix &An_cell,const Sparse_Matrix &An_neighbor);
 
 		void write_error(const std::string &filename,const Triangulation<dim> &triangulation);
+		void write_fe_index(const std::string &filename,
+                            const hp::DoFHandler<dim> &dof_handler,
+                            const std::vector<unsigned int> &n_eqn);
+
+
 };

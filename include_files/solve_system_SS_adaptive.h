@@ -30,8 +30,7 @@ Solve_System_SS_adaptive
 		LA::MPI::Vector locally_owned_solution;
 		std::vector<Vector<double>> cellwise_sol;
 		LA::MPI::Vector locally_owned_residual;
-		LA::MPI::Vector locally_relevant_solution_temp;
-		LA::MPI::Vector error_per_cell;  
+		LA::MPI::Vector locally_relevant_solution_temp; 
 		std::vector<unsigned int> cell_fe_index;
 
 		double min_h(Triangulation<dim> &triangulation);
@@ -58,6 +57,9 @@ Solve_System_SS_adaptive
 
 		DeclException1 (ExcFileNotOpen, std::string,
                         << "Could not open: " << arg1);
+
+		DeclException1 (ExcOrderingChanged, double,
+                        << "distance between cells : " << arg1);
 
 		struct PerCellIC
 		{
@@ -110,8 +112,6 @@ Solve_System_SS_adaptive
 
     	double residual_ss;
 
-    	TimerOutput computing_timer;
-
 
     	void run_time_loop(Triangulation<dim> &triangulation,
     					   const unsigned int &cycle,
@@ -126,7 +126,9 @@ Solve_System_SS_adaptive
     	void construct_block_structure(std::vector<int> &block_structure,
                                        const std::vector<unsigned int> &n_eqn);
 
-    	void allocate_fe_index(const unsigned int present_cycle);
+    	void allocate_fe_index(const unsigned int present_cycle,
+    						   const Vector<double> &error_per_cell,
+    						   Triangulation<dim> &triangulation);
 
     	unsigned int current_max_fe_index();
 

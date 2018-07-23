@@ -186,13 +186,18 @@ int main(int argc, char *argv[])
      std::vector<int> nbc_M;
      const double Kn = 0.1;
 
-     std::vector<int> M(2);
-     std::vector<int> M_adjoint(2);
-     M[0] = 4;
-     M[1] = 5;
+     const unsigned int num_systems = 4;
+     std::vector<int> M(num_systems);
+     std::vector<int> M_adjoint(num_systems);
+     M[0] = 6;
+     M[1] = 8;
+     M[2] = 10;
+     M[3] = 12;
 
-     M_adjoint[0] = 5;
-     M_adjoint[1] = 7;
+     M_adjoint[0] = 8;
+     M_adjoint[1] = 10;
+     M_adjoint[2] = 12;
+     M_adjoint[3] = 14;
 
      neqn_M.resize(18);
      nbc_M.resize(18);
@@ -553,6 +558,7 @@ ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,con
 {
 	value = 0;
 
+
 }
 
 
@@ -574,7 +580,6 @@ void
 ic_bc_adjoint<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
 {
 	value = 0;
-
 }
 
 
@@ -582,15 +587,16 @@ template<int dim>
 void 
 ic_bc_adjoint<dim>::force(Vector<double> &value,
 				  		 const Vector<double> &force_vec,
-				  		 const Point<dim> &p,const double &t)
+				  		 const Point<dim> &p,
+				  		 const double &t)
 {
 	Assert(value.size() != 0,ExcNotImplemented());
 	Assert(force_vec.size() != 0,ExcNotImplemented());
 	const double x = p[0];
 	value = 0;
 
-	//value(2) = x-0.5;
-	value(0) = -M_PI * cos(M_PI*x);
-	value(2) = -sqrt(2) * M_PI * cos(M_PI * x); 
+	value(2) = pow(x-0.5,1);
+	// value(0) = -M_PI * cos(M_PI*x);
+	// value(2) = -sqrt(2) * M_PI * cos(M_PI * x); 
 }
 

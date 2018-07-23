@@ -4,43 +4,60 @@ template<int dim>
 run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // system data
                               std::vector<system_data> &system_mat_error_comp,    // system data to compute error
 				  			              std::vector<system_data> &system_mat_adjoint, // adjoint data
-							  Triangulation<dim> &triangulation, // triangulation
-							  const int poly_degree,
-							  ic_bc_base<dim> *ic_bc_primal,
-					          ic_bc_base<dim> *ic_bc_adjoint)
+							                Triangulation<dim> &triangulation, // triangulation
+							                 const int poly_degree,
+							                 ic_bc_base<dim> *ic_bc_primal,
+					                     ic_bc_base<dim> *ic_bc_adjoint)
 {
+      TimerOutput timer (std::cout, TimerOutput::summary,
+                     TimerOutput::wall_times);
+
+     error_per_cell.reinit(triangulation.n_active_cells());
+     error_per_cell = 0;
+
 	   Solve_System_SS_adaptive<dim> solve_primal(system_mat_primal,
 	  								 			  triangulation,
 	  								 			  poly_degree,
 	  								 			  ic_bc_primal);
 
+      solve_primal.allocate_fe_index(0,error_per_cell,triangulation);
+      solve_primal.distribute_dofs();
+      solve_primal.prescribe_initial_conditions();
+
+     
 	   Solve_System_SS_adaptive<dim> solve_adjoint(system_mat_adjoint,
 	  								 			  triangulation,
 	  								 			  poly_degree,
 	  								 			  ic_bc_adjoint);
 
+     solve_adjoint.allocate_fe_index(0,error_per_cell,triangulation);
+     solve_adjoint.distribute_dofs();
+     solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 2;
-	   const double tolerance = 5e-2;		// tolerance
+	   const unsigned int refine_cycles = 4;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<std::vector<Vector<double>>> component_to_system = solve_primal.return_component_to_system(); 
-		 error_per_cell.reinit(triangulation.n_active_cells());
+     std::vector<std::vector<Vector<double>>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
 
 	   for(unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
 	   {
-	   		if(cycle == 1)
-	   			break;
 
+        std::cout << "refinement cycle: " << cycle <<  std::endl;
 	   		std::cout << "solving primal: " << std::endl;
+        timer.enter_subsection("solve primal");
 	   		solve_primal.run_time_loop(triangulation,cycle,refine_cycles,t,temp);
+        timer.leave_subsection();
 
 
 	   		if(cycle != refine_cycles-1)
 	   		{
 	   			std::cout << "solving adjoint: " << std::endl;
+          timer.enter_subsection("solve adjoint");
 	   			solve_adjoint.run_time_loop(triangulation,cycle,refine_cycles,t,solve_primal.cellwise_sol);
+          timer.leave_subsection();
 
+          timer.enter_subsection("compute error");
 	   			compute_error(solve_adjoint.dof_handler,
 	   						      system_mat_error_comp,
 	   					  	  solve_primal.n_eqn,
@@ -50,25 +67,35 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
                     solve_primal.cellwise_sol,
                     solve_primal.cell_index_center,
                     solve_adjoint.cell_index_center);
-	   		}
 
-        std::string filename = "primal";
+          timer.leave_subsection();
+
+         solve_primal.allocate_fe_index(cycle + 1,
+                                        error_per_cell,
+                                        triangulation); // allocate the index based upon the error
+         solve_primal.distribute_dofs();                           // distribute dofs
+         solve_primal.interpolate_higher_fe_index(solve_primal.cellwise_sol,solve_primal.cell_fe_index,
+                                                  solve_primal.locally_owned_solution,component_to_system); // create the cellwise solution
+
+
+
+         solve_adjoint.allocate_fe_index(cycle+1,error_per_cell,triangulation);
+         solve_adjoint.distribute_dofs();                           // distribute dofs
+         solve_adjoint.interpolate_higher_fe_index(solve_adjoint.cellwise_sol,solve_adjoint.cell_fe_index,
+                                                   solve_adjoint.locally_owned_solution,component_to_system_adjoint); // create the cellwise solution
+	   		} // end of if condition
+
+
+        std::string foldername = "2x1v_moments_Inflow_Adp/M_6_8_10_12/";
+        std::string filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
+                                          + "_Kn_" + "0p1" + std::string(".txt");
         solve_primal.create_output(filename);
 
-        filename = "adjoint";
-        solve_adjoint.create_output(filename);
+        filename = foldername + std::string("/fe_index_cycle") + std::to_string(cycle)
+                                          + "_Kn_" + "0p1" + std::string(".txt");
 
-
-        filename = "error";
-        write_error(filename,triangulation);
-	   		// solve_primal.allocate_fe_index(cycle + 1);
-      //   	solve_primal.distribute_dofs();
-
-      //   	// interpolate onto the current solution
-      //   	solve_primal.interpolate_higher_fe_index(solve_primal.cellwise_sol,solve_primal.cell_fe_index,
-      //                                 				solve_primal.locally_owned_solution,component_to_system);
-
-      //  		solve_primal.locally_relevant_solution = solve_primal.locally_owned_solution;
+        write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
+      
 	   }
 
 
@@ -160,7 +187,8 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
 
               // operations to avoid data races, computations are in steady state so we do not need to
  			        // change the value of temp_g.
-              Assert(cell_index_adjoint[cell->index()].distance(cell_index_primal[cell->index()])<1e-15,ExcMessage("indexing changed"));
+              AssertThrow(cell_index_adjoint[cell->index()].distance(cell_index_primal[cell->index()])<1e-15,
+                        ExcOrderingChanged(cell_index_adjoint[cell->index()].distance(cell_index_primal[cell->index()])));
               std::vector<std::vector<Vector<double>>> temp_g = g;
               const unsigned int this_fe_index = cell->active_fe_index();
 
@@ -184,6 +212,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
 
               // explicit euler update, 
                     data.local_contri +=  n.value() * adjoint_value * solution_value * volume;
+                    
 
                   }
 
@@ -224,9 +253,10 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
               	    // explicit euler update, 
                     data.local_contri -=  n.value() * adjoint_value * solution_value * face_length;
 
+
                   }
 
-                  // contribution from penalty_B
+                  //contribution from penalty_B
                   for (unsigned int m = 0 ; m < system_matrices[this_fe_index].penalty_B[bc_id].outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].penalty_B[bc_id],m); n ; ++n)
                     	if(n.col() < n_eqn_primal[this_fe_index])
@@ -237,6 +267,7 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
 
               		// explicit euler update
                     data.local_contri +=  n.value() * adjoint_value * solution_value * face_length;
+                    
 
                   }
 
@@ -252,10 +283,10 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
                                           * adjoint_value * face_length;
 
                   }
+
                 }
                 else
                 {
-
                    typename hp::DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
                    const unsigned int neighbor_fe_index = neighbor->active_fe_index();
                    const unsigned int index_neighbor = neighbor->index();
@@ -274,17 +305,16 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
 
                    Assert(!neighbor->has_children(), ExcInternalError());
 
-                   // contribution from the present cell
                   for (unsigned int m = 0 ; m < An_cell.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(An_cell,m); n ; ++n)
                     	if(n.col() < n_eqn_primal[this_fe_index])
                   {
-                                  // 0 because of finite volume
+                    // 0 because of finite volume
                     const double adjoint_value = adjoint_solution[index](n.row());
                     const double solution_value = primal_solution[index](n.col());
 
                     data.local_contri -=  n.value() * adjoint_value * solution_value
-                                                   * face_length/(2);
+                                                   * face_length/(2);                   
 
                   }
 
@@ -326,11 +356,11 @@ run_problem<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::act
 
                   }
 
+
                 } //end of else
 
 
-              } 
-              //end of loop over the faces
+              }//end of loop over the faces
 
 
  }
@@ -340,7 +370,7 @@ template<int dim>
 void
 run_problem<dim>::assemble_to_global(const PerCellError &data)
  {
-        error_per_cell(data.index) = data.local_contri;
+        error_per_cell(data.index) = fabs(data.local_contri);
  }
 
  template<int dim>
@@ -391,7 +421,7 @@ run_problem<dim>::write_error(const std::string &filename,const Triangulation<di
 	for(; cell != endc ; cell++)
 	{
 		 for (unsigned int space = 0 ; space < dim ; space ++)
-        		fprintf(fp, "%f\t",cell->center()(space));
+        		fprintf(fp, "%0.16f\t",cell->center()(space));
 
          fprintf(fp, "%0.16f\n",error_per_cell(cell->index()));
 	}
@@ -399,5 +429,23 @@ run_problem<dim>::write_error(const std::string &filename,const Triangulation<di
 	fclose(fp);
 }
 
+template<int dim>
+void
+run_problem<dim>::write_fe_index(const std::string &filename,
+                                const hp::DoFHandler<dim> &dof_handler,
+                                const std::vector<unsigned int> &n_eqn)
+{
+  FILE *fp;
+  fp = fopen(filename.c_str(),"w+");
+
+  typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),
+                                                     endc = dof_handler.end();
+
+  for(; cell != endc ; cell++)
+         fprintf(fp, "%d %d\n",cell->active_fe_index(),n_eqn[cell->active_fe_index()]);
+  
+
+  fclose(fp);
+}
 
 template class run_problem<2>;

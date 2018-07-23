@@ -13,25 +13,18 @@ fe_basic(poly_degree),
 initial_boundary(ic_bc),
 system_matrices(system_mat),
 this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
-pout(std::cout,this_mpi_process==0),
-computing_timer(MPI_COMM_WORLD,
-                    pout,
-                    TimerOutput::summary,
-                    TimerOutput::wall_times)
+pout(std::cout,this_mpi_process==0)
 {
 
-      develop_neqn();
-      construct_fe_collection();
-      allocate_fe_index(0);
-      distribute_dofs();
-
-      prescribe_initial_conditions();
-      locally_relevant_solution = locally_owned_solution;
-
       
+      develop_neqn();
+      
+      construct_fe_collection();
+            
       max_speed = compute_max_speed();
       Assert(n_eqn.size() == fe.size(), ExcNotImplemented());
 
+      
       cellwise_sol.resize(triangulation.n_active_cells()); // the size of triangulation does not change
       store_cell_index_center();
 }
@@ -54,7 +47,7 @@ Solve_System_SS_adaptive<dim>::distribute_dofs()
       // allocate the memory error 
       IndexSet locally_owned_cells(dof_handler.get_triangulation().n_active_cells()); // helpful while computing error
       create_IndexSet_triangulation(locally_owned_cells); 
-      error_per_cell.reinit(locally_owned_cells,mpi_comm);
+    
 }
 
 template<int dim>
@@ -152,8 +145,8 @@ Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation,
 {      
       std::vector<std::vector<Vector<double>>> component_to_system = return_component_to_system();   
 
-      computing_timer.enter_subsection("solving");
-        
+      locally_relevant_solution = locally_owned_solution; // the value set to locally owned solution is set here
+    
 
         int total_steps = 0;
         std::cout << "cycle: " << cycle << std::endl;
@@ -474,13 +467,13 @@ Solve_System_SS_adaptive<dim>::create_output(const std::string &filename)
       cell->get_dof_indices(local_dof_indices);
 
       for (unsigned int space = 0 ; space < dim ; space ++)
-        fprintf(fp, "%f\t",cell->center()(space));
+        fprintf(fp, "%0.16f\t",cell->center()(space));
 
       for (unsigned int i = 0 ; i < n_eqn[this_fe_index] ; i++) 
         if(i < to_print)
       {
         const double sol_value =  locally_owned_solution(local_dof_indices[component_to_system[this_fe_index][i](0)]);
-        fprintf(fp, "%f\t",sol_value);
+        fprintf(fp, "%0.16f\t",sol_value);
       }
 
       fprintf(fp, "\n");
@@ -638,8 +631,9 @@ void
 Solve_System_SS_adaptive<dim>::construct_block_structure(std::vector<int> &block_structure,
                                                          const std::vector<unsigned int> &n_eqn)
 {
-    Assert(n_eqn.size() != 0, ExcNotInitialized());
-    Assert(std::is_sorted(std::begin(n_eqn),std::end(n_eqn)),ExcMessage("number of equations not sorted"));
+    AssertThrow(n_eqn.size() != 0, ExcNotInitialized());
+    AssertThrow(std::is_sorted(std::begin(n_eqn),std::end(n_eqn)),
+                ExcMessage("number of equations not sorted"));
 
     // the very first entry should be the number of equations in the first system
     block_structure.push_back(n_eqn[0]);
@@ -784,22 +778,34 @@ Solve_System_SS_adaptive<dim>::current_max_fe_index()
 // set the fe index as the present cycle
 template<int dim>
 void
-Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycle)
+Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycle,
+                                                 const Vector<double> &error_per_cell,
+                                                 Triangulation<dim> &triangulation)
 {
   typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(), endc = dof_handler.end();
+  const double frac_refine = 0.3;
+  const double frac_coarse = 0;
 
   if(present_cycle == 0)
     for(; cell != endc ; cell++)
             cell->set_active_fe_index(present_cycle);
   else
+  {
+    // we use the triangulation object to mark cells for refinement
+    GridRefinement::refine_and_coarsen_fixed_number (triangulation,
+                                                            error_per_cell,
+                                                            frac_refine,
+                                                            frac_coarse);  
     for(; cell != endc ; cell++)
-      if(fabs(cell->center()(0)-1) < 0.2 || fabs(cell->center()(0)) < 0.2) // increase the index if close to the wall
       {
         const unsigned int current_index = cell->active_fe_index();
-
-        if(current_index < fe.size()) // else do nothing
-          cell->set_active_fe_index(current_index + 1);
+        if(current_index < fe.size() && cell->refine_flag_set()) // else do nothing
+        {
+          cell->set_active_fe_index(current_index + 1);           // increase the current fe index
+          cell->clear_refine_flag();                              // dont need the refinement flag anymore
+        }
       }
+  }
 
             
 }
@@ -958,7 +964,8 @@ Solve_System_SS_adaptive<dim>::interpolate_higher_fe_index(const std::vector<Vec
     for(;cell != endc ; cell++)
     {
       // check whether the indexing has been preserved
-      AssertThrow(cell_index_center[cell->index()].distance(cell->center()),ExcMessage("Ordering changed"));
+      AssertThrow(cell_index_center[cell->index()].distance(cell->center()) < 1e-16,
+                  ExcOrderingChanged(cell_index_center[cell->index()].distance(cell->center())));
 
       // or not during polynomial increase.
       std::vector<types::global_dof_index> local_dof_indices(cell->get_fe().dofs_per_cell);
