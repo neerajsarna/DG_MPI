@@ -12,7 +12,8 @@ run_problem
 					Triangulation<dim> &triangulation, // triangulation
 					const int poly_degree,
 					ic_bc_base<dim> *ic_bc_primal,
-					ic_bc_base<dim> *ic_bc_adjoint);
+					ic_bc_base<dim> *ic_bc_adjoint,
+					const std::string &foldername);
 
 
 		void compute_error(const hp::DoFHandler<dim> &dof_handler_primal,
@@ -73,6 +74,10 @@ run_problem
 		void write_fe_index(const std::string &filename,
                             const hp::DoFHandler<dim> &dof_handler,
                             const std::vector<unsigned int> &n_eqn);
+
+
+		void print_fe_index(const hp::DoFHandler<dim> &dof_handler,const std::vector<unsigned int> &n_eqn);
+		
 
 
 };

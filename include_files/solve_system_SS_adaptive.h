@@ -42,10 +42,7 @@ Solve_System_SS_adaptive
 		void distribute_dofs();
 		std::vector<unsigned int> n_eqn;
 		std::vector<system_data> system_matrices;
-		std::vector<system_data> system_matrices_original;	// here we store all the system matrices
-		std::vector<unsigned int> fe_index_id;
 
-	
 		const double CFL = 1.0;
 		double dt;
 		double t_end = 0.3;
@@ -122,7 +119,7 @@ Solve_System_SS_adaptive
     					   double &t,
     					   const std::vector<Vector<double>> &force_vector);
 
-    	void develop_system_matrices();
+    	
     	void develop_neqn();
 
     	void construct_fe_collection(); 

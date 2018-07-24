@@ -186,18 +186,22 @@ int main(int argc, char *argv[])
      std::vector<int> nbc_M;
      const double Kn = 0.1;
 
-     const unsigned int num_systems = 4;
+     const unsigned int num_systems = 6;
      std::vector<int> M(num_systems);
      std::vector<int> M_adjoint(num_systems);
      M[0] = 6;
      M[1] = 8;
      M[2] = 10;
      M[3] = 12;
+     M[4] = 14;
+     M[5] = 16;
 
      M_adjoint[0] = 8;
      M_adjoint[1] = 10;
      M_adjoint[2] = 12;
      M_adjoint[3] = 14;
+     M_adjoint[4] = 16;
+     M_adjoint[5] = 18;
 
      neqn_M.resize(18);
      nbc_M.resize(18);
@@ -243,6 +247,7 @@ int main(int argc, char *argv[])
       ic_bc<dim> initial_boundary;	
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
+      std::string foldername = "2x1v_moments_Inflow_Adp/temp";
 
        run_problem<dim> Run_Problem(system_matrices,	  // system data
        								system_matrices_error,
@@ -250,7 +255,8 @@ int main(int argc, char *argv[])
 							  		triangulation, // triangulation
 							  		poly_degree,
 							  		&initial_boundary,
-					          		&initial_boundary_adjoint);
+					          		&initial_boundary_adjoint,
+					          		foldername);
 
 }
 

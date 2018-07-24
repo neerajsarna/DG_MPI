@@ -7,7 +7,8 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 							                Triangulation<dim> &triangulation, // triangulation
 							                 const int poly_degree,
 							                 ic_bc_base<dim> *ic_bc_primal,
-					                     ic_bc_base<dim> *ic_bc_adjoint)
+					                     ic_bc_base<dim> *ic_bc_adjoint,
+                               const std::string &foldername)
 {
       TimerOutput timer (std::cout, TimerOutput::summary,
                      TimerOutput::wall_times);
@@ -34,7 +35,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
      solve_adjoint.distribute_dofs();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 4;
+	   const unsigned int refine_cycles = 6;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<std::vector<Vector<double>>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<std::vector<Vector<double>>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
@@ -48,6 +49,17 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
         timer.enter_subsection("solve primal");
 	   		solve_primal.run_time_loop(triangulation,cycle,refine_cycles,t,temp);
         timer.leave_subsection();
+   
+        print_fe_index(solve_primal.dof_handler,solve_primal.n_eqn);
+
+        // std::string filename = foldername + std::string("/fe_index_cycle") + std::to_string(cycle)
+        //                                   + "_Kn_" + "0p1" + std::string(".txt");
+
+        // write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
+
+        filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
+                                          + "_Kn_" + "0p1" + std::string(".txt");
+        solve_primal.create_output(filename);
 
 
 	   		if(cycle != refine_cycles-1)
@@ -56,6 +68,11 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
           timer.enter_subsection("solve adjoint");
 	   			solve_adjoint.run_time_loop(triangulation,cycle,refine_cycles,t,solve_primal.cellwise_sol);
           timer.leave_subsection();
+
+          // filename = foldername + std::string("/result_adjoint_cycle") + std::to_string(cycle)
+          //                                 + "_Kn_" + "0p1" + std::string(".txt");
+
+          // solve_adjoint.create_output(filename);
 
           timer.enter_subsection("compute error");
 	   			compute_error(solve_adjoint.dof_handler,
@@ -84,32 +101,8 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
          solve_adjoint.interpolate_higher_fe_index(solve_adjoint.cellwise_sol,solve_adjoint.cell_fe_index,
                                                    solve_adjoint.locally_owned_solution,component_to_system_adjoint); // create the cellwise solution
 	   		} // end of if condition
-
-
-        std::string foldername = "2x1v_moments_Inflow_Adp/M_6_8_10_12/";
-        std::string filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
-                                          + "_Kn_" + "0p1" + std::string(".txt");
-        solve_primal.create_output(filename);
-
-        filename = foldername + std::string("/fe_index_cycle") + std::to_string(cycle)
-                                          + "_Kn_" + "0p1" + std::string(".txt");
-
-        write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
       
 	   }
-
-
-	 	
-
-	// std::string filename = "2x3v_moments_HC_Adp/M_4Adj" + std::string("/result0")
- //                                + "_Kn_" + "0p1" + std::string(".txt");
-
- //    solve_adjoint.create_output(filename);
-
- //    filename = "2x3v_moments_HC_Adp/error_M3.txt";
-
- //    write_error(filename,triangulation);
-
 
 }
 
@@ -446,6 +439,27 @@ run_problem<dim>::write_fe_index(const std::string &filename,
   
 
   fclose(fp);
+}
+
+template<int dim>
+void
+run_problem<dim>::print_fe_index(const hp::DoFHandler<dim> &dof_handler,
+                                 const std::vector<unsigned int> &n_eqn)
+{
+  std::cout << "FE index data....." << std::endl;
+  typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(), endc = dof_handler.end();
+  std::vector<unsigned int> fe_indices(n_eqn.size());
+
+  for(; cell!=endc ; cell++)
+    fe_indices[cell->active_fe_index()]++;
+  
+
+  for(unsigned int i = 0 ; i < fe_indices.size(); i++)
+    std::cout << "FE index: " << i << 
+                " appeared: " << fe_indices[i] << 
+                " equations: " << n_eqn[i] << std::endl;
+
+
 }
 
 template class run_problem<2>;

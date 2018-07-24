@@ -11,27 +11,17 @@ mpi_comm(MPI_COMM_WORLD),
 dof_handler(triangulation),
 fe_basic(poly_degree),
 initial_boundary(ic_bc),
-system_matrices_original(system_mat),
+system_matrices(system_mat),
 this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
 pout(std::cout,this_mpi_process==0)
 {
-      const unsigned long int max_systems = 5;
 
-      fe_index_id.resize(std::min(system_matrices_original.size(),max_systems));
-      system_matrices.resize(std::min(system_matrices_original.size(),max_systems));
-
-      for(unsigned int i = 0 ; i < fe_index_id.size(); i++)
-        fe_index_id[i] = i;
-
-      develop_system_matrices();  // given the fe index develop the system matrices
       develop_neqn();
-      
       construct_fe_collection();
             
       max_speed = compute_max_speed();
       Assert(n_eqn.size() == fe.size(), ExcNotImplemented());
 
-      
       cellwise_sol.resize(triangulation.n_active_cells()); // the size of triangulation does not change
       store_cell_index_center();
 }
@@ -621,18 +611,6 @@ fe_v_face(scratch.fe_v_face.get_fe_collection(),
           update_normal_vectors)
 {;}
 
-
-template<int dim>
-void 
-Solve_System_SS_adaptive<dim>::develop_system_matrices()
-{
-  Assert(fe_index_id.size() !=0 ,ExcNotInitialized());
-  Assert(system_matrices.size() !=0 ,ExcNotInitialized());
-
-  for(unsigned int i = 0 ; i < fe_index_id.size() ;i++)
-      system_matrices[i] = system_matrices_original[fe_index_id[i]];
-}
-
 template<int dim>
 void 
 Solve_System_SS_adaptive<dim>::develop_neqn()
@@ -670,100 +648,110 @@ Solve_System_SS_adaptive<dim>::construct_fe_collection()
 
     Assert(n_eqn.size() != 0,ExcNotInitialized());
 
-    // first create the block structure for the finite element object which will then be used to construct the fe system
+    // first create the block structure for the finite element object 
+    // which will then be used to construct the fe system
+
     construct_block_structure(block_structure,n_eqn);
+
+    std::vector< std::vector< const FiniteElement<dim>* > > fe_list;
+    std::vector<unsigned int> multiplicities;
+
+    fe_list.resize(block_structure.size());
+    
+    for(unsigned int i = 0 ; i < block_structure.size() ; i++)
+      multiplicities.push_back(block_structure[i]);
 
     switch (block_structure.size())
     {
       case 1:
       {
-        fe.push_back(FESystem<dim>(fe_basic,block_structure[0]));
+        fe_list[0].push_back(&fe_basic);
         break;
       }
 
       case 2:
       {
-      
-        fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                          FE_Nothing<dim>(),block_structure[1]));
+        fe_list[0].push_back(&fe_basic);
+        fe_list[0].push_back(new FE_Nothing<dim>());
 
-        fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                                fe_basic,block_structure[1]));
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(&fe_basic);
 
         break;
       }
 
       case 3:
       {
-       fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                          FE_Nothing<dim>(),block_structure[1],
-                          FE_Nothing<dim>(),block_structure[2]));
+        fe_list[0].push_back(&fe_basic);
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                                             fe_basic,block_structure[1],
-                                              FE_Nothing<dim>(),block_structure[2]));
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                                             fe_basic,block_structure[1],
-                                            fe_basic,block_structure[2]));
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
         break;
       }
 
       case 4:
       {
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                               FE_Nothing<dim>(),block_structure[1],
-                                FE_Nothing<dim>(),block_structure[2],
-                              FE_Nothing<dim>(),block_structure[3]));
+        fe_list[0].push_back(&fe_basic);
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                                           fe_basic,block_structure[1],
-                                     FE_Nothing<dim>(),block_structure[2],
-                                     FE_Nothing<dim>(),block_structure[3]));
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                              fe_basic,block_structure[1],
-                              fe_basic,block_structure[2],
-                           FE_Nothing<dim>(),block_structure[3]));
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                                           fe_basic,block_structure[1],
-                           fe_basic,block_structure[2],
-                           fe_basic,block_structure[3]));
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
         break;
       }
 
       case 5:
       {
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                           FE_Nothing<dim>(),block_structure[1],
-                          FE_Nothing<dim>(),block_structure[2],
-                          FE_Nothing<dim>(),block_structure[3],
-                          FE_Nothing<dim>(),block_structure[4]));
+        fe_list[0].push_back(&fe_basic);
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                           fe_basic,block_structure[1],
-                          FE_Nothing<dim>(),block_structure[2],
-                          FE_Nothing<dim>(),block_structure[3],
-                          FE_Nothing<dim>(),block_structure[4]));
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                           fe_basic,block_structure[1],
-                          fe_basic,block_structure[2],
-                          FE_Nothing<dim>(),block_structure[3],
-                          FE_Nothing<dim>(),block_structure[4]));
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
 
-      fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                                            fe_basic,block_structure[1],
-                          fe_basic,block_structure[2],
-                          fe_basic,block_structure[3],
-                          FE_Nothing<dim>(),block_structure[4]));
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(new FE_Nothing<dim>());
 
-    fe.push_back(FESystem<dim>(fe_basic,block_structure[0],
-                           fe_basic,block_structure[1],
-                          fe_basic,block_structure[2],
-                          fe_basic,block_structure[3],
-                          fe_basic,block_structure[4]));
+
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
         break;
       }
 
@@ -773,6 +761,9 @@ Solve_System_SS_adaptive<dim>::construct_fe_collection()
         break;
       }
     }
+
+    for(unsigned int i = 0 ; i < fe_list.size() ;i++)
+      fe.push_back(FESystem<dim>(fe_list[i],multiplicities));
 }
 
 template<int dim>
@@ -826,21 +817,7 @@ Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycl
           cell->set_active_fe_index(current_index + 1);           // increase the current fe index
           cell->clear_refine_flag();                              // dont need the refinement flag anymore
         }
-        if(current_index == fe.size() && cell->refine_flag_set() && !found_higher) // enough to find even a single cell
-        {
-          found_higher = true;
-          fe_index_id[fe_index_id.size()-1] += 1; //increase the system corresponding to the last index
-     
-          AssertThrow(fe_index_id[fe_index_id.size()-1] <= (system_matrices_original.size()-1),
-                      ExcMessage("reduce the cycles"));
 
-          develop_system_matrices();
-          develop_neqn();
-          construct_fe_collection();
-          max_speed = compute_max_speed();
-          Assert(n_eqn.size() == fe.size(), ExcNotImplemented());
-
-        }
       }
   }
 
