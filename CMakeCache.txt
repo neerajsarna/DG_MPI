@@ -21,7 +21,7 @@
 2x1v_moments_Inflow_Adp_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
 
 //Choose the type of build, options are: Debug, Release, DebugRelease
-CMAKE_BUILD_TYPE:STRING=Release
+CMAKE_BUILD_TYPE:STRING=Debug
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON

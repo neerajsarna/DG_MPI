@@ -11,12 +11,19 @@ mpi_comm(MPI_COMM_WORLD),
 dof_handler(triangulation),
 fe_basic(poly_degree),
 initial_boundary(ic_bc),
-system_matrices(system_mat),
+system_matrices_original(system_mat),
 this_mpi_process(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
 pout(std::cout,this_mpi_process==0)
 {
+      const unsigned long int max_systems = 5;
 
-      
+      fe_index_id.resize(std::min(system_matrices_original.size(),max_systems));
+      system_matrices.resize(std::min(system_matrices_original.size(),max_systems));
+
+      for(unsigned int i = 0 ; i < fe_index_id.size(); i++)
+        fe_index_id[i] = i;
+
+      develop_system_matrices();  // given the fe index develop the system matrices
       develop_neqn();
       
       construct_fe_collection();
@@ -617,6 +624,17 @@ fe_v_face(scratch.fe_v_face.get_fe_collection(),
 
 template<int dim>
 void 
+Solve_System_SS_adaptive<dim>::develop_system_matrices()
+{
+  Assert(fe_index_id.size() !=0 ,ExcNotInitialized());
+  Assert(system_matrices.size() !=0 ,ExcNotInitialized());
+
+  for(unsigned int i = 0 ; i < fe_index_id.size() ;i++)
+      system_matrices[i] = system_matrices_original[fe_index_id[i]];
+}
+
+template<int dim>
+void 
 Solve_System_SS_adaptive<dim>::develop_neqn()
 {
   n_eqn.resize(system_matrices.size());
@@ -785,6 +803,7 @@ Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycl
   typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(), endc = dof_handler.end();
   const double frac_refine = 0.3;
   const double frac_coarse = 0;
+  bool found_higher = false;
 
   if(present_cycle == 0)
     for(; cell != endc ; cell++)
@@ -799,10 +818,28 @@ Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycl
     for(; cell != endc ; cell++)
       {
         const unsigned int current_index = cell->active_fe_index();
+        AssertThrow(current_index <=5 ,ExcNotImplemented());
+
+
         if(current_index < fe.size() && cell->refine_flag_set()) // else do nothing
         {
           cell->set_active_fe_index(current_index + 1);           // increase the current fe index
           cell->clear_refine_flag();                              // dont need the refinement flag anymore
+        }
+        if(current_index == fe.size() && cell->refine_flag_set() && !found_higher) // enough to find even a single cell
+        {
+          found_higher = true;
+          fe_index_id[fe_index_id.size()-1] += 1; //increase the system corresponding to the last index
+     
+          AssertThrow(fe_index_id[fe_index_id.size()-1] <= (system_matrices_original.size()-1),
+                      ExcMessage("reduce the cycles"));
+
+          develop_system_matrices();
+          develop_neqn();
+          construct_fe_collection();
+          max_speed = compute_max_speed();
+          Assert(n_eqn.size() == fe.size(), ExcNotImplemented());
+
         }
       }
   }
