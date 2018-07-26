@@ -35,7 +35,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
      solve_adjoint.distribute_dofs();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 6;
+	   const unsigned int refine_cycles = 3;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<std::vector<Vector<double>>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<std::vector<Vector<double>>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 

@@ -186,24 +186,17 @@ int main(int argc, char *argv[])
      std::vector<int> nbc_M;
      const double Kn = 0.1;
 
-     const unsigned int num_systems = 6;
+     const unsigned int num_systems = 3;
      std::vector<int> M(num_systems);
      std::vector<int> M_adjoint(num_systems);
      M[0] = 6;
-     M[1] = 8;
-     M[2] = 10;
-     M[3] = 12;
-     M[4] = 14;
-     M[5] = 16;
-
+     M[1] = 14;
+     M[2] = 16;
 
      M_adjoint[0] = 6;
      M_adjoint[1] = 8;
      M_adjoint[2] = 10;
-     M_adjoint[3] = 12;
-     M_adjoint[4] = 14;
-     M_adjoint[5] = 16;
-     
+    
 
      neqn_M.resize(18);
      nbc_M.resize(18);

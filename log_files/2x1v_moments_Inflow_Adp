@@ -1,15 +1,15 @@
-Sender: LSF System <lsfadmin@linuxbmc0560>
-Subject: Job 43717208: <2x1v_moments_Adp> in cluster <rcc> Done
+Sender: LSF System <lsfadmin@linuxbmc0406>
+Subject: Job 43756227: <2x1v_moments_Adp> in cluster <rcc> Done
 
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Jul 24 17:38:16 2018
-Job was executed on host(s) <12*linuxbmc0560>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Jul 24 17:38:27 2018
-                            <12*linuxbmc0562>
-                            <8*linuxbmc0563>
+Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Thu Jul 26 21:00:27 2018
+Job was executed on host(s) <12*linuxbmc0406>, in queue <normal>, as user <ns179556> in cluster <rcc> at Thu Jul 26 21:00:34 2018
+                            <12*linuxbmc0411>
+                            <8*linuxbmc0412>
 </home/ns179556> was used as the home directory.
 </home/ns179556/DG_MPI> was used as the working directory.
-Started at Tue Jul 24 17:38:27 2018
-Terminated at Tue Jul 24 18:03:49 2018
-Results reported at Tue Jul 24 18:03:49 2018
+Started at Thu Jul 26 21:00:34 2018
+Terminated at Thu Jul 26 21:18:30 2018
+Results reported at Thu Jul 26 21:18:30 2018
 
 Your job looked like:
 
@@ -54,31 +54,22 @@ Successfully completed.
 
 Resource usage summary:
 
-    CPU time :                                   2984.21 sec.
-    Max Memory :                                 486 MB
-    Average Memory :                             475.53 MB
+    CPU time :                                   2113.51 sec.
+    Max Memory :                                 476 MB
+    Average Memory :                             463.91 MB
     Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31514.00 MB
+    Delta Memory :                               31524.00 MB
     Max Swap :                                   -
     Max Processes :                              8
     Max Threads :                                20
-    Run time :                                   1522 sec.
-    Turnaround time :                            1533 sec.
+    Run time :                                   1100 sec.
+    Turnaround time :                            1083 sec.
 
 The output (if any) follows:
 
-/home/ns179556/.lsbatch/1532446696.43717208.shell:25: command not found: switch
+/home/ns179556/.lsbatch/1532631627.43756227.shell:25: command not found: switch
 +(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0560.rz.RWTH-Aachen.DE:04405] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
+[linuxbmc0406.rz.RWTH-Aachen.DE:08870] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
 developing systems: 
 developing systems: 
 developing systems: 
@@ -130,859 +121,210 @@ residual: 3.88502e-05time: 8.52321
 residual: 2.16351e-05time: 8.77389
 residual: 1.7334e-05time: 9.02457
 residual: 1.0822e-05time: 9.27525
-Steps taken: 18561
+residual: 6.47749e-06time: 9.52594
+residual: 5.18789e-06time: 9.77662
+residual: 2.99114e-06time: 10.0273
+residual: 1.98904e-06time: 10.278
+residual: 1.51641e-06time: 10.5287
+residual: 8.33396e-07time: 10.7793
+residual: 6.15336e-07time: 11.03
+residual: 4.32928e-07time: 11.2807
+residual: 2.38283e-07time: 11.5314
+residual: 1.88795e-07time: 11.7821
+residual: 1.21162e-07time: 12.0328
+residual: 7.06016e-08time: 12.2834
+residual: 5.68826e-08time: 12.5341
+residual: 3.35204e-08time: 12.7848
+residual: 2.15512e-08time: 13.0355
+residual: 1.67494e-08time: 13.2862
+Steps taken: 26942
 FE index data.....
 FE index: 0 appeared: 300 equations: 6
-FE index: 1 appeared: 0 equations: 8
-FE index: 2 appeared: 0 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-solving adjoint: 
-cycle: 0
-total cells: 300
-total dofs: 2400
-residual: 2.84084time: 9.50691
-residual: 2.44733time: 9.70797
-residual: 2.23962time: 9.90904
-residual: 2.15581time: 10.1101
-residual: 1.74558time: 10.3112
-residual: 1.06212time: 10.5122
-residual: 0.539749time: 10.7133
-residual: 0.383323time: 10.9144
-residual: 0.297282time: 11.1154
-residual: 0.213667time: 11.3165
-residual: 0.189631time: 11.5176
-residual: 0.156322time: 11.7186
-residual: 0.0983396time: 11.9197
-residual: 0.0599582time: 12.1208
-residual: 0.0500361time: 12.3218
-residual: 0.0372444time: 12.5229
-residual: 0.0240945time: 12.724
-residual: 0.0200386time: 12.9251
-residual: 0.0164557time: 13.1261
-residual: 0.0104855time: 13.3272
-residual: 0.00694534time: 13.5283
-residual: 0.00597774time: 13.7293
-residual: 0.00433972time: 13.9304
-residual: 0.0027313time: 14.1315
-residual: 0.00224258time: 14.3325
-residual: 0.0018232time: 14.5336
-residual: 0.00116048time: 14.7347
-residual: 0.000799143time: 14.9357
-residual: 0.000691796time: 15.1368
-residual: 0.000493308time: 15.3379
-residual: 0.000309043time: 15.5389
-residual: 0.000255213time: 15.74
-residual: 0.000205054time: 15.9411
-residual: 0.000129756time: 16.1421
-residual: 9.16116e-05time: 16.3432
-residual: 7.92392e-05time: 16.5443
-residual: 5.56346e-05time: 16.7453
-residual: 3.49784e-05time: 16.9464
-residual: 2.91869e-05time: 17.1475
-residual: 2.31527e-05time: 17.3485
-residual: 1.45536e-05time: 17.5496
-residual: 1.04923e-05time: 17.7507
-Steps taken: 21195
+FE index: 1 appeared: 0 equations: 14
+FE index: 2 appeared: 0 equations: 16
 refinement cycle: 1
 solving primal: 
 cycle: 1
-total cells: 300
-total dofs: 1982
-residual: 0.538261time: 18.0302
-residual: 0.310699time: 18.2312
-residual: 0.200331time: 18.4323
-residual: 0.183026time: 18.6334
-residual: 0.153105time: 18.8344
-residual: 0.0894483time: 19.0355
-residual: 0.0424337time: 19.2366
-residual: 0.0304577time: 19.4376
-residual: 0.0235968time: 19.6387
-residual: 0.0163706time: 19.8398
-residual: 0.0144219time: 20.0408
-residual: 0.0113927time: 20.2419
-residual: 0.00667635time: 20.443
-residual: 0.0043062time: 20.644
-residual: 0.00369932time: 20.8451
-residual: 0.00250867time: 21.0462
-residual: 0.00162328time: 21.2472
-residual: 0.00141766time: 21.4483
-residual: 0.0010411time: 21.6494
-residual: 0.000609179time: 21.8504
-residual: 0.000474246time: 22.0515
-residual: 0.00038791time: 22.2526
-residual: 0.000240477time: 22.4536
-residual: 0.000167344time: 22.6547
-residual: 0.000145213time: 22.8558
-residual: 9.75742e-05time: 23.0568
-residual: 5.97658e-05time: 23.2579
-residual: 5.11363e-05time: 23.459
-residual: 3.83184e-05time: 23.66
-residual: 2.2817e-05time: 23.8611
-residual: 1.78051e-05time: 24.0622
-residual: 1.46693e-05time: 24.2632
-Steps taken: 16417
-FE index data.....
-FE index: 0 appeared: 209 equations: 6
-FE index: 1 appeared: 91 equations: 8
-FE index: 2 appeared: 0 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-solving adjoint: 
-cycle: 1
-total cells: 300
-total dofs: 2582
-residual: 0.404708time: 24.6024
-residual: 0.196363time: 24.7739
-residual: 0.112141time: 24.9454
-residual: 0.0821696time: 25.1169
-residual: 0.0733736time: 25.2884
-residual: 0.0593793time: 25.4599
-residual: 0.0378441time: 25.6313
-residual: 0.0217654time: 25.8028
-residual: 0.0162287time: 25.9743
-residual: 0.013845time: 26.1458
-residual: 0.0101303time: 26.3173
-residual: 0.00808042time: 26.4888
-residual: 0.00750017time: 26.6603
-residual: 0.00611601time: 26.8317
-residual: 0.00401354time: 27.0032
-residual: 0.00257139time: 27.1747
-residual: 0.00219106time: 27.3462
-residual: 0.00183041time: 27.5177
-residual: 0.00127078time: 27.6892
-residual: 0.000929936time: 27.8607
-residual: 0.000844419time: 28.0322
-residual: 0.000693679time: 28.2036
-residual: 0.000463233time: 28.3751
-residual: 0.000313425time: 28.5466
-residual: 0.000275757time: 28.7181
-residual: 0.000228353time: 28.8896
-residual: 0.000155614time: 29.0611
-residual: 0.000110658time: 29.2326
-residual: 9.94623e-05time: 29.404
-residual: 8.17667e-05time: 29.5755
-residual: 5.49186e-05time: 29.747
-residual: 3.80171e-05time: 29.9185
-residual: 3.38076e-05time: 30.09
-residual: 2.78456e-05time: 30.2615
-residual: 1.8829e-05time: 30.433
-residual: 1.32859e-05time: 30.6045
-residual: 1.19066e-05time: 30.7759
-Steps taken: 18962
-refinement cycle: 2
-solving primal: 
-cycle: 2
-total cells: 300
-total dofs: 2164
-residual: 0.920125time: 31.1059
-residual: 0.41361time: 31.2774
-residual: 0.185275time: 31.4489
-residual: 0.0871512time: 31.6203
-residual: 0.068314time: 31.7918
-residual: 0.0517586time: 31.9633
-residual: 0.0291634time: 32.1348
-residual: 0.016178time: 32.3063
-residual: 0.0118936time: 32.4778
-residual: 0.00994032time: 32.6493
-residual: 0.0071577time: 32.8207
-residual: 0.0059108time: 32.9922
-residual: 0.00538607time: 33.1637
-residual: 0.0040938time: 33.3352
-residual: 0.0025505time: 33.5067
-residual: 0.0017349time: 33.6782
-residual: 0.00153565time: 33.8497
-residual: 0.00120023time: 34.0212
-residual: 0.000793194time: 34.1926
-residual: 0.000612135time: 34.3641
-residual: 0.000549898time: 34.5356
-residual: 0.000416933time: 34.7071
-residual: 0.000264834time: 34.8786
-residual: 0.000197186time: 35.0501
-residual: 0.000176024time: 35.2216
-residual: 0.000133222time: 35.393
-residual: 8.60334e-05time: 35.5645
-residual: 6.66911e-05time: 35.736
-residual: 5.94788e-05time: 35.9075
-residual: 4.42965e-05time: 36.079
-residual: 2.83056e-05time: 36.2505
-residual: 2.20208e-05time: 36.422
-residual: 1.95566e-05time: 36.5935
-residual: 1.44388e-05time: 36.7649
-Steps taken: 17410
-FE index data.....
-FE index: 0 appeared: 164 equations: 6
-FE index: 1 appeared: 90 equations: 8
-FE index: 2 appeared: 46 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-solving adjoint: 
-cycle: 2
-total cells: 300
-total dofs: 2764
-residual: 0.435653time: 37.0571
-residual: 0.156113time: 37.2085
-residual: 0.0617836time: 37.36
-residual: 0.0303654time: 37.5115
-residual: 0.016201time: 37.663
-residual: 0.0110089time: 37.8145
-residual: 0.00735317time: 37.966
-residual: 0.00435016time: 38.1175
-residual: 0.00291646time: 38.269
-residual: 0.00247073time: 38.4205
-residual: 0.00206654time: 38.572
-residual: 0.00155468time: 38.7234
-residual: 0.00125386time: 38.8749
-residual: 0.00117121time: 39.0264
-residual: 0.00102112time: 39.1779
-residual: 0.000753874time: 39.3294
-residual: 0.000493703time: 39.4809
-residual: 0.000369182time: 39.6324
-residual: 0.000332263time: 39.7839
-residual: 0.00027614time: 39.9354
-residual: 0.000198799time: 40.0869
-residual: 0.000147411time: 40.2383
-residual: 0.000132553time: 40.3898
-residual: 0.000117664time: 40.5413
-residual: 8.91484e-05time: 40.6928
-residual: 6.01303e-05time: 40.8443
-residual: 4.59544e-05time: 40.9958
-residual: 4.17828e-05time: 41.1473
-residual: 3.49841e-05time: 41.2988
-residual: 2.51098e-05time: 41.4503
-residual: 1.791e-05time: 41.6018
-residual: 1.56555e-05time: 41.7533
-residual: 1.40441e-05time: 41.9047
-residual: 1.08445e-05time: 42.0562
-Steps taken: 17114
-refinement cycle: 3
-solving primal: 
-cycle: 3
-total cells: 300
-total dofs: 2346
-residual: 0.575215time: 42.2423
-residual: 0.213818time: 42.3938
-residual: 0.0911445time: 42.5452
-residual: 0.0316033time: 42.6967
-residual: 0.0161273time: 42.8482
-residual: 0.0117989time: 42.9997
-residual: 0.00733228time: 43.1512
-residual: 0.00455059time: 43.3027
-residual: 0.00351436time: 43.4542
-residual: 0.00304019time: 43.6057
-residual: 0.00236992time: 43.7572
-residual: 0.00168291time: 43.9087
-residual: 0.0014278time: 44.0601
-residual: 0.00130694time: 44.2116
-residual: 0.00104162time: 44.3631
-residual: 0.00070454time: 44.5146
-residual: 0.000486605time: 44.6661
-residual: 0.000426072time: 44.8176
-residual: 0.000372143time: 44.9691
-residual: 0.000275809time: 45.1206
-residual: 0.000189043time: 45.2721
-residual: 0.00015571time: 45.4236
-residual: 0.000141932time: 45.575
-residual: 0.000113042time: 45.7265
-residual: 7.70551e-05time: 45.878
-residual: 5.52046e-05time: 46.0295
-residual: 4.93119e-05time: 46.181
-residual: 4.26468e-05time: 46.3325
-residual: 3.11657e-05time: 46.484
-residual: 2.11829e-05time: 46.6355
-residual: 1.74669e-05time: 46.787
-residual: 1.58697e-05time: 46.9385
-residual: 1.25529e-05time: 47.09
-Steps taken: 16809
-FE index data.....
-FE index: 0 appeared: 152 equations: 6
-FE index: 1 appeared: 55 equations: 8
-FE index: 2 appeared: 61 equations: 10
-FE index: 3 appeared: 32 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-solving adjoint: 
-cycle: 3
-total cells: 300
-total dofs: 2946
-residual: 0.307538time: 47.3205
-residual: 0.0930491time: 47.4574
-residual: 0.0356593time: 47.5943
-residual: 0.0143089time: 47.7312
-residual: 0.00690925time: 47.868
-residual: 0.00347415time: 48.0049
-residual: 0.00254047time: 48.1418
-residual: 0.00217298time: 48.2787
-residual: 0.00182125time: 48.4156
-residual: 0.00129929time: 48.5525
-residual: 0.000870518time: 48.6894
-residual: 0.000655287time: 48.8263
-residual: 0.000588874time: 48.9632
-residual: 0.000512007time: 49.1001
-residual: 0.000392683time: 49.237
-residual: 0.000291787time: 49.3739
-residual: 0.000248983time: 49.5108
-residual: 0.000232915time: 49.6477
-residual: 0.000199949time: 49.7846
-residual: 0.000149664time: 49.9215
-residual: 0.000103991time: 50.0584
-residual: 8.18294e-05time: 50.1953
-residual: 7.50102e-05time: 50.3321
-residual: 6.52441e-05time: 50.469
-residual: 4.98412e-05time: 50.6059
-residual: 3.58573e-05time: 50.7428
-residual: 2.94263e-05time: 50.8797
-residual: 2.73241e-05time: 51.0166
-residual: 2.37344e-05time: 51.1535
-residual: 1.80152e-05time: 51.2904
-residual: 1.26788e-05time: 51.4273
-residual: 1.00518e-05time: 51.5642
-Steps taken: 16021
-refinement cycle: 4
-solving primal: 
-cycle: 4
-total cells: 300
-total dofs: 2528
-residual: 0.284269time: 51.7068
-residual: 0.104456time: 51.8437
-residual: 0.0433721time: 51.9806
-residual: 0.016766time: 52.1175
-residual: 0.0102056time: 52.2544
-residual: 0.00683809time: 52.3913
-residual: 0.00535837time: 52.5282
-residual: 0.0047767time: 52.6651
-residual: 0.00448842time: 52.802
-residual: 0.00385361time: 52.9389
-residual: 0.00289329time: 53.0758
-residual: 0.00194596time: 53.2127
-residual: 0.0013044time: 53.3496
-residual: 0.00110834time: 53.4865
-residual: 0.000991561time: 53.6234
-residual: 0.000793911time: 53.7603
-residual: 0.000583011time: 53.8972
-residual: 0.000472148time: 54.0341
-residual: 0.000438017time: 54.1709
-residual: 0.000387124time: 54.3078
-residual: 0.000297746time: 54.4447
-residual: 0.000204874time: 54.5816
-residual: 0.00015128time: 54.7185
-residual: 0.000135525time: 54.8554
-residual: 0.000120614time: 54.9923
-residual: 9.41173e-05time: 55.1292
-residual: 6.68771e-05time: 55.2661
-residual: 5.2254e-05time: 55.403
-residual: 4.79292e-05time: 55.5399
-residual: 4.23385e-05time: 55.6768
-residual: 3.26051e-05time: 55.8137
-residual: 2.27283e-05time: 55.9506
-residual: 1.73479e-05time: 56.0875
-residual: 1.57784e-05time: 56.2244
-residual: 1.39419e-05time: 56.3613
-residual: 1.07599e-05time: 56.4982
-Steps taken: 18110
-FE index data.....
-FE index: 0 appeared: 132 equations: 6
-FE index: 1 appeared: 63 equations: 8
-FE index: 2 appeared: 44 equations: 10
-FE index: 3 appeared: 31 equations: 12
-FE index: 4 appeared: 30 equations: 14
-FE index: 5 appeared: 0 equations: 16
-solving adjoint: 
-cycle: 4
-total cells: 300
-total dofs: 3128
-residual: 0.223536time: 56.6539
-residual: 0.0780898time: 56.7796
-residual: 0.0293893time: 56.9053
-residual: 0.0149479time: 57.031
-residual: 0.00723827time: 57.1566
-residual: 0.00427175time: 57.2823
-residual: 0.00310905time: 57.408
-residual: 0.00273891time: 57.5337
-residual: 0.00256713time: 57.6593
-residual: 0.00227749time: 57.785
-residual: 0.00185687time: 57.9107
-residual: 0.00133486time: 58.0364
-residual: 0.000866423time: 58.162
-residual: 0.000573227time: 58.2877
-residual: 0.000451575time: 58.4134
-residual: 0.000402497time: 58.5391
-residual: 0.000340267time: 58.6647
-residual: 0.000276173time: 58.7904
-residual: 0.000242455time: 58.9161
-residual: 0.000231591time: 59.0418
-residual: 0.000214438time: 59.1674
-residual: 0.00017866time: 59.2931
-residual: 0.000132129time: 59.4188
-residual: 9.09581e-05time: 59.5445
-residual: 6.8355e-05time: 59.6701
-residual: 6.10277e-05time: 59.7958
-residual: 5.48389e-05time: 59.9215
-residual: 4.46663e-05time: 60.0472
-residual: 3.38368e-05time: 60.1728
-residual: 2.72458e-05time: 60.2985
-residual: 2.51076e-05time: 60.4242
-residual: 2.32973e-05time: 60.5499
-residual: 1.9605e-05time: 60.6755
-residual: 1.47063e-05time: 60.8012
-residual: 1.04857e-05time: 60.9269
-Steps taken: 17579
-refinement cycle: 5
-solving primal: 
-cycle: 5
-total cells: 300
-total dofs: 2710
-residual: 0.173495time: 61.0724
-residual: 0.0522066time: 61.1981
-residual: 0.0240305time: 61.3238
-residual: 0.00966002time: 61.4494
-residual: 0.00625006time: 61.5751
-residual: 0.0051042time: 61.7008
-residual: 0.00463142time: 61.8265
-residual: 0.00451942time: 61.9521
-residual: 0.00415872time: 62.0778
-residual: 0.00346731time: 62.2035
-residual: 0.00256296time: 62.3292
-residual: 0.00169335time: 62.4548
-residual: 0.00109808time: 62.5805
-residual: 0.000858186time: 62.7062
-residual: 0.00077496time: 62.8319
-residual: 0.000661734time: 62.9575
-residual: 0.000523055time: 63.0832
-residual: 0.000429783time: 63.2089
-residual: 0.000397723time: 63.3346
-residual: 0.000372226time: 63.4602
-residual: 0.000316862time: 63.5859
-residual: 0.000238569time: 63.7116
-residual: 0.000165262time: 63.8373
-residual: 0.000123344time: 63.9629
-residual: 0.000110178time: 64.0886
-residual: 9.99336e-05time: 64.2143
-residual: 8.17475e-05time: 64.34
-residual: 6.09775e-05time: 64.4656
-residual: 4.7096e-05time: 64.5913
-residual: 4.22802e-05time: 64.717
-residual: 3.92976e-05time: 64.8427
-residual: 3.32968e-05time: 64.9683
-residual: 2.50551e-05time: 65.094
-residual: 1.78462e-05time: 65.2197
-residual: 1.42595e-05time: 65.3454
-residual: 1.31382e-05time: 65.471
-residual: 1.17522e-05time: 65.5967
-Steps taken: 18883
-FE index data.....
-FE index: 0 appeared: 118 equations: 6
-FE index: 1 appeared: 53 equations: 8
-FE index: 2 appeared: 55 equations: 10
-FE index: 3 appeared: 34 equations: 12
-FE index: 4 appeared: 10 equations: 14
-FE index: 5 appeared: 30 equations: 16
-
-
-+---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |  1.51e+03s |            |
-|                                             |            |            |
-| Section                         | no. calls |  wall time | % of total |
-+---------------------------------+-----------+------------+------------+
-| compute error                   |         5 |    0.0261s |         0% |
-| solve adjoint                   |         5 |       743s |        49% |
-| solve primal                    |         6 |       769s |        51% |
-+---------------------------------+-----------+------------+------------+
-
-Sender: LSF System <lsfadmin@linuxbmc0559>
-Subject: Job 43741979: <2x1v_moments_Adp> in cluster <rcc> Done
-
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Thu Jul 26 10:51:29 2018
-Job was executed on host(s) <12*linuxbmc0559>, in queue <normal>, as user <ns179556> in cluster <rcc> at Thu Jul 26 10:51:33 2018
-                            <12*linuxbmc0562>
-                            <8*linuxbmc0573>
-</home/ns179556> was used as the home directory.
-</home/ns179556/DG_MPI> was used as the working directory.
-Started at Thu Jul 26 10:51:33 2018
-Terminated at Thu Jul 26 11:08:49 2018
-Results reported at Thu Jul 26 11:08:49 2018
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-#!/usr/bin/env zsh
- 
-### Job name
-#BSUB -J 2x1v_moments_Adp
- 
-### File / path where STDOUT & STDERR will be written
-###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_Inflow_Adp
- 
-### Request the time you need for execution in minutes
-### The format for the parameter is: [hour:]minute,
-### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 1:20
- 
-### Request memory you need for your job per PROCESS in MB
-#BSUB -M 1000
- 
-### Request the number of compute slots you want to use
-#BSUB -n 32
- 
-### Use esub for Open MPI
-#BSUB -a openmpi
- 
-
-switch intel/16.0 gcc/system-default
-module load openmpi/1.10.2
-
-cd /home/ns179556/DG_MPI
- 
-export FLAGS_MPI_BATCH="-np 1"
-### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2x1v_moments_Inflow_Adp.out 32 300 3
-
-------------------------------------------------------------
-
-Successfully completed.
-
-Resource usage summary:
-
-    CPU time :                                   2032.30 sec.
-    Max Memory :                                 488 MB
-    Average Memory :                             475.68 MB
-    Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31512.00 MB
-    Max Swap :                                   -
-    Max Processes :                              8
-    Max Threads :                                20
-    Run time :                                   1036 sec.
-    Turnaround time :                            1040 sec.
-
-The output (if any) follows:
-
-/home/ns179556/.lsbatch/1532595089.43741979.shell:25: command not found: switch
-+(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0559.rz.RWTH-Aachen.DE:19098] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-refinement cycle: 0
-solving primal: 
-cycle: 0
-total cells: 300
-total dofs: 1800
-residual: 9.03307time: 0.250683
-residual: 11.6155time: 0.501365
-residual: 10.8163time: 0.752048
-residual: 10.3904time: 1.00273
-residual: 9.51571time: 1.25341
-residual: 6.45743time: 1.5041
-residual: 2.79974time: 1.75478
-residual: 1.23323time: 2.00546
-residual: 0.921492time: 2.25614
-residual: 0.628948time: 2.50683
-residual: 0.531356time: 2.75751
-residual: 0.330776time: 3.00819
-residual: 0.176919time: 3.25887
-residual: 0.140337time: 3.50956
-residual: 0.0847701time: 3.76024
-residual: 0.0555649time: 4.01092
-residual: 0.0433593time: 4.2616
-residual: 0.0239696time: 4.51229
-residual: 0.0168827time: 4.76297
-residual: 0.0123016time: 5.01365
-residual: 0.00674568time: 5.26433
-residual: 0.00524067time: 5.51502
-residual: 0.00348437time: 5.7657
-residual: 0.00197058time: 6.01638
-residual: 0.00158749time: 6.26706
-residual: 0.000965537time: 6.51775
-residual: 0.000595841time: 6.76843
-residual: 0.000472204time: 7.01911
-residual: 0.000267125time: 7.26979
-residual: 0.000183683time: 7.52048
-residual: 0.000136975time: 7.77116
-residual: 7.48779e-05time: 8.02184
-residual: 5.67686e-05time: 8.27252
-residual: 3.88502e-05time: 8.52321
-residual: 2.16351e-05time: 8.77389
-residual: 1.7334e-05time: 9.02457
-residual: 1.0822e-05time: 9.27525
-Steps taken: 18561
-FE index data.....
-FE index: 0 appeared: 300 equations: 6
-FE index: 1 appeared: 0 equations: 8
-FE index: 2 appeared: 0 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-refinement cycle: 1
-solving primal: 
-cycle: 1
-total cells: 300
-total dofs: 2400
-residual: 1.04056time: 9.50691
-residual: 0.329667time: 9.70797
-residual: 0.12279time: 9.90904
-residual: 0.06075time: 10.1101
-residual: 0.046532time: 10.3112
-residual: 0.0313388time: 10.5122
-residual: 0.0168304time: 10.7133
-residual: 0.00969899time: 10.9144
-residual: 0.00732978time: 11.1154
-residual: 0.00543579time: 11.3165
-residual: 0.00404734time: 11.5176
-residual: 0.00364363time: 11.7186
-residual: 0.00279375time: 11.9197
-residual: 0.0016669time: 12.1208
-residual: 0.00112593time: 12.3218
-residual: 0.000953592time: 12.5229
-residual: 0.000661354time: 12.724
-residual: 0.000444416time: 12.9251
-residual: 0.000387385time: 13.1261
-residual: 0.000296456time: 13.3272
-residual: 0.000181205time: 13.5283
-residual: 0.000132903time: 13.7293
-residual: 0.000112796time: 13.9304
-residual: 7.61982e-05time: 14.1315
-residual: 5.01667e-05time: 14.3325
-residual: 4.33499e-05time: 14.5336
-residual: 3.28287e-05time: 14.7347
-residual: 2.02268e-05time: 14.9357
-residual: 1.53914e-05time: 15.1368
-residual: 1.29734e-05time: 15.3379
-Steps taken: 15347
-FE index data.....
-FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 300 equations: 8
-FE index: 2 appeared: 0 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-refinement cycle: 2
-solving primal: 
-cycle: 2
-total cells: 300
-total dofs: 3000
-residual: 0.705632time: 15.6489
-residual: 0.17892time: 15.8204
-residual: 0.0770109time: 15.9919
-residual: 0.0445802time: 16.1633
-residual: 0.0379221time: 16.3348
-residual: 0.0338263time: 16.5063
-residual: 0.0248462time: 16.6778
-residual: 0.0153348time: 16.8493
-residual: 0.00838628time: 17.0208
-residual: 0.00634688time: 17.1923
-residual: 0.00520935time: 17.3638
-residual: 0.00392217time: 17.5352
-residual: 0.00334241time: 17.7067
-residual: 0.00311893time: 17.8782
-residual: 0.00249686time: 18.0497
-residual: 0.00162088time: 18.2212
-residual: 0.00101944time: 18.3927
-residual: 0.000847711time: 18.5642
-residual: 0.000709093time: 18.7356
-residual: 0.000500306time: 18.9071
-residual: 0.000369809time: 19.0786
-residual: 0.000336126time: 19.2501
-residual: 0.000280798time: 19.4216
-residual: 0.000191201time: 19.5931
-residual: 0.000124923time: 19.7646
-residual: 0.000105728time: 19.9361
-residual: 9.02033e-05time: 20.1075
-residual: 6.37664e-05time: 20.279
-residual: 4.38701e-05time: 20.4505
-residual: 3.82981e-05time: 20.622
-residual: 3.29584e-05time: 20.7935
-residual: 2.32638e-05time: 20.965
-residual: 1.52594e-05time: 21.1365
-residual: 1.27358e-05time: 21.3079
-residual: 1.10943e-05time: 21.4794
-Steps taken: 17696
-FE index data.....
-FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 0 equations: 8
-FE index: 2 appeared: 300 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-refinement cycle: 3
-solving primal: 
-cycle: 3
-total cells: 300
-total dofs: 3600
-residual: 0.550669time: 21.6981
-residual: 0.14648time: 21.8496
-residual: 0.0500384time: 22.0011
-residual: 0.0282031time: 22.1526
-residual: 0.0221741time: 22.3041
-residual: 0.0205328time: 22.4556
-residual: 0.0180904time: 22.6071
-residual: 0.013292time: 22.7586
-residual: 0.008505time: 22.9101
-residual: 0.00501965time: 23.0616
-residual: 0.00373414time: 23.2131
-residual: 0.0032318time: 23.3645
-residual: 0.00255688time: 23.516
-residual: 0.0020539time: 23.6675
-residual: 0.00191119time: 23.819
-residual: 0.00176108time: 23.9705
-residual: 0.00139769time: 24.122
-residual: 0.000939667time: 24.2735
-residual: 0.000609565time: 24.425
-residual: 0.000497736time: 24.5765
-residual: 0.000441066time: 24.728
-residual: 0.000342766time: 24.8794
-residual: 0.000246503time: 25.0309
-residual: 0.000206203time: 25.1824
-residual: 0.000192128time: 25.3339
-residual: 0.000160165time: 25.4854
-residual: 0.000113087time: 25.6369
-residual: 7.57198e-05time: 25.7884
-residual: 6.22292e-05time: 25.9399
-residual: 5.62363e-05time: 26.0914
-residual: 4.46403e-05time: 26.2429
-residual: 3.12498e-05time: 26.3943
-residual: 2.39249e-05time: 26.5458
-residual: 2.19527e-05time: 26.6973
-residual: 1.90102e-05time: 26.8488
-residual: 1.39804e-05time: 27.0003
-Steps taken: 18422
-FE index data.....
-FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 0 equations: 8
-FE index: 2 appeared: 0 equations: 10
-FE index: 3 appeared: 300 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 0 equations: 16
-refinement cycle: 4
-solving primal: 
-cycle: 4
 total cells: 300
 total dofs: 4200
-residual: 0.464838time: 27.2651
-residual: 0.114824time: 27.402
-residual: 0.0447033time: 27.5389
-residual: 0.020792time: 27.6757
-residual: 0.014288time: 27.8126
-residual: 0.0127393time: 27.9495
-residual: 0.0117527time: 28.0864
-residual: 0.00995359time: 28.2233
-residual: 0.00715486time: 28.3602
-residual: 0.0046169time: 28.4971
-residual: 0.00294933time: 28.634
-residual: 0.00232165time: 28.7709
-residual: 0.00205131time: 28.9078
-residual: 0.00167172time: 29.0447
-residual: 0.00133165time: 29.1816
-residual: 0.00119645time: 29.3185
-residual: 0.00114352time: 29.4554
-residual: 0.00100366time: 29.5923
-residual: 0.000765614time: 29.7292
-residual: 0.000516908time: 29.8661
-residual: 0.000358289time: 30.003
-residual: 0.000306425time: 30.1398
-residual: 0.000275411time: 30.2767
-residual: 0.000221649time: 30.4136
-residual: 0.00016377time: 30.5505
-residual: 0.000131979time: 30.6874
-residual: 0.000123131time: 30.8243
-residual: 0.00011136time: 30.9612
-residual: 8.82832e-05time: 31.0981
-residual: 6.18386e-05time: 31.235
-residual: 4.40135e-05time: 31.3719
-residual: 3.80826e-05time: 31.5088
-residual: 3.47461e-05time: 31.6457
-residual: 2.83704e-05time: 31.7826
-residual: 2.06679e-05time: 31.9195
-residual: 1.55518e-05time: 32.0564
-residual: 1.39546e-05time: 32.1933
-residual: 1.28479e-05time: 32.3302
-residual: 1.0518e-05time: 32.4671
-Steps taken: 19590
+residual: 1.35324time: 13.6447
+residual: 0.534071time: 13.7816
+residual: 0.274572time: 13.9185
+residual: 0.157706time: 14.0554
+residual: 0.116042time: 14.1923
+residual: 0.109873time: 14.3291
+residual: 0.10521time: 14.466
+residual: 0.0908653time: 14.6029
+residual: 0.0695182time: 14.7398
+residual: 0.0467747time: 14.8767
+residual: 0.0283037time: 15.0136
+residual: 0.0193277time: 15.1505
+residual: 0.016517time: 15.2874
+residual: 0.014068time: 15.4243
+residual: 0.0113808time: 15.5612
+residual: 0.00994888time: 15.6981
+residual: 0.00956056time: 15.835
+residual: 0.00875467time: 15.9719
+residual: 0.00704425time: 16.1088
+residual: 0.00492709time: 16.2457
+residual: 0.0032354time: 16.3826
+residual: 0.00248914time: 16.5195
+residual: 0.00224603time: 16.6564
+residual: 0.00190501time: 16.7932
+residual: 0.00144662time: 16.9301
+residual: 0.0011153time: 17.067
+residual: 0.00100731time: 17.2039
+residual: 0.000941303time: 17.3408
+residual: 0.000787831time: 17.4777
+residual: 0.000573656time: 17.6146
+residual: 0.000392084time: 17.7515
+residual: 0.000310355time: 17.8884
+residual: 0.000284653time: 18.0253
+residual: 0.000245029time: 18.1622
+residual: 0.000185542time: 18.2991
+residual: 0.000134899time: 18.436
+residual: 0.000113894time: 18.5729
+residual: 0.000106613time: 18.7098
+residual: 9.20315e-05time: 18.8467
+residual: 6.92093e-05time: 18.9836
+residual: 4.81117e-05time: 19.1205
+residual: 3.77041e-05time: 19.2574
+residual: 3.46593e-05time: 19.3942
+residual: 3.04332e-05time: 19.5311
+residual: 2.34174e-05time: 19.668
+residual: 1.66797e-05time: 19.8049
+residual: 1.33163e-05time: 19.9418
+residual: 1.23472e-05time: 20.0787
+residual: 1.0929e-05time: 20.2156
+residual: 8.45742e-06time: 20.3525
+residual: 5.94104e-06time: 20.4894
+residual: 4.54236e-06time: 20.6263
+residual: 4.14041e-06time: 20.7632
+residual: 3.70817e-06time: 20.9001
+residual: 2.91875e-06time: 21.037
+residual: 2.07565e-06time: 21.1739
+residual: 1.58503e-06time: 21.3108
+residual: 1.44305e-06time: 21.4477
+residual: 1.30366e-06time: 21.5846
+residual: 1.03689e-06time: 21.7215
+residual: 7.36906e-07time: 21.8583
+residual: 5.47992e-07time: 21.9952
+residual: 4.90377e-07time: 22.1321
+residual: 4.46759e-07time: 22.269
+residual: 3.60627e-07time: 22.4059
+residual: 2.5876e-07time: 22.5428
+residual: 1.90947e-07time: 22.6797
+residual: 1.69357e-07time: 22.8166
+residual: 1.55401e-07time: 22.9535
+residual: 1.26978e-07time: 23.0904
+residual: 9.16251e-08time: 23.2273
+residual: 6.64947e-08time: 23.3642
+residual: 5.79028e-08time: 23.5011
+residual: 5.34229e-08time: 23.638
+residual: 4.42559e-08time: 23.7749
+residual: 3.22529e-08time: 23.9118
+residual: 2.32262e-08time: 24.0487
+residual: 1.99356e-08time: 24.1856
+residual: 1.84746e-08time: 24.3224
+residual: 1.54983e-08time: 24.4593
+residual: 1.1397e-08time: 24.5962
+Steps taken: 40683
 FE index data.....
 FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 0 equations: 8
-FE index: 2 appeared: 0 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 300 equations: 14
-FE index: 5 appeared: 0 equations: 16
-refinement cycle: 5
+FE index: 1 appeared: 300 equations: 14
+FE index: 2 appeared: 0 equations: 16
+refinement cycle: 2
 solving primal: 
-cycle: 5
+cycle: 2
 total cells: 300
 total dofs: 4800
-residual: 0.390754time: 32.6174
-residual: 0.10228time: 32.743
-residual: 0.0406092time: 32.8687
-residual: 0.0174138time: 32.9944
-residual: 0.0108215time: 33.1201
-residual: 0.00884161time: 33.2457
-residual: 0.00804561time: 33.3714
-residual: 0.00723403time: 33.4971
-residual: 0.00584019time: 33.6228
-residual: 0.00409635time: 33.7484
-residual: 0.00268336time: 33.8741
-residual: 0.00188122time: 33.9998
-residual: 0.00159689time: 34.1255
-residual: 0.00142347time: 34.2511
-residual: 0.00117063time: 34.3768
-residual: 0.000934401time: 34.5025
-residual: 0.000822292time: 34.6282
-residual: 0.000788556time: 34.7538
-residual: 0.000724626time: 34.8795
-residual: 0.000596074time: 35.0052
-residual: 0.000435307time: 35.1309
-residual: 0.000299079time: 35.2565
-residual: 0.000229542time: 35.3822
-residual: 0.000207795time: 35.5079
-residual: 0.000185783time: 35.6336
-residual: 0.000149791time: 35.7592
-residual: 0.000112818time: 35.8849
-residual: 9.14641e-05time: 36.0106
-residual: 8.50574e-05time: 36.1363
-residual: 7.90174e-05time: 36.2619
-residual: 6.6292e-05time: 36.3876
-residual: 4.94715e-05time: 36.5133
-residual: 3.50071e-05time: 36.639
-residual: 2.77975e-05time: 36.7646
-residual: 2.55794e-05time: 36.8903
-residual: 2.29906e-05time: 37.016
-residual: 1.85344e-05time: 37.1417
-residual: 1.37135e-05time: 37.2673
-residual: 1.06287e-05time: 37.393
-Steps taken: 19726
+residual: 0.390754time: 24.772
+residual: 0.10228time: 24.8977
+residual: 0.0406091time: 25.0234
+residual: 0.017413time: 25.149
+residual: 0.0108213time: 25.2747
+residual: 0.00884169time: 25.4004
+residual: 0.00804527time: 25.5261
+residual: 0.00723332time: 25.6517
+residual: 0.00583917time: 25.7774
+residual: 0.00409531time: 25.9031
+residual: 0.0026826time: 26.0288
+residual: 0.00188081time: 26.1544
+residual: 0.00159664time: 26.2801
+residual: 0.0014232time: 26.4058
+residual: 0.00117037time: 26.5315
+residual: 0.000934236time: 26.6571
+residual: 0.00082223time: 26.7828
+residual: 0.000788511time: 26.9085
+residual: 0.000724544time: 27.0342
+residual: 0.00059596time: 27.1598
+residual: 0.000435194time: 27.2855
+residual: 0.000299time: 27.4112
+residual: 0.000229504time: 27.5369
+residual: 0.000207769time: 27.6625
+residual: 0.000185751time: 27.7882
+residual: 0.000149756time: 27.9139
+residual: 0.000112792time: 28.0396
+residual: 9.14521e-05time: 28.1652
+residual: 8.5051e-05time: 28.2909
+residual: 7.90081e-05time: 28.4166
+residual: 6.62792e-05time: 28.5423
+residual: 4.94588e-05time: 28.6679
+residual: 3.49984e-05time: 28.7936
+residual: 2.77935e-05time: 28.9193
+residual: 2.55767e-05time: 29.045
+residual: 2.29869e-05time: 29.1706
+residual: 1.85301e-05time: 29.2963
+residual: 1.371e-05time: 29.422
+residual: 1.06269e-05time: 29.5477
+residual: 9.61533e-06time: 29.6733
+residual: 8.97588e-06time: 29.799
+residual: 7.64025e-06time: 29.9247
+residual: 5.78929e-06time: 30.0504
+residual: 4.14986e-06time: 30.176
+residual: 3.31496e-06time: 30.3017
+residual: 3.06139e-06time: 30.4274
+residual: 2.76967e-06time: 30.5531
+residual: 2.24709e-06time: 30.6787
+residual: 1.65723e-06time: 30.8044
+residual: 1.25289e-06time: 30.9301
+residual: 1.10929e-06time: 31.0557
+residual: 1.03823e-06time: 31.1814
+residual: 8.94349e-07time: 31.3071
+residual: 6.8587e-07time: 31.4328
+residual: 4.94303e-07time: 31.5584
+residual: 3.92516e-07time: 31.6841
+residual: 3.61745e-07time: 31.8098
+residual: 3.29559e-07time: 31.9355
+residual: 2.6976e-07time: 32.0611
+residual: 1.9947e-07time: 32.1868
+residual: 1.48518e-07time: 32.3125
+residual: 1.29111e-07time: 32.4382
+residual: 1.21004e-07time: 32.5638
+residual: 1.05347e-07time: 32.6895
+residual: 8.1657e-08time: 32.8152
+residual: 5.90167e-08time: 32.9409
+residual: 4.63636e-08time: 33.0665
+residual: 4.24999e-08time: 33.1922
+residual: 3.89771e-08time: 33.3179
+residual: 3.22199e-08time: 33.4436
+residual: 2.39516e-08time: 33.5692
+residual: 1.76517e-08time: 33.6949
+residual: 1.50895e-08time: 33.8206
+residual: 1.4145e-08time: 33.9463
+residual: 1.24367e-08time: 34.0719
+Steps taken: 37956
 FE index data.....
 FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 0 equations: 8
-FE index: 2 appeared: 0 equations: 10
-FE index: 3 appeared: 0 equations: 12
-FE index: 4 appeared: 0 equations: 14
-FE index: 5 appeared: 300 equations: 16
+FE index: 1 appeared: 0 equations: 14
+FE index: 2 appeared: 300 equations: 16
 
 
 +---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |  1.02e+03s |            |
+| Total wallclock time elapsed since start    |  1.06e+03s |            |
 |                                             |            |            |
 | Section                         | no. calls |  wall time | % of total |
 +---------------------------------+-----------+------------+------------+
-| solve primal                    |         6 |  1.02e+03s |     1e+02% |
+| solve primal                    |         3 |  1.06e+03s |     1e+02% |
 +---------------------------------+-----------+------------+------------+
 
