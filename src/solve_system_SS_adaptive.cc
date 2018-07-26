@@ -95,7 +95,7 @@ Solve_System_SS_adaptive<dim>::solve_steady_state(Triangulation<dim> &triangulat
         }
 
 
-        while (step_count < 100 || residual_ss > 1e-5 ) // we atleast run till t_end || residual_ss > 1e-8
+        while (step_count < 100 || residual_ss > 1e-6 ) // we atleast run till t_end || residual_ss > 1e-8
         {
                 WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
                   dof_handler.begin_active()),
@@ -804,6 +804,148 @@ Solve_System_SS_adaptive<dim>::construct_fe_collection()
        break;
       }
 
+      case 7:
+      {
+        fe_list[0].push_back(&fe_basic);
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(new FE_Nothing<dim>());
+        fe_list[3].push_back(new FE_Nothing<dim>());
+        fe_list[3].push_back(new FE_Nothing<dim>());
+
+
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(new FE_Nothing<dim>());
+        fe_list[4].push_back(new FE_Nothing<dim>());
+ 
+
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(new FE_Nothing<dim>());
+
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+
+       break;
+      }
+
+      case 8:
+      {
+        fe_list[0].push_back(&fe_basic);
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(new FE_Nothing<dim>());
+        fe_list[3].push_back(new FE_Nothing<dim>());
+        fe_list[3].push_back(new FE_Nothing<dim>());
+        fe_list[3].push_back(new FE_Nothing<dim>());
+
+
+        fe_list[4].push_back(&fe_basic);//1
+        fe_list[4].push_back(&fe_basic);//2
+        fe_list[4].push_back(&fe_basic);//3
+        fe_list[4].push_back(&fe_basic);//4
+        fe_list[4].push_back(&fe_basic);//5
+        fe_list[4].push_back(new FE_Nothing<dim>());//6
+        fe_list[4].push_back(new FE_Nothing<dim>());//7
+        fe_list[4].push_back(new FE_Nothing<dim>());//8
+ 
+
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(new FE_Nothing<dim>());
+        fe_list[5].push_back(new FE_Nothing<dim>());
+
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(&fe_basic);
+        fe_list[6].push_back(new FE_Nothing<dim>());
+
+
+        fe_list[7].push_back(&fe_basic);
+        fe_list[7].push_back(&fe_basic);
+        fe_list[7].push_back(&fe_basic);
+        fe_list[7].push_back(&fe_basic);
+        fe_list[7].push_back(&fe_basic);
+        fe_list[7].push_back(&fe_basic);
+        fe_list[7].push_back(&fe_basic);
+        fe_list[7].push_back(&fe_basic);
+
+       break;
+      }
 
       default:
       {
