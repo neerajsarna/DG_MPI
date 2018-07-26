@@ -57,14 +57,14 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 
         // write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
 
-        filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
+        std::string filename = foldername + std::string("/result_Uni_cycle") + std::to_string(cycle)
                                           + "_Kn_" + "0p1" + std::string(".txt");
         solve_primal.create_output(filename);
 
 
 	   		if(cycle != refine_cycles-1)
 	   		{
-	   			std::cout << "solving adjoint: " << std::endl;
+/*	   			std::cout << "solving adjoint: " << std::endl;
           timer.enter_subsection("solve adjoint");
 	   			solve_adjoint.run_time_loop(triangulation,cycle,refine_cycles,t,solve_primal.cellwise_sol);
           timer.leave_subsection();
@@ -85,7 +85,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
                     solve_primal.cell_index_center,
                     solve_adjoint.cell_index_center);
 
-          timer.leave_subsection();
+          timer.leave_subsection();*/
 
          solve_primal.allocate_fe_index(cycle + 1,
                                         error_per_cell,
@@ -96,11 +96,11 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 
 
 
-         solve_adjoint.allocate_fe_index(cycle+1,error_per_cell,triangulation);
+       /*  solve_adjoint.allocate_fe_index(cycle+1,error_per_cell,triangulation);
          solve_adjoint.distribute_dofs();                           // distribute dofs
          solve_adjoint.interpolate_higher_fe_index(solve_adjoint.cellwise_sol,solve_adjoint.cell_fe_index,
                                                    solve_adjoint.locally_owned_solution,component_to_system_adjoint); // create the cellwise solution
-	   		} // end of if condition
+	 */  		} // end of if condition
       
 	   }
 

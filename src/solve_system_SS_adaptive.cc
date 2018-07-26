@@ -755,6 +755,56 @@ Solve_System_SS_adaptive<dim>::construct_fe_collection()
         break;
       }
 
+      case 6:
+      {
+        fe_list[0].push_back(&fe_basic);
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+        fe_list[0].push_back(new FE_Nothing<dim>());
+	fe_list[0].push_back(new FE_Nothing<dim>());
+
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(&fe_basic);
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+        fe_list[1].push_back(new FE_Nothing<dim>());
+	fe_list[1].push_back(new FE_Nothing<dim>());
+
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(&fe_basic);
+        fe_list[2].push_back(new FE_Nothing<dim>());
+        fe_list[2].push_back(new FE_Nothing<dim>());
+	fe_list[2].push_back(new FE_Nothing<dim>());
+
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(&fe_basic);
+        fe_list[3].push_back(new FE_Nothing<dim>());
+	fe_list[3].push_back(new FE_Nothing<dim>());
+
+
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+        fe_list[4].push_back(&fe_basic);
+	fe_list[4].push_back(new FE_Nothing<dim>());
+ 
+
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+        fe_list[5].push_back(&fe_basic);
+	fe_list[5].push_back(&fe_basic);
+
+       break;
+      }
+
+
       default:
       {
         AssertThrow(1 == 0, ExcMessage("Should not have reached here"));
@@ -796,10 +846,10 @@ Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycl
   const double frac_coarse = 0;
   bool found_higher = false;
 
-  if(present_cycle == 0)
+  //if(present_cycle == 0)
     for(; cell != endc ; cell++)
             cell->set_active_fe_index(present_cycle);
-  else
+/*  else
   {
     // we use the triangulation object to mark cells for refinement
     GridRefinement::refine_and_coarsen_fixed_number (triangulation,
@@ -820,7 +870,7 @@ Solve_System_SS_adaptive<dim>::allocate_fe_index(const unsigned int present_cycl
 
       }
   }
-
+*/
             
 }
 
