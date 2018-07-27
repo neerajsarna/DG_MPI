@@ -95,7 +95,7 @@ Solve_System_SS_adaptive<dim>::solve_steady_state(Triangulation<dim> &triangulat
         }
 
 
-        while (step_count < 100 || residual_ss > 1e-8 ) // we atleast run till t_end || residual_ss > 1e-8
+        while (step_count < 100 || residual_ss > 1e-7 ) // we atleast run till t_end || residual_ss > 1e-8
         {
                 WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
                   dof_handler.begin_active()),
