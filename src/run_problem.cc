@@ -35,7 +35,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
      solve_adjoint.distribute_dofs();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 5;
+	   const unsigned int refine_cycles = 1;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<std::vector<Vector<double>>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<std::vector<Vector<double>>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
@@ -57,7 +57,8 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 
         // write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
 
-        std::string filename = foldername + std::string("/result_Uni_cycle") + std::to_string(cycle)
+        std::string filename = foldername + std::string("/result_Uni_cycle") + std::to_string(cycle) + std::string("_")
+					  + std::to_string(triangulation.n_active_cells())
                                           + "_Kn_" + "0p1" + std::string(".txt");
         solve_primal.create_output(filename);
 
