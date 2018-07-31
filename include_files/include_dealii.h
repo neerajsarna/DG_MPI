@@ -31,7 +31,11 @@ namespace LA
 #include <deal.II/fe/fe_nothing.h>
 #include <deal.II/fe/fe_tools.h>
 #include <deal.II/numerics/vector_tools.h>
+
 #include <deal.II/numerics/data_out.h>
+#include <deal.II/numerics/error_estimator.h>
+#include <deal.II/numerics/derivative_approximation.h>
+
 #include <deal.II/base/utilities.h>
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/index_set.h>
@@ -39,6 +43,7 @@ namespace LA
 #include <deal.II/distributed/tria.h>
 #include <deal.II/distributed/grid_refinement.h>
 
+#include <deal.II/numerics/solution_transfer.h>
 #include <deal.II/distributed/solution_transfer.h>
 
 #include <fstream>

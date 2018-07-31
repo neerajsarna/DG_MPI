@@ -26,11 +26,10 @@ Solve_System_SS_adaptive
 		IndexSet locally_relevant_dofs;
 		IndexSet locally_owned_dofs;
 		
-		LA::MPI::Vector locally_relevant_solution;
-		LA::MPI::Vector locally_owned_solution;
+		Vector<double> locally_relevant_solution;
+		Vector<double> locally_owned_solution;
 		std::vector<Vector<double>> cellwise_sol;
-		LA::MPI::Vector locally_owned_residual;
-		LA::MPI::Vector locally_relevant_solution_temp; 
+		Vector<double> locally_owned_residual;
 		std::vector<unsigned int> cell_fe_index;
 
 		double min_h(Triangulation<dim> &triangulation);
@@ -40,6 +39,7 @@ Solve_System_SS_adaptive
 
 		void prescribe_initial_conditions();
 		void distribute_dofs();
+		void allocate_memory();
 		std::vector<unsigned int> n_eqn;
 		std::vector<system_data> system_matrices;
 
@@ -52,7 +52,6 @@ Solve_System_SS_adaptive
 
 		void create_output(const std::string &filename);
 		const unsigned int this_mpi_process;
-		void create_IndexSet_triangulation(IndexSet &locally_owned_cells);
 		std::vector<double> compute_max_speed();		
 
 		DeclException1 (ExcFileNotOpen, std::string,
@@ -98,6 +97,19 @@ Solve_System_SS_adaptive
                                       const std::vector<std::vector<Vector<double>>> &g,
                                       const std::vector<Vector<double>> &force_vector);
 
+		void integrate_face(Vector<double> &result,
+			const typename hp::DoFHandler<dim>::cell_iterator &neighbor,
+			const std::vector<system_data> &system_matrices,
+			const std::vector<std::vector<Vector<double>>> &component_to_system,
+			const unsigned int &this_fe_index,
+			const double &face_length,
+			const double &volume,
+			const double &nx,
+			const double &ny,
+			const Sparse_Matrix &An_cell,
+			const std::vector<types::global_dof_index> &local_dof_indices);
+
+
 		void assemble_to_global(const PerCellAssemble &data,const std::vector<Vector<double>> &component);
 
 
@@ -122,14 +134,16 @@ Solve_System_SS_adaptive
     	
     	void develop_neqn();
 
-    	void construct_fe_collection(); 
+    	void construct_fe_collection(const FiniteElement<dim> &fe_basic,
+                                                       const std::vector<unsigned int> &n_eqn,
+                                                       hp::FECollection<dim> &fe); 
 
     	void construct_block_structure(std::vector<int> &block_structure,
                                        const std::vector<unsigned int> &n_eqn);
 
     	void allocate_fe_index(const unsigned int present_cycle,
     						   const Vector<double> &error_per_cell,
-    						   Triangulation<dim> &triangulation);
+    						   const Triangulation<dim> &triangulation);
 
     	unsigned int current_max_fe_index();
 
@@ -148,12 +162,16 @@ Solve_System_SS_adaptive
     	std::vector<unsigned int> create_cell_fe_index();
     	void interpolate_higher_fe_index(const std::vector<Vector<double>> &cellwise_sol,
                                          const std::vector<unsigned int> &cell_fe_index,
-                                         LA::MPI::Vector &new_vec,
+                                         Vector<double> &new_vec,
                                          const std::vector<std::vector<Vector<double>>> &component_to_system);	// interpolates to higher fe index
 
-    	void create_cellwise_solution(const LA::MPI::Vector &dofwise_sol,
+    	void create_cellwise_solution(const Vector<double> &dofwise_sol,
                                       std::vector<Vector<double>> &cellwise_sol,
                                       const std::vector<std::vector<Vector<double>>> &component_to_system);
+
+
+    	void perform_velocity_adaptivity(const int cycle,
+                                    const Vector<double> &error_per_cell);		// prepare for the next velocity space refinement cycle
 
 		// void refine_and_interpolate(parallel::distributed::Triangulation<dim> &triangulation);
 

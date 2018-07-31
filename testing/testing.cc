@@ -30,43 +30,52 @@ int main(int argc, char *argv[])
     triangulation.refine_global(atoi(argv[1]));
 
 
-   DoFHandler<dim> dof_handler1(triangulation);
-   DoFHandler<dim> dof_handler2(triangulation);
+    hp::DoFHandler<dim> dof_handler(triangulation);
+    hp::FECollection<dim> fe;
 
-   FE_DGQ<dim> fe1(0);
-   FE_DGQ<dim> fe2(1);
+    fe.push_back(FE_DGQ<dim>(0));
+    
+    typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),
+                                                       endc = dof_handler.end();
 
-   dof_handler1.distribute_dofs(fe1);
-   dof_handler2.distribute_dofs(fe2);
+    dof_handler.distribute_dofs(fe);
 
-   Vector<double> value(dof_handler1.n_dofs());
+    Vector<double> value(dof_handler.n_dofs());
 
-   
-   typename DoFHandler<dim>::active_cell_iterator cell = dof_handler1.begin_active(),
-   											      endc = dof_handler1.end();
+    for(; cell != endc ; cell++)
+    {
+      
+      std::vector<types::global_dof_index> local_dof_indices(1);
+      cell->get_dof_indices(local_dof_indices);
 
-   
-   for(; cell != endc ; cell++)
-   {	
-         std::vector<types::global_dof_index> local_dof_indices(cell->get_fe().dofs_per_cell);
-         cell->get_dof_indices(local_dof_indices);
-   		value(local_dof_indices[0]) = function_value(cell->center());
-   }
+      value(local_dof_indices[0]) = function_value(cell->center());
+    }
 
-    Vector<double> value_interpolate = get_interpolated_values(dof_handler1,value,triangulation);
 
-   write_solution<dim>("lower_order",
-               fe1,
-               dof_handler1,
-               value);
+    hp::DoFHandler<dim> dof2(triangulation);
+   hp::FECollection<dim> fe2;
 
-   write_solution<dim>("higher_order",
-               fe2,
-               dof_handler2,
-               value_interpolate);
+   FE_DGQ<dim> fe_basic2(1);
 
-   dof_handler1.clear();
-   dof_handler2.clear();
+   fe2.push_back(fe_basic2);
+   dof2.distribute_dofs(fe2);
+
+   Vector<double> value_interpolate(dof2.n_dofs());
+
+   FETools::interpolate(dof_handler,
+                        value,
+                        dof2,
+                        value_interpolate);   
+
+   std::cout << "lower_order" << std::endl;
+   std::cout << value << std::endl;
+
+   std::cout << "higher_order" << std::endl;
+   std::cout << value_interpolate << std::endl;
+
+    dof_handler.clear();
+    dof2.clear();
+
 
 }
 
@@ -128,8 +137,12 @@ get_interpolated_values(const DoFHandler<dim> &dof1,
                         const Vector<double> &value1,
                         const Triangulation<dim> &triangulation)
 {
-   DoFHandler<dim> dof2(triangulation);
-   FE_DGQ<dim> fe(1);
+   hp::DoFHandler<dim> dof2(triangulation);
+   hp::FECollection<dim> fe;
+
+   FE_DGQ<dim> fe_basic(1);
+
+   fe.push_back(fe_basic);
    dof2.distribute_dofs(fe);
 
    Vector<double> value_interpolate(dof2.n_dofs());
