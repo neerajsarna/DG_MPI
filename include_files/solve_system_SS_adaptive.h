@@ -171,35 +171,31 @@ Solve_System_SS_adaptive
 
 
     	void perform_velocity_adaptivity(const int cycle,
-                                    const Vector<double> &error_per_cell);		// prepare for the next velocity space refinement cycle
+                                    const Vector<double> &error_per_cell); // perform the adaptivity in the velocity space
 
 		// void refine_and_interpolate(parallel::distributed::Triangulation<dim> &triangulation);
 
-		// void compute_error();
+		void compute_error();
 
-		// void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
-		// 							 PerCellErrorScratch &scratch,
-		// 							 PerCellError &data);
+		struct PerCellError
+		{
+			Vector<double> solution_value;
+			Vector<double> exact_solution;
+			double error_value;
+			double cell_index;
+			double volume;
+		};
 
-		// struct PerCellError
-		// {
-		// 	Vector<double> solution_value;
-		// 	Vector<double> exact_solution;
-		// 	double error_value;
-		// 	double cell_index;
-		// 	double volume;
+		double discretization_error;
 
-		// 	PerCellError(const unsigned int &n_eqn)
-		// 	:
-		// 	solution_value(n_eqn),
-		// 	exact_solution(n_eqn)
-		// 	{}
-		// };
+		struct PerCellErrorScratch
+		{};
 
-		// struct PerCellErrorScratch
-		// {};
+		void compute_error_per_cell(const typename hp::DoFHandler<dim>::active_cell_iterator &cell,
+									 PerCellErrorScratch &scratch,
+									 PerCellError &data);
 
-		// void copy_error_to_global(const PerCellError &data);
+		 void copy_error_to_global(const PerCellError &data);
 
 };
 

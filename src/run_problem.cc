@@ -37,7 +37,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
      solve_adjoint.allocate_memory();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 5;
+	   const unsigned int refine_cycles = 4;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<std::vector<Vector<double>>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<std::vector<Vector<double>>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
@@ -76,6 +76,13 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 	   			solve_adjoint.run_time_loop(triangulation,cycle,refine_cycles,t,solve_primal.cellwise_sol);
           timer.leave_subsection();
 
+          solve_primal.compute_error(); 
+          solve_adjoint.compute_error();
+          develop_convergence_table(solve_primal.discretization_error,
+                                    solve_adjoint.discretization_error,
+                                    solve_primal.min_h(triangulation));
+
+
           filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
                  + std::string(".txt");
           
@@ -103,18 +110,20 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
 
           // now we conduct the grid adaptivity
           timer.enter_subsection("compute error discretization");
-         //  std::cout << "computing discretization error " << std::endl;
-         //  compute_error_h(triangulation,
-         //                  solve_adjoint.dof_handler,
-         //                  solve_adjoint.locally_owned_solution,
-         //                  solve_primal.cellwise_sol,
-         //                  system_mat_primal,
-         //                  solve_adjoint.n_eqn,
-         //                  ic_bc_primal);
+          std::cout << "computing discretization error " << std::endl;
+          compute_error_h(triangulation,
+                          solve_adjoint.dof_handler,
+                          solve_adjoint.locally_owned_solution,
+                          solve_primal.cellwise_sol,
+                          system_mat_primal,
+                          solve_adjoint.n_eqn,
+                          ic_bc_primal);
 
+          std::cout << "performing refinement.." << std::endl;
+          fflush(stdout);
 
-         // filename = foldername + "/error_cycle"  + std::to_string(cycle) + std::string(".txt");
-         // write_error(filename,triangulation);
+          filename = foldername + "/error_cycle"  + std::to_string(cycle) + std::string(".txt");
+          write_error(filename,triangulation);
 
 
          // GridRefinement::refine_and_coarsen_fixed_number (triangulation,
@@ -125,7 +134,8 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
                                                            endc = triangulation.end();
 
          for(; cell != endc ; cell++)
-            cell->set_refine_flag();  
+                cell->set_refine_flag();  // global refinement
+
 
          triangulation.prepare_coarsening_and_refinement();
 
@@ -147,7 +157,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
          tmp.reinit(solve_adjoint.dof_handler.n_dofs());
          solution_transfer_adjoint.interpolate(solve_adjoint.locally_owned_solution, tmp);
          solve_adjoint.locally_owned_solution = tmp;
-         
+
          error_per_cell.reinit(triangulation.n_active_cells());
          timer.leave_subsection();
 
@@ -155,6 +165,7 @@ run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // 
       
 	   } // end of loop over cycles
 
+     print_convergence_table();
 
 
 }
@@ -351,13 +362,10 @@ run_problem<dim>::compute_error_per_cell_velocity(const typename hp::DoFHandler<
    const unsigned int effective_index = std::max(this_fe_index,neighbor_fe_index);
 
    Sparse_Matrix An_effective = system_matrices[effective_index].Ax * nx
-   + system_matrices[effective_index].Ay * ny;
-   Sparse_Matrix Amod;
+                                + system_matrices[effective_index].Ay * ny;
 
-   if (fabs(ny) < 1e-16)
-    Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ax_mod;
-  else
-    Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ay_mod;
+   Sparse_Matrix Amod = system_matrices[effective_index].Ax_mod * fabs(nx)
+                        + system_matrices[effective_index].Ay_mod * fabs(ny);
 
   result -= xAy(adjoint_value,An_effective,solution_value) * face_length/2;
   result -= xAy(adjoint_value,Amod,solution_value) * face_length/2;
@@ -386,7 +394,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
     // a memory intensive way of interpolation
     const unsigned int max_neqn = *std::max_element(std::begin(n_eqn_adjoint),std::end(n_eqn_adjoint));
 
-    // due to an unavailability of an extrapolation function we give up the hp dof handler
+    // due to an unavailability of an inbuilt extrapolation function we give up the hp dof handler
     DoFHandler<dim> temp_dof_handler(triangulation);
     FE_DGQ<dim> temp_fe_basic(1);  
     FESystem<dim> temp_fe(temp_fe_basic,max_neqn);
@@ -394,6 +402,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
     temp_dof_handler.distribute_dofs(temp_fe);
     Vector<double> value_interpolated(temp_dof_handler.n_dofs());
     Vector<int> cell_fe_index(triangulation.n_active_cells());
+
 
     extrapolate(dof_handler_adjoint,
                 value_adjoint,
@@ -424,6 +433,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
                                                  face_quadrature_basic);
 
 
+
     // compute the system to component index for the adjoint dof_handler
                      
     std::vector<Vector<double>> component_to_system_adjoint(temp_fe.n_components());
@@ -440,6 +450,39 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
 
     const typename DoFHandler<dim>::active_cell_iterator cell = temp_dof_handler.begin_active(),
                                                          endc = temp_dof_handler.end();      
+
+    typename DoFHandler<dim>::active_cell_iterator cell_temp = temp_dof_handler.begin_active(),
+                                                         endc_temp = temp_dof_handler.end();      
+
+    FILE *fp;
+    std::string filename = "interpolated_adj" + std::to_string(triangulation.n_active_cells());
+    fp = fopen(filename.c_str(),"w+");
+
+    FEValues<dim> fe_values(temp_fe,quadrature_basic,update_quadrature_points);
+   for(; cell_temp != endc_temp ; cell_temp++)
+   {
+      fe_values.reinit(cell_temp);
+      Vector<double> value_q_point(temp_fe.n_components());
+      
+
+      std::vector<Point<dim>> q_points;
+      q_points = fe_values.get_quadrature_points();
+
+      for(unsigned int i = 0 ; i < q_points.size() ; i++)
+      {
+         VectorTools::point_value(temp_dof_handler,value_interpolated,
+                                  q_points[i],value_q_point);  
+
+         for(unsigned int space = 0 ; space < dim; space ++)
+            fprintf(fp, "%f\t",q_points[i](space));
+
+         
+         fprintf(fp, "%f\n",value_q_point(0));
+      }
+   }
+
+   fclose(fp);
+
 
     WorkStream::run(cell,
     endc,
@@ -560,12 +603,14 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
                     
                     }
 
+
                   } // end of if
                   else
                   {
                    typename DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
                    if(!neighbor->has_children()) // having no children
                    {
+
                     error_face_h(neighbor,
                                 primal_solution,
                                 primal_value,
@@ -577,17 +622,17 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
                                 scratch.fe_v_face,
                                 cell_fe_index,
                                 data.local_contri);
-
-
+                     
                   }//end over if neighbor children
                   else
                   {
                     Assert(neighbor->has_children(),ExcInternalError());
+                    
                     for(unsigned int subface = 0 ; subface < face_itr->n_children() ; subface ++) // loop over the subfaces of the present cell
                      {
                         Assert(subface < 2,ExcInternalError());
-                        const typename hp::DoFHandler<dim>::active_cell_iterator neighbor_child 
-                                      = cell->neighbor_child_on_subface(face,subface);
+                        const typename DoFHandler<dim>::active_cell_iterator neighbor_child 
+                                          = cell->neighbor_child_on_subface(face,subface);
 
                         scratch.fe_v_subface.reinit(cell,face,subface);
 
@@ -622,6 +667,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
                                 const Vector<int> &cell_fe_index,
                                 double &result)
  {
+
                     const unsigned int dofs_per_component = neighbor->get_fe().dofs_per_cell/neighbor->get_fe().n_components();
                     const unsigned int index_neighbor = neighbor->index();
                     const unsigned int neighbor_fe_index = cell_fe_index(index_neighbor); 
@@ -642,12 +688,9 @@ run_problem<dim>::assemble_to_global(const PerCellError &data)
 
                    Sparse_Matrix An_effective = system_matrices[effective_index].Ax * nx
                                               + system_matrices[effective_index].Ay * ny;
-                   Sparse_Matrix Amod;
 
-                   if (fabs(ny) < 1e-16)
-                    Amod = system_matrices[effective_index].Ax_mod;
-                  else
-                    Amod = system_matrices[effective_index].Ay_mod;
+                   Sparse_Matrix Amod = system_matrices[effective_index].Ax_mod * fabs(nx)
+                                        + system_matrices[effective_index].Ay_mod * fabs(ny);
 
 
                    // over the cell
@@ -881,7 +924,6 @@ run_problem<dim>::extrapolate(const hp::DoFHandler<dim> &dofIn,
 
       Vector<double> temp(dof_handler.n_dofs());
 
-      // remove the hp nature by extending everything by a zero
       interpolate_to_highest_fe_index(dofIn,
                              InVec,
                              dof_handler,
@@ -889,6 +931,7 @@ run_problem<dim>::extrapolate(const hp::DoFHandler<dim> &dofIn,
                              cell_fe_index);
       
       // interpolate to P1 DG space
+
       FETools::extrapolate(dof_handler,
                            temp,
                            dofOut,
@@ -942,6 +985,42 @@ run_problem<dim>::interpolate_to_highest_fe_index(const hp::DoFHandler<dim> &dof
 
     cellOut++;      
   }
+
+}
+
+template<int dim>
+void
+run_problem<dim>::develop_convergence_table(const double &error_primal,
+                                            const double &error_adjoint,
+                                            const double &min_h)
+{
+  std::string col1 = "primal error";
+  std::string col2 = "adjoint error";
+  std::string col3 = "min h";
+
+  convergence_table.add_value(col1,error_primal);
+  convergence_table.add_value(col2,error_adjoint);
+  convergence_table.add_value(col3,min_h);
+
+  convergence_table.set_scientific(col1,true);
+  convergence_table.set_scientific(col2,true);
+  convergence_table.set_scientific(col3,true);
+}
+
+template<int dim>
+void
+run_problem<dim>::print_convergence_table()
+{
+      std::ofstream output_convergence("convergence_table.txt");
+      convergence_table.evaluate_convergence_rates("primal error",
+                                                  "min h",
+                                                  ConvergenceTable::reduction_rate_log2,1);
+
+      convergence_table.evaluate_convergence_rates("adjoint error",
+                                                  "min h",
+                                                  ConvergenceTable::reduction_rate_log2,1);
+
+      convergence_table.write_text(output_convergence);
 
 }
 
@@ -1281,6 +1360,61 @@ run_problem<dim>::construct_block_structure(std::vector<int> &block_structure,
       block_structure.push_back(n_eqn[i]-n_eqn[i-1]);
 
     AssertDimension(block_structure.size(),n_eqn.size());
+}
+
+template<int dim>
+void 
+run_problem<dim>::count_bc_id(const Triangulation<2> &triangulation)
+{
+    typename Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
+                               endc = triangulation.end();
+    
+    int id0 = 0,id1 = 0, id2 = 0, id3 = 0; 
+
+    for(; cell != endc ; cell++)   
+      if (cell->is_locally_owned())
+    {
+
+      for(unsigned int face = 0 ; face < GeometryInfo<2>::faces_per_cell ; face++)
+        if (cell->face(face)->at_boundary())
+          switch (cell->face(face)->boundary_id())
+          {
+            case 0:
+            {
+              id0++;
+              break;
+            }
+
+            case 1:
+            {
+              id1++;
+              break;
+            }
+
+            case 2:
+            {
+              id2++;
+              break;
+            }
+
+            case 3:
+            {
+              id3++;
+              break;
+            }
+          }
+        }
+        
+    
+
+          std::cout << "id0 " << id0 
+          << " id1 " << id1 
+          << " id2 " << id2 
+          << " id3 " << id3 << std::endl;
+
+        fflush(stdout);
+
+
 }
 
 template class run_problem<2>;

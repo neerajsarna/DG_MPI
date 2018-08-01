@@ -45,6 +45,7 @@ namespace LA
 
 #include <deal.II/numerics/solution_transfer.h>
 #include <deal.II/distributed/solution_transfer.h>
+#include <deal.II/base/convergence_table.h>
 
 #include <fstream>
 #include <iostream>

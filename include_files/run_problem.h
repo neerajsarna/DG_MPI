@@ -166,4 +166,11 @@ run_problem
                                          Vector<double> &OutVec,
                                          Vector<int> &cell_fe_index);
 
+
+    void count_bc_id(const Triangulation<2> &triangulation);
+
+    ConvergenceTable convergence_table;
+    void develop_convergence_table(const double &error_primal,const double &error_adjoint,const double &min_h);
+    void print_convergence_table();
+
 };

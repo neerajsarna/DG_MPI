@@ -126,10 +126,30 @@ int main(int argc, char *argv[])
 	  // develop mesh
      //for(int i = 1 ; i < 30 ; i++ ) 
      //{
-      int repetitions = atoi(argv[2]);
+
+      std::vector<unsigned int> repetitions(dim);
+
+      const double left_edge = 0;
+      const double right_edge = 1;
+      Point<dim> p1;
+      Point<dim> p2;
+
+      // corners of the diagonal
+      p1(0) = left_edge;
+      p1(1) = left_edge;
+
+      p2(0) = right_edge;
+      p2(1) = right_edge;
+
+     
+      repetitions[0] = atoi(argv[2]);
+      repetitions[1] = 5;
+
       Triangulation<dim> triangulation;
-      GridGenerator::subdivided_hyper_cube(triangulation,repetitions);
-      triangulation.refine_global(1);		// we need to refine atleast once
+      GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
+
+      triangulation.refine_global(1);;
+
       set_square_bid(triangulation);
 
 
@@ -158,6 +178,7 @@ void develop_system(system_data &system_matrices)
 
 	system_matrices.Ax.coeffRef(0,0) = 1;
 	system_matrices.Ay.coeffRef(0,0) = 1;
+	//system_matrices.Ay.coeffRef(0,0) = 0;
 	system_matrices.P.coeffRef(0,0) = 0;
 
 	system_matrices.Ax.makeCompressed();
@@ -200,9 +221,13 @@ void develop_system(system_data &system_matrices)
 	// boundary at y = 0, bottom boundary
 	bc_id = 3;
 
-	system_matrices.B[bc_id].coeffRef(0,0) = 1;
-	system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
-	system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
+	// system_matrices.B[bc_id].coeffRef(0,0) = 1;
+	// system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
+	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
+
+	system_matrices.B[bc_id].coeffRef(0,0) = 0;
+	system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
+	system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
 
 	// loop over all the boundaries
 	for (unsigned int i = 0 ; i < 4 ; i ++)
@@ -224,6 +249,7 @@ void develop_system_adjoint(system_data &system_matrices)
 
 	system_matrices.Ax.coeffRef(0,0) = -1;
 	system_matrices.Ay.coeffRef(0,0) = -1;
+	//system_matrices.Ay.coeffRef(0,0) = 0;
 	system_matrices.P.coeffRef(0,0) = 0;
 
 	system_matrices.Ax.makeCompressed();
@@ -252,9 +278,13 @@ void develop_system_adjoint(system_data &system_matrices)
 	// top boundary  y = 1
 	bc_id = 1;
 
-	system_matrices.B[bc_id].coeffRef(0,0) = 1;
-	system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
-	system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
+	// system_matrices.B[bc_id].coeffRef(0,0) = 1;
+	// system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
+	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
+
+	system_matrices.B[bc_id].coeffRef(0,0) = 0;
+	system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
+	system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
 
 	// left boundary x = 0
 	bc_id = 2;
@@ -299,6 +329,7 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 	const double y = p[1];
 
 	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
+	//value(0) = exp(-pow((x-0.5),2)*100);
 
 }
 
@@ -321,6 +352,8 @@ ic_bc<dim>::force(Vector<double> &value,
 
 	value(0) = (-200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
+	//value(0) = -100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
+	//value(0) = M_PI * cos(M_PI * x);
 }
 
 template<int dim>
@@ -350,7 +383,8 @@ ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,con
 	const double x = p[0];
 	const double y = p[1];
 
-	value(0) = 0;
+	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
+	//value(0) = exp(-pow((x-0.5),2)*100);
 
 }
 
@@ -373,6 +407,8 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 
 	value(0) = (200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = -M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
+	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
+	//value(0) = -M_PI * cos(M_PI * x);
 	
 }
 

@@ -139,7 +139,7 @@ Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation,
 {      
       std::vector<std::vector<Vector<double>>> component_to_system = return_component_to_system();   
 
-      
+      discretization_error = 0;
       locally_relevant_solution.reinit(locally_owned_solution.size());
       locally_owned_residual.reinit(locally_owned_solution.size());
       locally_relevant_solution = locally_owned_solution; // the value set to locally owned solution is set here
@@ -437,12 +437,8 @@ template<int dim>
 
                    Sparse_Matrix An_effective = construct_An_effective(An_cell,An_neighbor);
 
-                   Sparse_Matrix Amod;
-
-                   if (fabs(ny) < 1e-16)
-                        Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ax_mod;
-                   else
-                        Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ay_mod;
+                   Sparse_Matrix Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ax_mod * fabs(nx) 
+                                        +system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ay_mod * fabs(ny);
 
 
                    // contribution from the present cell
@@ -544,69 +540,68 @@ Solve_System_SS_adaptive<dim>::create_output(const std::string &filename)
 
 }
 
-// template<int dim>
-// void 
-// Solve_System_SS_adaptive<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::active_cell_iterator &cell,
-//                                              PerCellErrorScratch &scratch,
-//                                              PerCellError &data)
-// {
+template<int dim>
+void 
+Solve_System_SS_adaptive<dim>::compute_error_per_cell(const typename hp::DoFHandler<dim>::active_cell_iterator &cell,
+                                             PerCellErrorScratch &scratch,
+                                             PerCellError &data)
+{
 
-//     data.error_value = 0;
-//     data.solution_value = 0;
+    const unsigned int this_fe_index = cell->active_fe_index();
+    const unsigned int this_neqn = cell->get_fe().n_components();
 
-//     VectorTools::point_value(cell->get_dof_handler(),locally_owned_solution, 
-//                              cell->center(),data.solution_value); 
-//     initial_boundary->exact_solution(cell->center(),data.exact_solution,t_end);
+    data.error_value = 0;
+    data.solution_value.reinit(this_neqn);
+    data.exact_solution.reinit(this_neqn);
 
-//     // overwrite the solution value with the error in this cell
-//     data.solution_value.sadd(1,-1,data.exact_solution);
+    VectorTools::point_value(cell->get_dof_handler(),locally_owned_solution, 
+                             cell->center(),data.solution_value); 
+
+    initial_boundary->exact_solution(cell->center(),data.exact_solution,t_end);
+
+    // overwrite the solution value with the error in this cell
+    data.solution_value.sadd(1,-1,data.exact_solution);
     
-//     for (unsigned int i = 0 ; i < data.solution_value.size(); i++) 
-//       data.error_value = pow(data.solution_value(i),2) +data.error_value;
+    for (unsigned int i = 0 ; i < data.solution_value.size(); i++) 
+      data.error_value = pow(data.solution_value(i),2) +data.error_value;
 
-//     data.cell_index = cell->index();
+    data.cell_index = cell->index();
 
-//     data.volume = cell->measure();
+    data.volume = cell->measure();
     
   
-// }
+}
 
-// template<int dim>
-// void
-// Solve_System_SS<dim>::copy_error_to_global(const PerCellError &data)
-// {
-//   error_per_cell(data.cell_index) = sqrt(data.error_value * data.volume);
-// }
+template<int dim>
+void
+Solve_System_SS_adaptive<dim>::copy_error_to_global(const PerCellError &data)
+{
+   discretization_error += data.error_value * data.volume;
+}
 
 
-// template<int dim>
-// void
-// Solve_System_SS<dim>::compute_error()
-// {
-//   PerCellError per_cell_error(n_eqn);
-//   PerCellErrorScratch per_cell_error_scratch;
+template<int dim>
+void
+Solve_System_SS_adaptive<dim>::compute_error()
+{
+  PerCellError per_cell_error;
+  PerCellErrorScratch per_cell_error_scratch;
 
-//   typedef FilteredIterator<typename DoFHandler<dim>::active_cell_iterator> CellFilter;
-
-//   WorkStream::run ( CellFilter(IteratorFilters::LocallyOwnedCell(),
-//                     dof_handler.begin_active()),
-//                     CellFilter(IteratorFilters::LocallyOwnedCell(), 
-//                     dof_handler.end()),
-//                     std::bind(&Solve_System_SS<dim>::compute_error_per_cell,
-//                             this,
-//                             std::placeholders::_1,
-//                             std::placeholders::_2,
-//                             std::placeholders::_3),
-//                     std::bind(&Solve_System_SS<dim>::copy_error_to_global,
-//                             this,
-//                             std::placeholders::_1),
-//                    per_cell_error_scratch,
-//                    per_cell_error);
+  WorkStream::run ( dof_handler.begin_active(),
+                    dof_handler.end(),
+                    std::bind(&Solve_System_SS_adaptive<dim>::compute_error_per_cell,
+                            this,
+                            std::placeholders::_1,
+                            std::placeholders::_2,
+                            std::placeholders::_3),
+                    std::bind(&Solve_System_SS_adaptive<dim>::copy_error_to_global,
+                            this,
+                            std::placeholders::_1),
+                   per_cell_error_scratch,
+                   per_cell_error);
   
-//   double errorTot = error_per_cell.l2_norm();
-//   pout << dof_handler.n_dofs() << "\t" << errorTot << std::endl;
-
-// }
+  discretization_error = sqrt(discretization_error);
+}
 
 
 
