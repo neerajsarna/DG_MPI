@@ -156,6 +156,9 @@ int main(int argc, char *argv[])
       ic_bc<dim> initial_boundary;
       ic_bc_adjoint<dim> initial_boundary_adjoint;
 
+      const unsigned int max_neqn_primal = system_matrices[system_matrices.size()-1].Ax.rows();
+      const unsigned int max_neqn_adjoint = system_matrices_adjoint[system_matrices_adjoint.size()-1].Ax.rows();
+
 	  run_problem<dim> Run_Problem(system_matrices,	  			 // system data
        								system_matrices,
 				  			  		system_matrices_adjoint, 	// adjoint data
@@ -163,7 +166,9 @@ int main(int argc, char *argv[])
 							  		poly_degree,
 							  		&initial_boundary,
 					          		&initial_boundary_adjoint,
-					          		foldername);
+					          		foldername,
+					          		max_neqn_primal,
+					          		max_neqn_adjoint);
      //}
 }
 
@@ -221,13 +226,13 @@ void develop_system(system_data &system_matrices)
 	// boundary at y = 0, bottom boundary
 	bc_id = 3;
 
-	// system_matrices.B[bc_id].coeffRef(0,0) = 1;
-	// system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
-	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
+	system_matrices.B[bc_id].coeffRef(0,0) = 1;
+	system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
+	system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
 
-	system_matrices.B[bc_id].coeffRef(0,0) = 0;
-	system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
-	system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
+	// system_matrices.B[bc_id].coeffRef(0,0) = 0;
+	// system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
+	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
 
 	// loop over all the boundaries
 	for (unsigned int i = 0 ; i < 4 ; i ++)
@@ -278,13 +283,13 @@ void develop_system_adjoint(system_data &system_matrices)
 	// top boundary  y = 1
 	bc_id = 1;
 
-	// system_matrices.B[bc_id].coeffRef(0,0) = 1;
-	// system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
-	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
+	system_matrices.B[bc_id].coeffRef(0,0) = 1;
+	system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
+	system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
 
-	system_matrices.B[bc_id].coeffRef(0,0) = 0;
-	system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
-	system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
+	// system_matrices.B[bc_id].coeffRef(0,0) = 0;
+	// system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
+	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
 
 	// left boundary x = 0
 	bc_id = 2;
@@ -330,6 +335,7 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 
 	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
 	//value(0) = exp(-pow((x-0.5),2)*100);
+	//value(0) = sin(M_PI * x) * sin(M_PI * y);
 
 }
 
@@ -385,6 +391,7 @@ ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,con
 
 	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
 	//value(0) = exp(-pow((x-0.5),2)*100);
+	//value(0) = sin(M_PI * x) * sin(M_PI * y);
 
 }
 
@@ -406,6 +413,7 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	const double y = p[1];
 
 	value(0) = (200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
+	//value(0) = (200.*( x - y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = -M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);

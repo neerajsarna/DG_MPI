@@ -21,62 +21,30 @@ get_interpolated_values(const DoFHandler<dim> &dof1,
 
 int main(int argc, char *argv[])
 {
-	const int dim = 1;
+	const int dim = 2;
 
 	Triangulation<dim> triangulation;
 
       //The diagonal of the rectangle is the line joining p1 and p2
-    GridGenerator::hyper_cube(triangulation);
-    triangulation.refine_global(atoi(argv[1]));
+    GridGenerator::subdivided_hyper_cube(triangulation,atoi(argv[1]));
+  
 
-
-    hp::DoFHandler<dim> dof_handler(triangulation);
-    hp::FECollection<dim> fe;
-
-    fe.push_back(FE_DGQ<dim>(0));
-    
-    typename hp::DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),
-                                                       endc = dof_handler.end();
+    DoFHandler<dim> dof_handler(triangulation);
+    FE_DGQ<dim> fe(30);
 
     dof_handler.distribute_dofs(fe);
 
-    Vector<double> value(dof_handler.n_dofs());
+    std::cout << "memory consumed(GB): " << dof_handler.memory_consumption()/1e9 << std::endl;
+    Vector<double> vec1(dof_handler.n_dofs());
+    Vector<double> vec2(dof_handler.n_dofs());
+    Vector<double> vec3(dof_handler.n_dofs());
+    Vector<double> vec4(dof_handler.n_dofs());
+    Vector<double> vec5(dof_handler.n_dofs());
+    Vector<double> vec6(dof_handler.n_dofs());
 
-    for(; cell != endc ; cell++)
-    {
-      
-      std::vector<types::global_dof_index> local_dof_indices(1);
-      cell->get_dof_indices(local_dof_indices);
-
-      value(local_dof_indices[0]) = function_value(cell->center());
-    }
-
-
-    hp::DoFHandler<dim> dof2(triangulation);
-   hp::FECollection<dim> fe2;
-
-   FE_DGQ<dim> fe_basic2(1);
-
-   fe2.push_back(fe_basic2);
-   dof2.distribute_dofs(fe2);
-
-   Vector<double> value_interpolate(dof2.n_dofs());
-
-   FETools::interpolate(dof_handler,
-                        value,
-                        dof2,
-                        value_interpolate);   
-
-   std::cout << "lower_order" << std::endl;
-   std::cout << value << std::endl;
-
-   std::cout << "higher_order" << std::endl;
-   std::cout << value_interpolate << std::endl;
+    std::cout << "memory consumed(GB): " << vec1.memory_consumption()/1e9 << std::endl;
 
     dof_handler.clear();
-    dof2.clear();
-
-
 }
 
 template<int dim>

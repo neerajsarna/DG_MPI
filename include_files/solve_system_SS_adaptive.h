@@ -14,23 +14,22 @@ Solve_System_SS_adaptive
 		Solve_System_SS_adaptive(std::vector<system_data> &system_mat,
 						Triangulation<dim> &triangulation,
 					 	const int poly_degree,
-						ic_bc_base<dim> *ic_bc);
+						ic_bc_base<dim> *ic_bc,
+						const unsigned int &maximum_neqn);
 		
 		~Solve_System_SS_adaptive();
 
 		MPI_Comm mpi_comm;
-		hp::DoFHandler<dim> dof_handler;
+		DoFHandler<dim> dof_handler;
       	FE_DGQ<dim> fe_basic;
-      	hp::FECollection<dim> fe;
+      	FESystem<dim> fe;
 
 		IndexSet locally_relevant_dofs;
 		IndexSet locally_owned_dofs;
 		
 		Vector<double> locally_relevant_solution;
 		Vector<double> locally_owned_solution;
-		std::vector<Vector<double>> cellwise_sol;
 		Vector<double> locally_owned_residual;
-		std::vector<unsigned int> cell_fe_index;
 
 		double min_h(Triangulation<dim> &triangulation);
 		
@@ -41,6 +40,7 @@ Solve_System_SS_adaptive
 		void distribute_dofs();
 		void allocate_memory();
 		std::vector<unsigned int> n_eqn;
+		const unsigned int max_neqn;
 		std::vector<system_data> system_matrices;
 
 		const double CFL = 1.0;
@@ -48,6 +48,7 @@ Solve_System_SS_adaptive
 		double t_end = 0.3;
 		std::vector<double> max_speed;
 		double current_max_speed;
+		unsigned int current_max_index;
 
 
 		void create_output(const std::string &filename);
@@ -74,33 +75,32 @@ Solve_System_SS_adaptive
 		{
 			std::vector<types::global_dof_index> local_dof_indices;
 			Vector<double> local_contri;
-			unsigned int dofs_per_cell;
-			unsigned int this_fe_index;
+			unsigned int this_neqn;
 		};
 
 		struct PerCellAssembleScratch
 		{
-			    PerCellAssembleScratch(const hp::FECollection<dim> &fe,
-                	        		   const hp::QCollection<dim-1> &   quadrature); // initialisation
+			    PerCellAssembleScratch(const FESystem<dim> &fe,
+                	        		   const QGauss<dim-1> &   quadrature); // initialisation
 
     			PerCellAssembleScratch(const PerCellAssembleScratch &scratch);	// copy constructor
 
-    			hp::FEFaceValues<dim> fe_v_face;    			
+    			FEFaceValues<dim> fe_v_face;    			
 		};
 
 
-		void assemble_per_cell(const typename hp::DoFHandler<dim>::active_cell_iterator &cell,
+		void assemble_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
                                       PerCellAssembleScratch &scratch,
                                       PerCellAssemble &data,
-                                      const std::vector<std::vector<Vector<double>>> &component_to_system,
+                                      const std::vector<Vector<double>> &component_to_system,
                                       const double &t,
-                                      const std::vector<std::vector<Vector<double>>> &g,
+                                      const std::vector<Vector<double>> &g,
                                       const std::vector<Vector<double>> &force_vector);
 
 		void integrate_face(Vector<double> &result,
-			const typename hp::DoFHandler<dim>::cell_iterator &neighbor,
+			const typename DoFHandler<dim>::cell_iterator &neighbor,
 			const std::vector<system_data> &system_matrices,
-			const std::vector<std::vector<Vector<double>>> &component_to_system,
+			const std::vector<Vector<double>> &component_to_system,
 			const unsigned int &this_fe_index,
 			const double &face_length,
 			const double &volume,
@@ -110,14 +110,15 @@ Solve_System_SS_adaptive
 			const std::vector<types::global_dof_index> &local_dof_indices);
 
 
-		void assemble_to_global(const PerCellAssemble &data,const std::vector<Vector<double>> &component);
+		void assemble_to_global(const PerCellAssemble &data,
+								const std::vector<Vector<double>> &component_to_system);
 
 
 		ConditionalOStream pout;
 
-		void compute_ic_per_cell(const typename hp::DoFHandler<dim>::active_cell_iterator &cell,
+		void compute_ic_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
                                   PerCellICScratch &scratch,PerCellIC &data,
-                                  const std::vector<Vector<double>> &component);
+                                  const Vector<double> &component);
 
 		void copy_ic_to_global(const PerCellIC &data);
 
@@ -134,17 +135,6 @@ Solve_System_SS_adaptive
     	
     	void develop_neqn();
 
-    	void construct_fe_collection(const FiniteElement<dim> &fe_basic,
-                                                       const std::vector<unsigned int> &n_eqn,
-                                                       hp::FECollection<dim> &fe); 
-
-    	void construct_block_structure(std::vector<int> &block_structure,
-                                       const std::vector<unsigned int> &n_eqn);
-
-    	void allocate_fe_index(const unsigned int present_cycle,
-    						   const Vector<double> &error_per_cell,
-    						   const Triangulation<dim> &triangulation);
-
     	unsigned int current_max_fe_index();
 
     	int solve_steady_state(Triangulation<dim> &triangulation,double &t,
@@ -152,28 +142,8 @@ Solve_System_SS_adaptive
 
 		Sparse_Matrix construct_An_effective(const Sparse_Matrix &An_cell,const Sparse_Matrix &An_neighbor);
 
-		std::vector<Vector<double>> return_component();
-		std::vector<std::vector<Vector<double>>> return_component_to_system();
-
-		std::vector<Point<dim>> cell_index_center;
-
-
-    	void store_cell_index_center();
-    	std::vector<unsigned int> create_cell_fe_index();
-    	void interpolate_higher_fe_index(const std::vector<Vector<double>> &cellwise_sol,
-                                         const std::vector<unsigned int> &cell_fe_index,
-                                         Vector<double> &new_vec,
-                                         const std::vector<std::vector<Vector<double>>> &component_to_system);	// interpolates to higher fe index
-
-    	void create_cellwise_solution(const Vector<double> &dofwise_sol,
-                                      std::vector<Vector<double>> &cellwise_sol,
-                                      const std::vector<std::vector<Vector<double>>> &component_to_system);
-
-
-    	void perform_velocity_adaptivity(const int cycle,
-                                    const Vector<double> &error_per_cell); // perform the adaptivity in the velocity space
-
-		// void refine_and_interpolate(parallel::distributed::Triangulation<dim> &triangulation);
+		Vector<double> return_component();
+		std::vector<Vector<double>> return_component_to_system();
 
 		void compute_error();
 
@@ -191,7 +161,7 @@ Solve_System_SS_adaptive
 		struct PerCellErrorScratch
 		{};
 
-		void compute_error_per_cell(const typename hp::DoFHandler<dim>::active_cell_iterator &cell,
+		void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
 									 PerCellErrorScratch &scratch,
 									 PerCellError &data);
 
