@@ -63,7 +63,7 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1)
      solve_adjoint.allocate_memory();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 4;
+	   const unsigned int refine_cycles = 7;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 

@@ -412,12 +412,13 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	const double x = p[0];
 	const double y = p[1];
 
-	value(0) = (200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
+	//value(0) = (200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = (200.*( x - y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = -M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);
-	
+	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
+
 }
 
 template<int dim>

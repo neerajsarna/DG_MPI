@@ -29,4 +29,4 @@ cd /home/ns179556/DG_MPI
  
 export FLAGS_MPI_BATCH="-np 1"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2x1v_moments_Inflow_Adp.out 32 300 3
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10

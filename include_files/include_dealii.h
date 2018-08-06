@@ -2,10 +2,10 @@
 #include <deal.II/base/function.h>
 #include <deal.II/base/timer.h>
 #include <deal.II/lac/generic_linear_algebra.h>
-namespace LA
+/*namespace LA
 {
   using namespace dealii::LinearAlgebraTrilinos;
-}
+}*/
 #include <deal.II/lac/vector.h>
 #include <deal.II/lac/full_matrix.h>
 #include <deal.II/lac/dynamic_sparsity_pattern.h>
@@ -40,11 +40,11 @@ namespace LA
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/index_set.h>
 #include <deal.II/lac/sparsity_tools.h>
-#include <deal.II/distributed/tria.h>
-#include <deal.II/distributed/grid_refinement.h>
+//#include <deal.II/distributed/tria.h>
+//#include <deal.II/distributed/grid_refinement.h>
 
 #include <deal.II/numerics/solution_transfer.h>
-#include <deal.II/distributed/solution_transfer.h>
+//#include <deal.II/distributed/solution_transfer.h>
 #include <deal.II/base/convergence_table.h>
 
 #include <fstream>
