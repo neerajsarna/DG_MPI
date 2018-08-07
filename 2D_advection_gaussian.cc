@@ -3,6 +3,7 @@
 using namespace dealii;
 void develop_system(system_data &system_matrices);
 void develop_system_adjoint(system_data &system_matrices);
+//template<int dim> void set_boundary_id(Triangulation<dim> &triangulation);
 
 Full_matrix compute_Amod(const Sparse_Matrix &A)
 {
@@ -52,8 +53,7 @@ ic_bc_adjoint:public ic_bc_base<dim>
 void 
 set_square_bid(Triangulation<2> &triangulation)
 {
-	typename Triangulation<2>::active_cell_iterator
-											 cell = triangulation.begin_active(),
+	typename Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
 											 endc = triangulation.end();
 
     const double left_edge = 0;
@@ -97,6 +97,34 @@ set_square_bid(Triangulation<2> &triangulation)
 }
 
 
+void 
+set_square_bid(Triangulation<1> &triangulation)
+{
+	typename Triangulation<1>::active_cell_iterator cell = triangulation.begin_active(),
+											 endc = triangulation.end();
+
+    const double left_edge = 0;
+    const double right_edge = 1;
+
+    for(; cell != endc ; cell++)
+    	if(cell->is_locally_owned())
+    	{
+                for (unsigned int face = 0 ; face < GeometryInfo<1>::faces_per_cell ; face++)
+              
+                  if (cell->face(face)->at_boundary())
+                  { 
+                    double x_cord = cell->face(face)->center()(0);
+                   // right
+                    if (x_cord == right_edge)
+                      cell->face(face)->set_boundary_id(0);
+                    // left edge
+                    if (x_cord == left_edge)
+                      cell->face(face)->set_boundary_id(2);
+
+                   }
+    	}
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -105,7 +133,7 @@ int main(int argc, char *argv[])
       const unsigned int num_threads = atoi(argv[1]);
       Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, num_threads);
 
-      const int dim = 2;
+      const int dim = 1;
       const int poly_degree = 0;
       std::string foldername = "2D_advection_gaussian";
 
@@ -129,26 +157,26 @@ int main(int argc, char *argv[])
 
       std::vector<unsigned int> repetitions(dim);
 
-      const double left_edge = 0;
-      const double right_edge = 1;
-      Point<dim> p1;
-      Point<dim> p2;
+      // const double left_edge = 0;
+      // const double right_edge = 1;
+      // // Point<dim> p1;
+      // // Point<dim> p2;
 
-      // corners of the diagonal
-      p1(0) = left_edge;
-      p1(1) = left_edge;
+      // // // corners of the diagonal
+      // // p1(0) = left_edge;
+      // // p1(1) = left_edge;
 
-      p2(0) = right_edge;
-      p2(1) = right_edge;
+      // // p2(0) = right_edge;
+      // // p2(1) = right_edge;
 
-     
       repetitions[0] = atoi(argv[2]);
-      repetitions[1] = 5;
+      //repetitions[1] = 5;
 
       Triangulation<dim> triangulation;
-      GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
+      //GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
+      GridGenerator::subdivided_hyper_cube(triangulation,repetitions[0]);
 
-      triangulation.refine_global(1);;
+      triangulation.refine_global(1);
 
       set_square_bid(triangulation);
 
@@ -320,8 +348,13 @@ template<int dim>
 double 
 ic_bc<dim>::ic(const Point<dim> &p,const int &id)
 {
-	const double x = p[0];
-	const double y = p[1];
+	Vector<double> temp_p(2);
+
+	for(unsigned int space = 0 ; space < dim; space++)
+		temp_p(space) = p[space];
+
+	const double x = temp_p[0];
+	const double y = temp_p[1];
 
 	return(0);
 }
@@ -330,10 +363,16 @@ template<int dim>
 void 
 ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
 {
-	const double x = p[0];
-	const double y = p[1];
+	Vector<double> temp_p(2);
 
-	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
+	for(unsigned int space = 0 ; space < dim; space++)
+		temp_p(space) = p[space];
+
+	const double x = temp_p[0];
+	const double y = temp_p[1];
+
+	value(0) = sin(M_PI * x);
+	//value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
 	//value(0) = exp(-pow((x-0.5),2)*100);
 	//value(0) = sin(M_PI * x) * sin(M_PI * y);
 
@@ -353,13 +392,19 @@ ic_bc<dim>::force(Vector<double> &value,
 	  const Vector<double> &force_vec,
 	  const Point<dim> &p,const double &t)
 {
-	const double x = p[0];
-	const double y = p[1];
+	Vector<double> temp_p(2);
 
-	value(0) = (-200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
+	for(unsigned int space = 0 ; space < dim; space++)
+		temp_p(space) = p[space];
+
+	const double x = temp_p[0];
+	const double y = temp_p[1];
+
+
+	//value(0) = (-200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
 	//value(0) = -100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
-	//value(0) = M_PI * cos(M_PI * x);
+	value(0) = M_PI * cos(M_PI * x);
 }
 
 template<int dim>
@@ -376,8 +421,13 @@ template<int dim>
 double 
 ic_bc_adjoint<dim>::ic(const Point<dim> &p,const int &id)
 {
-	const double x = p[0];
-	const double y = p[1];
+	Vector<double> temp_p(2);
+
+	for(unsigned int space = 0 ; space < dim; space++)
+		temp_p(space) = p[space];
+
+	const double x = temp_p[0];
+	const double y = temp_p[1];
 
 	return(0);
 }
@@ -386,12 +436,18 @@ template<int dim>
 void 
 ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
 {
-	const double x = p[0];
-	const double y = p[1];
+	Vector<double> temp_p(2);
 
-	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
+	for(unsigned int space = 0 ; space < dim; space++)
+		temp_p(space) = p[space];
+
+	const double x = temp_p[0];
+	const double y = temp_p[1];
+
+	//value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
 	//value(0) = exp(-pow((x-0.5),2)*100);
 	//value(0) = sin(M_PI * x) * sin(M_PI * y);
+	value(0) = sin(M_PI * x);
 
 }
 
@@ -409,15 +465,21 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	  const Vector<double> &force_vec,
 	  const Point<dim> &p,const double &t)
 {
-	const double x = p[0];
-	const double y = p[1];
+	Vector<double> temp_p(2);
+
+	for(unsigned int space = 0 ; space < dim; space++)
+		temp_p(space) = p[space];
+
+	const double x = temp_p[0];
+	const double y = temp_p[1];
 
 	//value(0) = (200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = (200.*( x - y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = -M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);
-	value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
+
+	value(0) = exp(-pow((x-0.5),2)*100);
 
 }
 

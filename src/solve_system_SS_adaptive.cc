@@ -171,6 +171,8 @@ Solve_System_SS_adaptive<dim>::prescribe_initial_conditions()
 
 }
 
+
+// initial conditions for one given cell
 template<int dim>
 void
 Solve_System_SS_adaptive<dim>::compute_ic_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
@@ -263,12 +265,16 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                 scratch.fe_v_face.reinit(cell,face);                
                 // normal to the face assuming cartesian grid
                 Tensor<1,dim> normal_vec = scratch.fe_v_face.normal_vector(0);
+                Vector<double> temp_normal_vec(2);      // 2 is the current maximum dimension
 
-                const double nx = normal_vec[0];
-                const double ny = normal_vec[1];
+                for(unsigned int space = 0 ; space < dim; space ++)
+                  temp_normal_vec(space) = normal_vec[space];
+
+                const double nx = temp_normal_vec[0];
+                const double ny = temp_normal_vec[1];
 
                 const typename DoFHandler<dim>::face_iterator face_itr = cell->face(face);
-                const double face_length = face_itr->measure();
+                const double face_length = return_face_length(face_itr);
 
                   // construct An of the current cell
                   Sparse_Matrix An_cell = system_matrices[this_fe_index].Ax * nx
@@ -585,24 +591,45 @@ Solve_System_SS_adaptive<dim>::compute_max_speed()
 }
 
 
-template<int dim>
+template<>
 double
-Solve_System_SS_adaptive<dim>::min_h(Triangulation<dim> &triangulation)
+Solve_System_SS_adaptive<2>::min_h(Triangulation<2> &triangulation)
 {
 
-  typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),
-                                                                           endc = triangulation.end();
+  typename Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
+                                                  endc = triangulation.end();
 
 
   double min_length = 10000;
 
   for(; cell != endc ; cell++)
-      for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
+      for(unsigned int face = 0 ; face < GeometryInfo<2>::faces_per_cell ; face++)
         if (cell->face(face)->measure() < min_length)
           min_length = cell->face(face)->measure();
 
 
   return(min_length);
+}
+
+template<>
+double
+Solve_System_SS_adaptive<1>::min_h(Triangulation<1> &triangulation)
+{
+  return(GridTools::minimal_cell_diameter(triangulation));
+}
+
+template<>
+double
+Solve_System_SS_adaptive<2>::return_face_length(const typename DoFHandler<2>::face_iterator &face_itr)
+{
+  return(face_itr->measure());
+}
+
+template<>
+double
+Solve_System_SS_adaptive<1>::return_face_length(const typename DoFHandler<1>::face_iterator &face_itr)
+{
+  return(1);
 }
 
 template<int dim>
@@ -710,5 +737,6 @@ Solve_System_SS_adaptive<dim>::~Solve_System_SS_adaptive()
 
 // explicit initiation to avoid linker error
 template class Solve_System_SS_adaptive<2>;
+template class Solve_System_SS_adaptive<1>;
 
 

@@ -166,6 +166,7 @@ Solve_System_SS_adaptive
 									 PerCellError &data);
 
 		 void copy_error_to_global(const PerCellError &data);
+		 double return_face_length(const typename DoFHandler<dim>::face_iterator &face_itr);
 
 };
 

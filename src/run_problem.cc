@@ -18,7 +18,27 @@ dummy_fe_grid(FE_DGQ<dim>(1),max_equations_adjoint),
 dummy_fe_velocity(FE_DGQ<dim>(0),1)
 {
      AssertThrow(max_equations_primal <= max_equations_adjoint,ExcInternalError()); 
-     const unsigned int refinement_type = 1;
+     const unsigned int refinement_type = 0;
+
+     switch (refinement_type)
+     {
+      case 0:
+      {
+        std::cout << "UNIFORM REFINEMENT...." << std::endl;
+        break;
+
+      }
+      case 1:
+      {
+        std::cout << "ADAPTIVE REFINEMENT...." << std::endl;
+        break;
+      }
+      default:
+      {
+        break;
+      }
+     }
+
 
      dummy_dof_handler_grid.distribute_dofs(dummy_fe_grid);
      dummy_dof_handler_velocity.distribute_dofs(dummy_fe_velocity);
@@ -84,8 +104,8 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1)
 
         solve_primal.create_output(filename);
 
-        filename = "grid" + std::to_string(cycle);
-        write_grid(filename,triangulation);
+        // filename = "grid" + std::to_string(cycle);
+        // write_grid(filename,triangulation);
 
 
 	   		if(cycle != refine_cycles-1)
@@ -379,7 +399,7 @@ run_problem<dim>::compute_error_velocity(const Vector<double> &primal_solution,
                              dof_handler_adjoint,
                              temp);
 
-        compute_error(primal_solution,
+        compute_error(temp,
                       adjoint_solution,
                       dof_handler_adjoint,
                       system_matrices,
@@ -419,8 +439,10 @@ run_problem<dim>::compute_error_grid(const Vector<double> &primal_solution,
                              dummy_dof_handler_grid,
                              temp_adjoint);
 
-        compute_error(temp_primal,temp_adjoint,
-                      dummy_dof_handler_grid,system_matrices,
+        compute_error(temp_primal,
+                      temp_adjoint,
+                      dummy_dof_handler_grid,
+                      system_matrices,
                       ic_bc_primal,error_per_cell_grid,
                       1);
 }
@@ -500,9 +522,13 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                 
                 // normal to the face assuming cartesian grid
                 Tensor<1,dim> normal_vec = scratch.fe_v_face.normal_vector(0);
+                Vector<double> temp_normal_vec(2);      // 2 is the current maximum dimension
 
-                const double nx = normal_vec[0];
-                const double ny = normal_vec[1];
+                for(unsigned int space = 0 ; space < dim; space ++)
+                  temp_normal_vec(space) = normal_vec[space];
+
+                const double nx = temp_normal_vec[0];
+                const double ny = temp_normal_vec[1];
 
                 const typename Triangulation<dim>::face_iterator face_itr = cell->face(face);
 
@@ -624,8 +650,13 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                    
                     Tensor<1,dim> normal_vec = fe_v_face.normal_vector(0);
 
-                    const double nx = normal_vec[0];
-                    const double ny = normal_vec[1];
+                    Vector<double> temp_normal_vec(2);      // 2 is the current maximum dimension
+
+                    for(unsigned int space = 0 ; space < dim; space ++)
+                      temp_normal_vec(space) = normal_vec[space];
+
+                    const double nx = temp_normal_vec[0];
+                    const double ny = temp_normal_vec[1];
 
                     const std::vector<double> &Jacobians_face = fe_v_face.get_JxW_values();
                     const unsigned int total_ngp_face = Jacobians_face.size();
@@ -887,6 +918,7 @@ run_problem<dim>::modulus_Vec(const Vector<double> &inVec)
   return(outVec);
 }
 
+// for problems with an exact solution, we compute the error in the target functional
 template<int dim>
 void 
 run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulation,
@@ -936,3 +968,4 @@ fe_v_subface(scratch.fe_v_subface.get_fe(),scratch.fe_v_subface.get_quadrature()
 {;}
 
 template class run_problem<2>;
+template class run_problem<1>;
