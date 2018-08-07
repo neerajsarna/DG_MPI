@@ -77,6 +77,9 @@ run_problem
                                 ic_bc_base<dim> *ic_bc_primal,
                                 const Triangulation<dim> &triangulation);
 
+    typename DoFHandler<dim>::cell_iterator return_child_refined_neighbor(const typename DoFHandler<dim>::cell_iterator &neighbor,
+                                                                         const typename DoFHandler<dim>::active_cell_iterator &cell);
+
     void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
                                 PerCellErrorScratch &scratch,
                                         PerCellError &data,
@@ -111,7 +114,6 @@ run_problem
               const Vector<double> &y);
 
     void assemble_to_global(const PerCellError &data,Vector<double> &input);
-
 
     void compute_error(const Vector<double> &primal_solution,
                                 const Vector<double> &adjoint_solution,
@@ -150,6 +152,5 @@ run_problem
                                      ic_bc_base<dim> *ic_bc_adjoint,
                                      const DoFHandler<dim> &dof_handler_primal,
                                      const Vector<double> &primal_solution);
-
 
 };

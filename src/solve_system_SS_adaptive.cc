@@ -251,12 +251,13 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
               if(system_matrices[this_fe_index].have_force)
               {
                 Vector<double> force_value(n_eqn[this_fe_index]);
-                initial_boundary->force(force_value,force_vector[cell->index()],
+                initial_boundary->force(force_value,force_vector[cell->active_cell_index()],
                                         cell->center(),t);
 
                 for(unsigned int i = 0 ; i < n_eqn[this_fe_index] ; i++)
                     data.local_contri(component_to_system[i](0)) += dt * force_value(i);                
               }
+
 
 
               // loop over the faces, we assume no hanging nodes 
@@ -326,15 +327,21 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                                                   * temp_g[bc_id](n.col()) * face_length/volume;
 
                   }
+
+
                 }
                 else
                 {
+
+                    std::cout << "neighbor in " << std::endl;
+                    fflush(stdout);
 
                    typename DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
 
                    if(!neighbor->has_children())  // if neighbor is active then either its on the same level or its 
                                               // coarser. 
                    {
+
                     Assert(!face_itr->has_children(),ExcInternalError());
                     integrate_face(data.local_contri,
                                  neighbor,
@@ -347,22 +354,27 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                                  ny,
                                  An_cell,
                                  data.local_dof_indices);
+
                    }
                    else
                    {
                      Assert(neighbor->has_children(),ExcInternalError()); // the neighbor should have children in this case
-                     Assert(face_itr->n_children() == 2,ExcInternalError());
+                     Assert(neighbor->n_children() > 0, ExcInternalError());
+                     if (dim != 1)
+                     {
                      for(unsigned int subface = 0 ; subface < face_itr->n_children() ; subface ++) // loop over the subfaces of the present cell
                      {
-                        Assert(subface < 2,ExcInternalError());
-                        const typename DoFHandler<dim>::active_cell_iterator neighbor_child 
-                                      = cell->neighbor_child_on_subface(face,subface);
+                      Assert(subface < 2,ExcInternalError());
+                      Assert(dim != 1,ExcMessage("should not have reached here"));
 
-                        integrate_face(data.local_contri,
-                                      neighbor_child,
-                                      system_matrices,
-                                      component_to_system,
-                                      this_fe_index,
+                      const typename DoFHandler<dim>::active_cell_iterator neighbor_child 
+                      = cell->neighbor_child_on_subface(face,subface);
+
+                      integrate_face(data.local_contri,
+                        neighbor_child,
+                        system_matrices,
+                        component_to_system,
+                        this_fe_index,
                                       face_length/2,      // only for isotropic refinement, the length of the subface
                                       volume,
                                       nx,
@@ -371,6 +383,42 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                                       data.local_dof_indices);
                      }
                    }
+
+                     if(dim == 1)
+                     {
+                      std::cout << "neighbor children in " << std::endl;
+                      fflush(stdout);
+
+                      std::cout << "find neighbor in" << std::endl;
+                      fflush(stdout);
+                      const typename DoFHandler<dim>::cell_iterator 
+                                                      neighbor_child = return_child_refined_neighbor(neighbor,cell); 
+
+                      Assert(!neighbor_child->has_children(),ExcOrderingChanged(neighbor_child->n_children()));
+                      std::cout << "find neighbor out" << std::endl;
+                      fflush(stdout);
+
+                      integrate_face(data.local_contri,
+                                      neighbor_child,
+                                      system_matrices,
+                                      component_to_system,
+                                      this_fe_index,
+                                      face_length,      // only for isotropic refinement, the length of the subface
+                                      volume,
+                                      nx,
+                                      ny,
+                                      An_cell,
+                                      data.local_dof_indices);
+
+                      std::cout << "neighbor children out " << std::endl;
+                      fflush(stdout);
+
+                    }
+                     
+                   }
+
+                  std::cout << "neighbor out " << std::endl;
+                  fflush(stdout);
 
                 } //end of else
 
@@ -396,12 +444,13 @@ template<int dim>
                                               const Sparse_Matrix &An_cell,
                                               const std::vector<types::global_dof_index> &local_dof_indices)
  {
+
                    const unsigned int neighbor_fe_index = neighbor->user_index();
                    const unsigned int dofs_per_cell_neighbor = fe.dofs_per_cell;
                    std::vector<types::global_dof_index> local_dof_indices_neighbor(dofs_per_cell_neighbor);
 
-
                    neighbor->get_dof_indices(local_dof_indices_neighbor);
+
 
                    Sparse_Matrix An_neighbor = system_matrices[neighbor_fe_index].Ax * nx
                                               + system_matrices[neighbor_fe_index].Ay * ny;
@@ -533,7 +582,7 @@ Solve_System_SS_adaptive<dim>::compute_error_per_cell(const typename DoFHandler<
     for (unsigned int i = 0 ; i < data.solution_value.size(); i++) 
       data.error_value = pow(data.solution_value(i),2) +data.error_value;
 
-    data.cell_index = cell->index();
+    data.cell_index = cell->active_cell_index();
 
     data.volume = cell->measure();
     
@@ -630,6 +679,37 @@ double
 Solve_System_SS_adaptive<1>::return_face_length(const typename DoFHandler<1>::face_iterator &face_itr)
 {
   return(1);
+}
+
+template<>
+typename DoFHandler<1>::cell_iterator
+Solve_System_SS_adaptive<1>::return_child_refined_neighbor(const typename DoFHandler<1>::cell_iterator &neighbor,
+                                                             const typename DoFHandler<1>::active_cell_iterator &cell)
+{
+  std::vector<double> distances(2);
+  Assert(neighbor->n_children() == 2,ExcInternalError());
+  std::vector<typename DoFHandler<1>::cell_iterator> neighbor_child(2);
+
+
+  neighbor_child[0] = neighbor->child(0);
+  
+  distances[0] = cell->center().distance(neighbor_child[0]->center());
+
+  neighbor_child[1] = neighbor->child(1);
+  
+  distances[1] = cell->center().distance(neighbor_child[1]->center());
+
+  std::cout << "center neighbor: " << neighbor->center() 
+            << " center child 1: " << neighbor_child[0]->center()
+            << " cener child 2: " << neighbor_child[1]->center() << std::endl;
+
+  std::cout << "level neighbor: " << neighbor->level() 
+            << " level child 1: " << neighbor_child[0]->level()
+            << " level child 2: " << neighbor_child[1]->level() << std::endl;
+            
+  Assert(fabs(distances[0]-distances[1]) > 1e-15,ExcInternalError());
+  return(distances[0] >= distances[1] ? neighbor_child[1] : neighbor_child[0]);
+  
 }
 
 template<int dim>

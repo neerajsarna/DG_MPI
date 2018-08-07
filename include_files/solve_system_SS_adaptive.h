@@ -88,6 +88,9 @@ Solve_System_SS_adaptive
     			FEFaceValues<dim> fe_v_face;    			
 		};
 
+		typename DoFHandler<dim>::cell_iterator return_child_refined_neighbor(const typename DoFHandler<dim>::cell_iterator &neighbor,
+		 																const typename DoFHandler<dim>::active_cell_iterator &cell);
+
 
 		void assemble_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
                                       PerCellAssembleScratch &scratch,

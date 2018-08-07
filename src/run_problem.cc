@@ -18,7 +18,7 @@ dummy_fe_grid(FE_DGQ<dim>(1),max_equations_adjoint),
 dummy_fe_velocity(FE_DGQ<dim>(0),1)
 {
      AssertThrow(max_equations_primal <= max_equations_adjoint,ExcInternalError()); 
-     const unsigned int refinement_type = 0;
+     const unsigned int refinement_type = 1;
 
      switch (refinement_type)
      {
@@ -83,7 +83,7 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1)
      solve_adjoint.allocate_memory();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 7;
+	   const unsigned int refine_cycles = 20;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
@@ -304,12 +304,12 @@ run_problem<dim>::print_convergence_table()
       std::ofstream output_convergence("convergence_table.txt");
 
       convergence_table.evaluate_convergence_rates("primal error",
-                                                  "min h",
-                                                  ConvergenceTable::reduction_rate_log2,1);
+                                                  "dofs primal",
+                                                  ConvergenceTable::reduction_rate_log2);
 
       convergence_table.evaluate_convergence_rates("adjoint error",
-                                                  "min h",
-                                                  ConvergenceTable::reduction_rate_log2,1);
+                                                  "dofs primal",
+                                                  ConvergenceTable::reduction_rate_log2);
 
       convergence_table.evaluate_convergence_rates("target error",
                                                   "dofs primal",
@@ -593,7 +593,8 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                   else
                   {
                     Assert(neighbor->has_children(),ExcInternalError());
-                    
+                    if(dim != 1)
+                    {
                     for(unsigned int subface = 0 ; subface < face_itr->n_children() ; subface ++) // loop over the subfaces of the present cell
                      {
                         Assert(subface < 2,ExcInternalError());
@@ -610,7 +611,24 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                      component_to_system,
                                      scratch.fe_v_subface,
                                      data.local_contri);
-                     } // end of loop over the subfaces
+                     } // end of loop over the subfaces                      
+                    }
+
+                     if(dim == 1)
+                     {
+                        const typename DoFHandler<dim>::active_cell_iterator 
+                                      neighbor_child = return_child_refined_neighbor(neighbor,cell); 
+                        scratch.fe_v_face.reinit(cell,face);            // no subfaces for 1D
+                        error_face(neighbor_child,
+                                   cell,
+                                    primal_solution,
+                                    adjoint_solution,
+                                     system_matrices,
+                                     component_to_system,
+                                     scratch.fe_v_face,
+                                     data.local_contri);
+                     }
+
                   } // 
                 }//end over else of interior edges
               } // end over for
@@ -947,6 +965,27 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
                                                            *(exact_solution_value(i)-solution_value(i)) * volume;
 
   }
+}
+
+template<>
+typename DoFHandler<1>::cell_iterator
+run_problem<1>::return_child_refined_neighbor(const typename DoFHandler<1>::cell_iterator &neighbor,
+                                              const typename DoFHandler<1>::active_cell_iterator &cell)
+{   
+  std::vector<double> distances(2);
+  Assert(neighbor->n_children() == 2,ExcInternalError());
+  std::vector<typename DoFHandler<1>::cell_iterator> neighbor_child(2);
+
+  neighbor_child[0] = neighbor->child(0);
+  distances[0] = cell->center().distance(neighbor_child[0]->center());
+
+  neighbor_child[1] = neighbor->child(1);
+  distances[1] = cell->center().distance(neighbor_child[1]->center());
+
+  Assert(fabs(distances[0]-distances[1]) > 1e-15,ExcInternalError());
+
+  return(distances[0] >= distances[1] ? neighbor_child[1] : neighbor_child[0]);
+  
 }
 
 template<int dim>
