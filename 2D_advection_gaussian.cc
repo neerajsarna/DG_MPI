@@ -479,8 +479,8 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);
 
-	value(0) = exp(-pow((x-0.6),2)*100);
-	//value(0) = 1;
+	//value(0) = exp(-pow((x-0.6),2)*100);
+	value(0) = 0;
 }
 
 template<int dim>
@@ -491,4 +491,7 @@ ic_bc_adjoint<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	const int num_bc = B.rows();
 	value.reinit(num_bc);
 	value = 0;
+
+	if(bc_id == 0)
+		value(0) = 1;
 }

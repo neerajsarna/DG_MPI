@@ -151,6 +151,9 @@ run_problem
                                      ic_bc_base<dim> *ic_bc_primal,
                                      ic_bc_base<dim> *ic_bc_adjoint,
                                      const DoFHandler<dim> &dof_handler_primal,
-                                     const Vector<double> &primal_solution);
+                                     const Vector<double> &primal_solution,
+                                     const std::vector<system_data> &system_matrices_adjoint,
+                                     const double &t);
 
+    double return_face_length(const typename DoFHandler<dim>::face_iterator &face_itr);
 };

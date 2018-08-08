@@ -122,7 +122,9 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1)
                                   ic_bc_primal,
                                   ic_bc_adjoint,
                                   solve_primal.dof_handler,
-                                  solve_primal.locally_owned_solution);
+                                  solve_primal.locally_owned_solution,
+                                  system_mat_adjoint,
+                                  t);
 
           filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
                      + std::string(".txt");
@@ -943,10 +945,25 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
                                      ic_bc_base<dim> *ic_bc_primal,
                                      ic_bc_base<dim> *ic_bc_adjoint,
                                      const DoFHandler<dim> &dof_handler_primal,
-                                     const Vector<double> &primal_solution)
+                                     const Vector<double> &primal_solution,
+                                     const std::vector<system_data> &system_matrices_adjoint,
+                                     const double &t)
 {
   typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(), endc = triangulation.end();
   Vector<double> temp;
+
+  std::vector<Vector<double>> jbc_Omega(4);
+
+
+  for (unsigned int id = 0 ; id < 4 ; id++) // develop the boundary for the biggest inhomogeneity anyhow
+            ic_bc_adjoint->bc_inhomo(system_matrices_adjoint[system_matrices_adjoint.size()-1].B[id],
+                                     id,jbc_Omega[id],t);
+
+  std::vector<int> bc_id_primal(4); // the id of primal which is the id of adjoint
+  bc_id_primal[0] = 2;  // adjoint boundary at x = 1 is the primal boundary at x = 0 (reversal in advection direction)
+  bc_id_primal[1] = 3;
+  bc_id_primal[2] = 0;
+  bc_id_primal[3] = 1;
 
   for(; cell != endc ; cell++)
   {
@@ -954,6 +971,7 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
     Vector<double> solution_value(dummy_fe_grid.n_components());
     Vector<double> exact_solution_value(dummy_fe_grid.n_components());
     Vector<double> jOmega(dummy_fe_grid.n_components());
+
 
 
     VectorTools::point_value(dof_handler_primal,primal_solution,cell->center(),solution_value); // compute exact solution
@@ -964,30 +982,32 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
       error_per_cell_grid_target(cell->active_cell_index()) += jOmega(i)
                                                            *(exact_solution_value(i)-solution_value(i)) * volume;
 
+    for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
+      if(cell->face(face)->at_boundary())
+    {
+      ic_bc_primal->exact_solution(cell->face(face)->center(),exact_solution_value,t);
+      const double face_length = return_face_length(cell->face(face));
+      for(unsigned int i = 0 ; i < jbc_Omega[bc_id_primal[cell->face(face)->bc_id()]].size(); i++)
+        error_per_cell_grid_target(cell->active_cell_index()) += jbc_Omega[bc_id_primal[cell->face(face)->bc_id()]](i)
+                                                           *(exact_solution_value(i)-solution_value(i)) * face_length;
+    }
+
   }
 }
 
-/*
 template<>
-typename DoFHandler<1>::cell_iterator
-run_problem<1>::return_child_refined_neighbor(const typename DoFHandler<1>::cell_iterator &neighbor,
-                                              const typename DoFHandler<1>::active_cell_iterator &cell)
-{   
-  std::vector<double> distances(2);
-  Assert(neighbor->n_children() == 2,ExcInternalError());
-  std::vector<typename DoFHandler<1>::cell_iterator> neighbor_child(2);
+double
+run_problem<2>::return_face_length(const typename DoFHandler<2>::face_iterator &face_itr)
+{
+  return(face_itr->measure());
+}
 
-  neighbor_child[0] = neighbor->child(0);
-  distances[0] = cell->center().distance(neighbor_child[0]->center());
-
-  neighbor_child[1] = neighbor->child(1);
-  distances[1] = cell->center().distance(neighbor_child[1]->center());
-
-  Assert(fabs(distances[0]-distances[1]) > 1e-15,ExcInternalError());
-
-  return(distances[0] >= distances[1] ? neighbor_child[1] : neighbor_child[0]);
-  
-}*/
+template<>
+double
+run_problem<1>::return_face_length(const typename DoFHandler<1>::face_iterator &face_itr)
+{
+  return(1);
+}
 
 template<>
 typename DoFHandler<1>::cell_iterator
