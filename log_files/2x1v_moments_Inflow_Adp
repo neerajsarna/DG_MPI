@@ -1,15 +1,15 @@
-Sender: LSF System <lsfadmin@linuxbmc0403>
-Subject: Job 43756251: <2x1v_moments_Adp> in cluster <rcc> Done
+Sender: LSF System <lsfadmin@linuxbmc0344>
+Subject: Job 43919381: <2x1v_moments_Adp> in cluster <rcc> Exited
 
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Thu Jul 26 21:36:47 2018
-Job was executed on host(s) <12*linuxbmc0403>, in queue <normal>, as user <ns179556> in cluster <rcc> at Thu Jul 26 21:36:54 2018
-                            <12*linuxbmc0404>
-                            <8*linuxbmc0406>
+Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Wed Aug  8 12:35:30 2018
+Job was executed on host(s) <12*linuxbmc0344>, in queue <normal>, as user <ns179556> in cluster <rcc> at Wed Aug  8 12:35:35 2018
+                            <12*linuxbmc0346>
+                            <8*linuxbmc0350>
 </home/ns179556> was used as the home directory.
 </home/ns179556/DG_MPI> was used as the working directory.
-Started at Thu Jul 26 21:36:54 2018
-Terminated at Thu Jul 26 22:13:27 2018
-Results reported at Thu Jul 26 22:13:27 2018
+Started at Wed Aug  8 12:35:35 2018
+Terminated at Wed Aug  8 13:55:45 2018
+Results reported at Wed Aug  8 13:55:45 2018
 
 Your job looked like:
 
@@ -46,1434 +46,783 @@ cd /home/ns179556/DG_MPI
  
 export FLAGS_MPI_BATCH="-np 1"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2x1v_moments_Inflow_Adp.out 32 300 3
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10
 
 ------------------------------------------------------------
 
-Successfully completed.
+TERM_RUNLIMIT: job killed after reaching LSF run time limit.
+Exited with exit code 140.
 
 Resource usage summary:
 
-    CPU time :                                   4332.81 sec.
-    Max Memory :                                 479 MB
-    Average Memory :                             471.24 MB
+    CPU time :                                   9588.00 sec.
+    Max Memory :                                 491 MB
+    Average Memory :                             482.31 MB
     Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31521.00 MB
+    Delta Memory :                               31509.00 MB
     Max Swap :                                   -
     Max Processes :                              8
     Max Threads :                                20
-    Run time :                                   2208 sec.
-    Turnaround time :                            2200 sec.
+    Run time :                                   4810 sec.
+    Turnaround time :                            4815 sec.
 
 The output (if any) follows:
 
-/home/ns179556/.lsbatch/1532633807.43756251.shell:25: command not found: switch
+/home/ns179556/.lsbatch/1533724530.43919381.shell:25: command not found: switch
 +(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0403.rz.RWTH-Aachen.DE:31143] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-developing systems: 
-refinement cycle: 0
-solving primal: 
-cycle: 0
-total cells: 300
-total dofs: 1800
-residual: 9.03307time: 0.250683
-residual: 11.6155time: 0.501365
-residual: 10.8163time: 0.752048
-residual: 10.3904time: 1.00273
-residual: 9.51571time: 1.25341
-residual: 6.45743time: 1.5041
-residual: 2.79974time: 1.75478
-residual: 1.23323time: 2.00546
-residual: 0.921492time: 2.25614
-residual: 0.628948time: 2.50683
-residual: 0.531356time: 2.75751
-residual: 0.330776time: 3.00819
-residual: 0.176919time: 3.25887
-residual: 0.140337time: 3.50956
-residual: 0.0847701time: 3.76024
-residual: 0.0555649time: 4.01092
-residual: 0.0433593time: 4.2616
-residual: 0.0239696time: 4.51229
-residual: 0.0168827time: 4.76297
-residual: 0.0123016time: 5.01365
-residual: 0.00674568time: 5.26433
-residual: 0.00524067time: 5.51502
-residual: 0.00348437time: 5.7657
-residual: 0.00197058time: 6.01638
-residual: 0.00158749time: 6.26706
-residual: 0.000965537time: 6.51775
-residual: 0.000595841time: 6.76843
-residual: 0.000472204time: 7.01911
-residual: 0.000267125time: 7.26979
-residual: 0.000183683time: 7.52048
-residual: 0.000136975time: 7.77116
-residual: 7.48779e-05time: 8.02184
-residual: 5.67686e-05time: 8.27252
-residual: 3.88502e-05time: 8.52321
-residual: 2.16351e-05time: 8.77389
-residual: 1.7334e-05time: 9.02457
-residual: 1.0822e-05time: 9.27525
-residual: 6.47749e-06time: 9.52594
-residual: 5.18789e-06time: 9.77662
-residual: 2.99114e-06time: 10.0273
-residual: 1.98904e-06time: 10.278
-residual: 1.51641e-06time: 10.5287
-residual: 8.33396e-07time: 10.7793
-residual: 6.15336e-07time: 11.03
-residual: 4.32928e-07time: 11.2807
-residual: 2.38283e-07time: 11.5314
-residual: 1.88795e-07time: 11.7821
-residual: 1.21162e-07time: 12.0328
-Steps taken: 24148
-FE index data.....
-FE index: 0 appeared: 300 equations: 6
-FE index: 1 appeared: 0 equations: 14
-FE index: 2 appeared: 0 equations: 16
-FE index: 3 appeared: 0 equations: 18
-FE index: 4 appeared: 0 equations: 20
-refinement cycle: 1
-solving primal: 
-cycle: 1
-total cells: 300
-total dofs: 4200
-residual: 1.35324time: 12.2439
-residual: 0.534071time: 12.3808
-residual: 0.274572time: 12.5176
-residual: 0.157706time: 12.6545
-residual: 0.116042time: 12.7914
-residual: 0.109873time: 12.9283
-residual: 0.10521time: 13.0652
-residual: 0.0908653time: 13.2021
-residual: 0.0695182time: 13.339
-residual: 0.0467747time: 13.4759
-residual: 0.0283037time: 13.6128
-residual: 0.0193277time: 13.7497
-residual: 0.016517time: 13.8866
-residual: 0.014068time: 14.0235
-residual: 0.0113808time: 14.1604
-residual: 0.00994888time: 14.2973
-residual: 0.00956056time: 14.4342
-residual: 0.00875467time: 14.5711
-residual: 0.00704425time: 14.708
-residual: 0.00492709time: 14.8449
-residual: 0.00323541time: 14.9818
-residual: 0.00248914time: 15.1186
-residual: 0.00224603time: 15.2555
-residual: 0.00190501time: 15.3924
-residual: 0.00144662time: 15.5293
-residual: 0.0011153time: 15.6662
-residual: 0.00100731time: 15.8031
-residual: 0.000941304time: 15.94
-residual: 0.000787831time: 16.0769
-residual: 0.000573657time: 16.2138
-residual: 0.000392084time: 16.3507
-residual: 0.000310355time: 16.4876
-residual: 0.000284653time: 16.6245
-residual: 0.000245029time: 16.7614
-residual: 0.000185542time: 16.8983
-residual: 0.000134899time: 17.0352
-residual: 0.000113894time: 17.1721
-residual: 0.000106613time: 17.309
-residual: 9.20315e-05time: 17.4459
-residual: 6.92093e-05time: 17.5827
-residual: 4.81117e-05time: 17.7196
-residual: 3.77041e-05time: 17.8565
-residual: 3.46593e-05time: 17.9934
-residual: 3.04332e-05time: 18.1303
-residual: 2.34174e-05time: 18.2672
-residual: 1.66797e-05time: 18.4041
-residual: 1.33163e-05time: 18.541
-residual: 1.23472e-05time: 18.6779
-residual: 1.09291e-05time: 18.8148
-residual: 8.45742e-06time: 18.9517
-residual: 5.94105e-06time: 19.0886
-residual: 4.54236e-06time: 19.2255
-residual: 4.14041e-06time: 19.3624
-residual: 3.70817e-06time: 19.4993
-residual: 2.91876e-06time: 19.6362
-residual: 2.07565e-06time: 19.7731
-residual: 1.58503e-06time: 19.91
-residual: 1.44305e-06time: 20.0468
-residual: 1.30366e-06time: 20.1837
-residual: 1.0369e-06time: 20.3206
-residual: 7.36906e-07time: 20.4575
-residual: 5.47992e-07time: 20.5944
-residual: 4.90377e-07time: 20.7313
-residual: 4.46759e-07time: 20.8682
-residual: 3.60627e-07time: 21.0051
-residual: 2.5876e-07time: 21.142
-residual: 1.90947e-07time: 21.2789
-residual: 1.69357e-07time: 21.4158
-residual: 1.55401e-07time: 21.5527
-residual: 1.26978e-07time: 21.6896
-Steps taken: 35378
-FE index data.....
-FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 300 equations: 14
-FE index: 2 appeared: 0 equations: 16
-FE index: 3 appeared: 0 equations: 18
-FE index: 4 appeared: 0 equations: 20
-refinement cycle: 2
-solving primal: 
-cycle: 2
-total cells: 300
-total dofs: 4800
-residual: 0.390754time: 21.9188
-residual: 0.10228time: 22.0444
-residual: 0.0406091time: 22.1701
-residual: 0.017413time: 22.2958
-residual: 0.0108213time: 22.4215
-residual: 0.0088417time: 22.5471
-residual: 0.00804528time: 22.6728
-residual: 0.00723333time: 22.7985
-residual: 0.00583918time: 22.9241
-residual: 0.00409532time: 23.0498
-residual: 0.00268261time: 23.1755
-residual: 0.00188082time: 23.3012
-residual: 0.00159664time: 23.4268
-residual: 0.00142321time: 23.5525
-residual: 0.00117037time: 23.6782
-residual: 0.000934239time: 23.8039
-residual: 0.000822231time: 23.9295
-residual: 0.000788513time: 24.0552
-residual: 0.000724546time: 24.1809
-residual: 0.000595962time: 24.3066
-residual: 0.000435195time: 24.4322
-residual: 0.000299001time: 24.5579
-residual: 0.000229504time: 24.6836
-residual: 0.00020777time: 24.8093
-residual: 0.000185752time: 24.9349
-residual: 0.000149757time: 25.0606
-residual: 0.000112792time: 25.1863
-residual: 9.14524e-05time: 25.312
-residual: 8.50512e-05time: 25.4376
-residual: 7.90083e-05time: 25.5633
-residual: 6.62794e-05time: 25.689
-residual: 4.9459e-05time: 25.8147
-residual: 3.49985e-05time: 25.9403
-residual: 2.77936e-05time: 26.066
-residual: 2.55767e-05time: 26.1917
-residual: 2.2987e-05time: 26.3174
-residual: 1.85302e-05time: 26.443
-residual: 1.37101e-05time: 26.5687
-residual: 1.0627e-05time: 26.6944
-residual: 9.61535e-06time: 26.8201
-residual: 8.9759e-06time: 26.9457
-residual: 7.64027e-06time: 27.0714
-residual: 5.78931e-06time: 27.1971
-residual: 4.14987e-06time: 27.3228
-residual: 3.31497e-06time: 27.4484
-residual: 3.06139e-06time: 27.5741
-residual: 2.76968e-06time: 27.6998
-residual: 2.2471e-06time: 27.8255
-residual: 1.65724e-06time: 27.9511
-residual: 1.25289e-06time: 28.0768
-residual: 1.10929e-06time: 28.2025
-residual: 1.03823e-06time: 28.3282
-residual: 8.94352e-07time: 28.4538
-residual: 6.85873e-07time: 28.5795
-residual: 4.94305e-07time: 28.7052
-residual: 3.92517e-07time: 28.8309
-residual: 3.61746e-07time: 28.9565
-residual: 3.2956e-07time: 29.0822
-residual: 2.69761e-07time: 29.2079
-residual: 1.99471e-07time: 29.3336
-residual: 1.48518e-07time: 29.4592
-residual: 1.29111e-07time: 29.5849
-residual: 1.21004e-07time: 29.7106
-residual: 1.05347e-07time: 29.8363
-Steps taken: 32123
-FE index data.....
-FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 0 equations: 14
-FE index: 2 appeared: 300 equations: 16
-FE index: 3 appeared: 0 equations: 18
-FE index: 4 appeared: 0 equations: 20
-refinement cycle: 3
-solving primal: 
-cycle: 3
-total cells: 300
-total dofs: 5400
-residual: 0.344456time: 29.9839
-residual: 0.0909732time: 30.1006
-residual: 0.0351765time: 30.2173
-residual: 0.0164505time: 30.3341
-residual: 0.00843098time: 30.4508
-residual: 0.00664134time: 30.5675
-residual: 0.00607225time: 30.6842
-residual: 0.00542509time: 30.8009
-residual: 0.00470978time: 30.9177
-residual: 0.00363462time: 31.0344
-residual: 0.00251347time: 31.1511
-residual: 0.00171746time: 31.2678
-residual: 0.00133378time: 31.3846
-residual: 0.00119373time: 31.5013
-residual: 0.00106263time: 31.618
-residual: 0.000874316time: 31.7347
-residual: 0.000700125time: 31.8514
-residual: 0.000610108time: 31.9682
-residual: 0.000582859time: 32.0849
-residual: 0.000547642time: 32.2016
-residual: 0.000471291time: 32.3183
-residual: 0.000365001time: 32.4351
-residual: 0.000260664time: 32.5518
-residual: 0.000190953time: 32.6685
-residual: 0.000163744time: 32.7852
-residual: 0.000152008time: 32.9019
-residual: 0.000133218time: 33.0187
-residual: 0.000106358time: 33.1354
-residual: 8.13251e-05time: 33.2521
-residual: 6.74763e-05time: 33.3688
-residual: 6.31338e-05time: 33.4856
-residual: 5.9152e-05time: 33.6023
-residual: 5.09026e-05time: 33.719
-residual: 3.9502e-05time: 33.8357
-residual: 2.8682e-05time: 33.9524
-residual: 2.20415e-05time: 34.0692
-residual: 1.97201e-05time: 34.1859
-residual: 1.83873e-05time: 34.3026
-residual: 1.59269e-05time: 34.4193
-residual: 1.25179e-05time: 34.5361
-residual: 9.39502e-06time: 34.6528
-residual: 7.66238e-06time: 34.7695
-residual: 7.11075e-06time: 34.8862
-residual: 6.63586e-06time: 35.0029
-residual: 5.68815e-06time: 35.1197
-residual: 4.40645e-06time: 35.2364
-residual: 3.23038e-06time: 35.3531
-residual: 2.55354e-06time: 35.4698
-residual: 2.32999e-06time: 35.5866
-residual: 2.16874e-06time: 35.7033
-residual: 1.86097e-06time: 35.82
-residual: 1.44793e-06time: 35.9367
-residual: 1.07855e-06time: 36.0534
-residual: 8.78056e-07time: 36.1702
-residual: 8.14309e-07time: 36.2869
-residual: 7.56857e-07time: 36.4036
-residual: 6.45065e-07time: 36.5203
-residual: 4.97789e-07time: 36.6371
-residual: 3.66949e-07time: 36.7538
-residual: 2.9553e-07time: 36.8705
-residual: 2.72603e-07time: 36.9872
-residual: 2.52842e-07time: 37.1039
-residual: 2.15174e-07time: 37.2207
-residual: 1.66129e-07time: 37.3374
-residual: 1.23445e-07time: 37.4541
-residual: 1.01028e-07time: 37.5708
-Steps taken: 33045
-FE index data.....
-FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 0 equations: 14
-FE index: 2 appeared: 0 equations: 16
-FE index: 3 appeared: 300 equations: 18
-FE index: 4 appeared: 0 equations: 20
-refinement cycle: 4
-solving primal: 
-cycle: 4
-total cells: 300
-total dofs: 6000
-residual: 0.290996time: 37.6907
-residual: 0.0850621time: 37.8001
-residual: 0.0288906time: 37.9095
-residual: 0.0145742time: 38.0188
-residual: 0.0074717time: 38.1282
-residual: 0.00525327time: 38.2376
-residual: 0.00472932time: 38.347
-residual: 0.00435714time: 38.4563
-residual: 0.00381681time: 38.5657
-residual: 0.00318319time: 38.6751
-residual: 0.00237373time: 38.7845
-residual: 0.00165147time: 38.8938
-residual: 0.0012071time: 39.0032
-residual: 0.00102171time: 39.1126
-residual: 0.000937193time: 39.222
-residual: 0.000828486time: 39.3313
-residual: 0.000680788time: 39.4407
-residual: 0.000547597time: 39.5501
-residual: 0.000475675time: 39.6595
-residual: 0.000452579time: 39.7688
-residual: 0.00043027time: 39.8782
-residual: 0.00038127time: 39.9876
-residual: 0.00030802time: 40.097
-residual: 0.000229183time: 40.2063
-residual: 0.000167389time: 40.3157
-residual: 0.000136127time: 40.4251
-residual: 0.000125407time: 40.5345
-residual: 0.000115505time: 40.6438
-residual: 9.86387e-05time: 40.7532
-residual: 7.79639e-05time: 40.8626
-residual: 6.07353e-05time: 40.972
-residual: 5.19709e-05time: 41.0813
-residual: 4.91152e-05time: 41.1907
-residual: 4.60847e-05time: 41.3001
-residual: 4.0074e-05time: 41.4095
-residual: 3.18047e-05time: 41.5188
-residual: 2.36605e-05time: 41.6282
-residual: 1.81269e-05time: 41.7376
-residual: 1.58621e-05time: 41.847
-residual: 1.49368e-05time: 41.9563
-residual: 1.34892e-05time: 42.0657
-residual: 1.11784e-05time: 42.1751
-residual: 8.61854e-06time: 42.2845
-residual: 6.68359e-06time: 42.3938
-residual: 5.80464e-06time: 42.5032
-residual: 5.49963e-06time: 42.6126
-residual: 5.07977e-06time: 42.722
-residual: 4.31913e-06time: 42.8313
-residual: 3.36545e-06time: 42.9407
-residual: 2.51587e-06time: 43.0501
-residual: 2.01973e-06time: 43.1595
-residual: 1.84565e-06time: 43.2688
-residual: 1.73549e-06time: 43.3782
-residual: 1.53005e-06time: 43.4876
-residual: 1.23456e-06time: 43.597
-residual: 9.37573e-07time: 43.7063
-residual: 7.3699e-07time: 43.8157
-residual: 6.5722e-07time: 43.9251
-residual: 6.23351e-07time: 44.0345
-residual: 5.64846e-07time: 44.1438
-residual: 4.68867e-07time: 44.2532
-residual: 3.59397e-07time: 44.3626
-residual: 2.71904e-07time: 44.472
-residual: 2.28272e-07time: 44.5813
-residual: 2.13688e-07time: 44.6907
-residual: 1.98534e-07time: 44.8001
-residual: 1.70647e-07time: 44.9095
-residual: 1.34481e-07time: 45.0188
-residual: 1.01532e-07time: 45.1282
-Steps taken: 34529
-FE index data.....
-FE index: 0 appeared: 0 equations: 6
-FE index: 1 appeared: 0 equations: 14
-FE index: 2 appeared: 0 equations: 16
-FE index: 3 appeared: 0 equations: 18
-FE index: 4 appeared: 300 equations: 20
-
-
-+---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |  2.18e+03s |            |
-|                                             |            |            |
-| Section                         | no. calls |  wall time | % of total |
-+---------------------------------+-----------+------------+------------+
-| solve primal                    |         5 |  2.18e+03s |     1e+02% |
-+---------------------------------+-----------+------------+------------+
-
-Sender: LSF System <lsfadmin@linuxbmc0551>
-Subject: Job 43891807: <2x1v_moments_Adp> in cluster <rcc> Exited
-
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sat Aug  4 01:33:46 2018
-Job was executed on host(s) <12*linuxbmc0551>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sat Aug  4 01:33:52 2018
-                            <12*linuxbmc0555>
-                            <8*linuxbmc0556>
-</home/ns179556> was used as the home directory.
-</home/ns179556/DG_MPI> was used as the working directory.
-Started at Sat Aug  4 01:33:52 2018
-Terminated at Sat Aug  4 01:45:31 2018
-Results reported at Sat Aug  4 01:45:31 2018
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-#!/usr/bin/env zsh
- 
-### Job name
-#BSUB -J 2x1v_moments_Adp
- 
-### File / path where STDOUT & STDERR will be written
-###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_Inflow_Adp
- 
-### Request the time you need for execution in minutes
-### The format for the parameter is: [hour:]minute,
-### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 1:20
- 
-### Request memory you need for your job per PROCESS in MB
-#BSUB -M 1000
- 
-### Request the number of compute slots you want to use
-#BSUB -n 32
- 
-### Use esub for Open MPI
-#BSUB -a openmpi
- 
-
-switch intel/16.0 gcc/system-default
-module load openmpi/1.10.2
-
-cd /home/ns179556/DG_MPI
- 
-export FLAGS_MPI_BATCH="-np 1"
-### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 20
-
-------------------------------------------------------------
-
-TERM_OWNER: job killed by owner.
-Exited with signal termination: 9.
-
-Resource usage summary:
-
-    CPU time :                                   1373.00 sec.
-    Max Memory :                                 501 MB
-    Average Memory :                             468.45 MB
-    Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31499.00 MB
-    Max Swap :                                   -
-    Max Processes :                              8
-    Max Threads :                                21
-    Run time :                                   698 sec.
-    Turnaround time :                            705 sec.
-
-The output (if any) follows:
-
-/home/ns179556/.lsbatch/1533339226.43891807.shell:25: command not found: switch
-+(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0551.rz.RWTH-Aachen.DE:29544] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+[linuxbmc0344.rz.RWTH-Aachen.DE:26887] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+ADAPTIVE REFINEMENT....
 preparing primal: 
 preparing adjoint: 
 refinement cycle: 0
 solving primal: 
 cycle: 0
-total cells: 400
-total dofs: 400
+total cells: 20
+total dofs: 20
 Steps taken: 100
 solving adjoint: 
 cycle: 0
-total cells: 400
-total dofs: 400
+total cells: 20
+total dofs: 20
 Steps taken: 100
 compute error grid
 refinement cycle: 1
 solving primal: 
 cycle: 1
-total cells: 763
-total dofs: 763
-Steps taken: 186
+total cells: 27
+total dofs: 27
+Steps taken: 100
 solving adjoint: 
 cycle: 1
-total cells: 763
-total dofs: 763
-Steps taken: 186
+total cells: 27
+total dofs: 27
+Steps taken: 100
 compute error grid
 refinement cycle: 2
 solving primal: 
 cycle: 2
-total cells: 1450
-total dofs: 1450
-Steps taken: 373
+total cells: 36
+total dofs: 36
+Steps taken: 174
 solving adjoint: 
 cycle: 2
-total cells: 1450
-total dofs: 1450
-Steps taken: 369
+total cells: 36
+total dofs: 36
+Steps taken: 100
 compute error grid
 refinement cycle: 3
 solving primal: 
 cycle: 3
-total cells: 2758
-total dofs: 2758
-residual: 0.00159781time: 7.925
-Steps taken: 721
+total cells: 47
+total dofs: 47
+Steps taken: 348
 solving adjoint: 
 cycle: 3
-total cells: 2758
-total dofs: 2758
-residual: 0.0022538time: 9.05156
-Steps taken: 723
+total cells: 47
+total dofs: 47
+Steps taken: 141
 compute error grid
 refinement cycle: 4
 solving primal: 
 cycle: 4
-total cells: 5248
-total dofs: 5248
-residual: 0.0834866time: 9.79063
-residual: 0.000532226time: 10.1812
-Steps taken: 1389
+total cells: 62
+total dofs: 62
+Steps taken: 317
 solving adjoint: 
 cycle: 4
-total cells: 5248
-total dofs: 5248
-residual: 0.0963087time: 10.8758
-residual: 0.000573753time: 11.2664
-Steps taken: 1385
+total cells: 62
+total dofs: 62
+Steps taken: 301
 compute error grid
 refinement cycle: 5
 solving primal: 
 cycle: 5
-total cells: 9982
-total dofs: 9982
-residual: 2.05399time: 11.7625
-residual: 0.0465186time: 11.9578
-residual: 0.00672708time: 12.1531
-residual: 0.000475121time: 12.3484
-residual: 3.36873e-06time: 12.5437
-Steps taken: 2794
+total cells: 81
+total dofs: 81
+residual: 4.64591e-05time: 26.9063
+Steps taken: 630
 solving adjoint: 
 cycle: 5
-total cells: 9982
-total dofs: 9982
-residual: 0.836576time: 12.8539
-residual: 0.0440031time: 13.0492
-residual: 0.00451037time: 13.2445
-residual: 0.000259458time: 13.4398
-residual: 1.68122e-06time: 13.6352
-Steps taken: 2738
+total cells: 81
+total dofs: 81
+residual: 3.72941e-05time: 28.875
+Steps taken: 609
 compute error grid
 refinement cycle: 6
 solving primal: 
 cycle: 6
-total cells: 19000
-total dofs: 19000
-residual: 13.9838time: 13.8258
-Sender: LSF System <lsfadmin@linuxbmc0832>
-Subject: Job 43901884: <2x1v_moments_Adp> in cluster <rcc> Done
-
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug  5 18:44:00 2018
-Job was executed on host(s) <12*linuxbmc0832>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug  5 18:50:14 2018
-                            <12*linuxbmc0833>
-                            <8*linuxbmc0845>
-</home/ns179556> was used as the home directory.
-</home/ns179556/DG_MPI> was used as the working directory.
-Started at Sun Aug  5 18:50:14 2018
-Terminated at Sun Aug  5 18:52:12 2018
-Results reported at Sun Aug  5 18:52:12 2018
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-#!/usr/bin/env zsh
- 
-### Job name
-#BSUB -J 2x1v_moments_Adp
- 
-### File / path where STDOUT & STDERR will be written
-###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_Inflow_Adp
- 
-### Request the time you need for execution in minutes
-### The format for the parameter is: [hour:]minute,
-### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 1:20
- 
-### Request memory you need for your job per PROCESS in MB
-#BSUB -M 1000
- 
-### Request the number of compute slots you want to use
-#BSUB -n 32
- 
-### Use esub for Open MPI
-#BSUB -a openmpi
- 
-
-switch intel/16.0 gcc/system-default
-module load openmpi/1.10.2
-
-cd /home/ns179556/DG_MPI
- 
-export FLAGS_MPI_BATCH="-np 1"
-### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10
-
-------------------------------------------------------------
-
-Successfully completed.
-
-Resource usage summary:
-
-    CPU time :                                   213.20 sec.
-    Max Memory :                                 483 MB
-    Average Memory :                             364.75 MB
-    Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31517.00 MB
-    Max Swap :                                   -
-    Max Processes :                              8
-    Max Threads :                                20
-    Run time :                                   117 sec.
-    Turnaround time :                            492 sec.
-
-The output (if any) follows:
-
-/home/ns179556/.lsbatch/1533487440.43901884.shell:25: command not found: switch
-+(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0832.rz.RWTH-Aachen.DE:19613] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-preparing primal: 
-preparing adjoint: 
-refinement cycle: 0
-solving primal: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
+total cells: 106
+total dofs: 106
+residual: 1.06722e-05time: 30.7781
+Steps taken: 588
 solving adjoint: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
-compute error grid
-refinement cycle: 1
-solving primal: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 105
-solving adjoint: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 104
-compute error grid
-refinement cycle: 2
-solving primal: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 214
-solving adjoint: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 213
-compute error grid
-refinement cycle: 3
-solving primal: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 418
-solving adjoint: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 421
-compute error grid
-refinement cycle: 4
-solving primal: 
-cycle: 4
-total cells: 2633
-total dofs: 2633
-residual: 0.000905802time: 13.6844
-Steps taken: 809
-solving adjoint: 
-cycle: 4
-total cells: 2633
-total dofs: 2633
-residual: 0.00118232time: 14.9484
-Steps taken: 811
-compute error grid
-refinement cycle: 5
-solving primal: 
-cycle: 5
-total cells: 5012
-total dofs: 5012
-residual: 0.029313time: 15.825
-residual: 0.000660716time: 16.2156
-residual: 6.64293e-07time: 16.6062
-Steps taken: 1614
-
-
-+---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |       104s |            |
-|                                             |            |            |
-| Section                         | no. calls |  wall time | % of total |
-+---------------------------------+-----------+------------+------------+
-| compute discretization error    |         5 |      2.97s |       2.9% |
-| perform adaptivity              |         5 |    0.0298s |         0% |
-| solve adjoint                   |         5 |      21.2s |        20% |
-| solve primal                    |         6 |      77.8s |        75% |
-+---------------------------------+-----------+------------+------------+
-
-Sender: LSF System <lsfadmin@linuxbmc0325>
-Subject: Job 43902172: <2x1v_moments_Adp> in cluster <rcc> Done
-
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug  5 20:23:20 2018
-Job was executed on host(s) <12*linuxbmc0325>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug  5 20:23:22 2018
-                            <12*linuxbmc0326>
-                            <8*linuxbmc0327>
-</home/ns179556> was used as the home directory.
-</home/ns179556/DG_MPI> was used as the working directory.
-Started at Sun Aug  5 20:23:22 2018
-Terminated at Sun Aug  5 20:30:03 2018
-Results reported at Sun Aug  5 20:30:03 2018
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-#!/usr/bin/env zsh
- 
-### Job name
-#BSUB -J 2x1v_moments_Adp
- 
-### File / path where STDOUT & STDERR will be written
-###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_Inflow_Adp
- 
-### Request the time you need for execution in minutes
-### The format for the parameter is: [hour:]minute,
-### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 1:20
- 
-### Request memory you need for your job per PROCESS in MB
-#BSUB -M 1000
- 
-### Request the number of compute slots you want to use
-#BSUB -n 32
- 
-### Use esub for Open MPI
-#BSUB -a openmpi
- 
-
-switch intel/16.0 gcc/system-default
-module load openmpi/1.10.2
-
-cd /home/ns179556/DG_MPI
- 
-export FLAGS_MPI_BATCH="-np 1"
-### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10
-
-------------------------------------------------------------
-
-Successfully completed.
-
-Resource usage summary:
-
-    CPU time :                                   782.77 sec.
-    Max Memory :                                 487 MB
-    Average Memory :                             450.79 MB
-    Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31513.00 MB
-    Max Swap :                                   -
-    Max Processes :                              8
-    Max Threads :                                20
-    Run time :                                   401 sec.
-    Turnaround time :                            403 sec.
-
-The output (if any) follows:
-
-/home/ns179556/.lsbatch/1533493400.43902172.shell:25: command not found: switch
-+(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0325.rz.RWTH-Aachen.DE:27544] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-preparing primal: 
-preparing adjoint: 
-refinement cycle: 0
-solving primal: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
-solving adjoint: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
-compute error grid
-refinement cycle: 1
-solving primal: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 105
-solving adjoint: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 104
-compute error grid
-refinement cycle: 2
-solving primal: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 214
-solving adjoint: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 213
-compute error grid
-refinement cycle: 3
-solving primal: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 418
-solving adjoint: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 421
-compute error grid
-refinement cycle: 4
-solving primal: 
-cycle: 4
-total cells: 2633
-total dofs: 2633
-residual: 0.000905802time: 13.6844
-Steps taken: 809
-solving adjoint: 
-cycle: 4
-total cells: 2633
-total dofs: 2633
-residual: 0.00118232time: 14.9484
-Steps taken: 811
-compute error grid
-refinement cycle: 5
-solving primal: 
-cycle: 5
-total cells: 5012
-total dofs: 5012
-residual: 0.029313time: 15.825
-residual: 0.000660716time: 16.2156
-residual: 6.64293e-07time: 16.6062
-Steps taken: 1614
-solving adjoint: 
-cycle: 5
-total cells: 5012
-total dofs: 5012
-residual: 0.0280852time: 17.0859
-residual: 0.000397307time: 17.4766
-residual: 3.70478e-07time: 17.8672
-Steps taken: 1579
-compute error grid
-refinement cycle: 6
-solving primal: 
 cycle: 6
-total cells: 9542
-total dofs: 9542
-residual: 4.2457time: 18.1242
-residual: 0.0664705time: 18.3195
-residual: 0.00807673time: 18.5148
-residual: 0.00123404time: 18.7102
-residual: 6.62488e-05time: 18.9055
-residual: 1.60981e-06time: 19.1008
-Steps taken: 3338
-
-
-+---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |       390s |            |
-|                                             |            |            |
-| Section                         | no. calls |  wall time | % of total |
-+---------------------------------+-----------+------------+------------+
-| compute discretization error    |         6 |      7.51s |       1.9% |
-| perform adaptivity              |         6 |    0.0556s |         0% |
-| solve adjoint                   |         6 |      76.8s |        20% |
-| solve primal                    |         7 |       301s |        77% |
-+---------------------------------+-----------+------------+------------+
-
-Sender: LSF System <lsfadmin@linuxbmc0886>
-Subject: Job 43902828: <2x1v_moments_Adp> in cluster <rcc> Done
-
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug  5 21:39:00 2018
-Job was executed on host(s) <12*linuxbmc0886>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug  5 21:43:48 2018
-                            <12*linuxbmc0887>
-                            <8*linuxbmc0896>
-</home/ns179556> was used as the home directory.
-</home/ns179556/DG_MPI> was used as the working directory.
-Started at Sun Aug  5 21:43:48 2018
-Terminated at Sun Aug  5 21:48:45 2018
-Results reported at Sun Aug  5 21:48:45 2018
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-#!/usr/bin/env zsh
- 
-### Job name
-#BSUB -J 2x1v_moments_Adp
- 
-### File / path where STDOUT & STDERR will be written
-###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_Inflow_Adp
- 
-### Request the time you need for execution in minutes
-### The format for the parameter is: [hour:]minute,
-### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 1:20
- 
-### Request memory you need for your job per PROCESS in MB
-#BSUB -M 1000
- 
-### Request the number of compute slots you want to use
-#BSUB -n 32
- 
-### Use esub for Open MPI
-#BSUB -a openmpi
- 
-
-switch intel/16.0 gcc/system-default
-module load openmpi/1.10.2
-
-cd /home/ns179556/DG_MPI
- 
-export FLAGS_MPI_BATCH="-np 1"
-### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10
-
-------------------------------------------------------------
-
-Successfully completed.
-
-Resource usage summary:
-
-    CPU time :                                   573.53 sec.
-    Max Memory :                                 515 MB
-    Average Memory :                             451.70 MB
-    Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31485.00 MB
-    Max Swap :                                   -
-    Max Processes :                              8
-    Max Threads :                                20
-    Run time :                                   297 sec.
-    Turnaround time :                            585 sec.
-
-The output (if any) follows:
-
-/home/ns179556/.lsbatch/1533497940.43902828.shell:25: command not found: switch
-+(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0886.rz.RWTH-Aachen.DE:10450] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-preparing primal: 
-preparing adjoint: 
-refinement cycle: 0
-solving primal: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
-solving adjoint: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
+total cells: 106
+total dofs: 106
+residual: 4.86531e-05time: 32.6156
+Steps taken: 607
 compute error grid
-refinement cycle: 1
+refinement cycle: 7
 solving primal: 
-cycle: 1
-total cells: 800
-total dofs: 800
-Steps taken: 100
+cycle: 7
+total cells: 138
+total dofs: 138
+residual: 4.44193e-07time: 34.5125
+Steps taken: 526
 solving adjoint: 
-cycle: 1
-total cells: 800
-total dofs: 800
-Steps taken: 100
+cycle: 7
+total cells: 138
+total dofs: 138
+residual: 6.53995e-05time: 36.1562
+Steps taken: 611
 compute error grid
-refinement cycle: 2
+refinement cycle: 8
 solving primal: 
-cycle: 2
-total cells: 3200
-total dofs: 3200
-Steps taken: 149
+cycle: 8
+total cells: 180
+total dofs: 180
+residual: 0.0204849time: 37.2844
+residual: 5.38862e-06time: 38.0656
+Steps taken: 1139
 solving adjoint: 
-cycle: 2
-total cells: 3200
-total dofs: 3200
-Steps taken: 149
+cycle: 8
+total cells: 180
+total dofs: 180
+residual: 0.00602691time: 39.0641
+Steps taken: 892
 compute error grid
-refinement cycle: 3
+refinement cycle: 9
 solving primal: 
-cycle: 3
-total cells: 12800
-total dofs: 12800
-Steps taken: 280
+cycle: 9
+total cells: 235
+total dofs: 235
+residual: 0.0215291time: 40.4578
+residual: 1.35533e-07time: 41.2391
+Steps taken: 1010
 solving adjoint: 
-cycle: 3
-total cells: 12800
-total dofs: 12800
-Steps taken: 280
+cycle: 9
+total cells: 235
+total dofs: 235
+residual: 0.0819014time: 42.0359
+residual: 2.4325e-06time: 42.8172
+Steps taken: 1101
 compute error grid
-refinement cycle: 4
+refinement cycle: 10
 solving primal: 
-cycle: 4
-total cells: 51200
-total dofs: 51200
-residual: 4.30514e-05time: 11.8938
-Steps taken: 541
-
-
-+---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |       285s |            |
-|                                             |            |            |
-| Section                         | no. calls |  wall time | % of total |
-+---------------------------------+-----------+------------+------------+
-| compute discretization error    |         4 |      23.3s |       8.2% |
-| perform adaptivity              |         4 |     0.153s |         0% |
-| solve adjoint                   |         4 |      28.9s |        10% |
-| solve primal                    |         5 |       220s |        77% |
-+---------------------------------+-----------+------------+------------+
-
-Sender: LSF System <lsfadmin@linuxbmc0383>
-Subject: Job 43904019: <2x1v_moments_Adp> in cluster <rcc> Done
-
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug  5 22:14:15 2018
-Job was executed on host(s) <12*linuxbmc0383>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug  5 22:18:54 2018
-                            <12*linuxbmc0385>
-                            <8*linuxbmc0392>
-</home/ns179556> was used as the home directory.
-</home/ns179556/DG_MPI> was used as the working directory.
-Started at Sun Aug  5 22:18:54 2018
-Terminated at Sun Aug  5 22:25:39 2018
-Results reported at Sun Aug  5 22:25:39 2018
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-#!/usr/bin/env zsh
- 
-### Job name
-#BSUB -J 2x1v_moments_Adp
- 
-### File / path where STDOUT & STDERR will be written
-###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_Inflow_Adp
- 
-### Request the time you need for execution in minutes
-### The format for the parameter is: [hour:]minute,
-### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 1:20
- 
-### Request memory you need for your job per PROCESS in MB
-#BSUB -M 1000
- 
-### Request the number of compute slots you want to use
-#BSUB -n 32
- 
-### Use esub for Open MPI
-#BSUB -a openmpi
- 
-
-switch intel/16.0 gcc/system-default
-module load openmpi/1.10.2
-
-cd /home/ns179556/DG_MPI
- 
-export FLAGS_MPI_BATCH="-np 1"
-### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10
-
-------------------------------------------------------------
-
-Successfully completed.
-
-Resource usage summary:
-
-    CPU time :                                   790.80 sec.
-    Max Memory :                                 488 MB
-    Average Memory :                             453.77 MB
-    Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31512.00 MB
-    Max Swap :                                   -
-    Max Processes :                              8
-    Max Threads :                                20
-    Run time :                                   404 sec.
-    Turnaround time :                            684 sec.
-
-The output (if any) follows:
-
-/home/ns179556/.lsbatch/1533500055.43904019.shell:25: command not found: switch
-+(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0383.rz.RWTH-Aachen.DE:03228] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-preparing primal: 
-preparing adjoint: 
-refinement cycle: 0
-solving primal: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
+cycle: 10
+total cells: 306
+total dofs: 306
+residual: 0.10079time: 43.3656
+residual: 0.0142608time: 43.7562
+residual: 0.000527613time: 44.1469
+Steps taken: 1916
 solving adjoint: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
+cycle: 10
+total cells: 306
+total dofs: 306
+residual: 0.508855time: 44.8625
+residual: 0.0975979time: 45.2531
+residual: 0.000242828time: 45.6438
+Steps taken: 1795
 compute error grid
-refinement cycle: 1
+refinement cycle: 11
 solving primal: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 105
+cycle: 11
+total cells: 398
+total dofs: 398
+residual: 0.071324time: 46.2648
+residual: 0.0238647time: 46.6555
+residual: 0.000247554time: 47.0461
+Steps taken: 1823
 solving adjoint: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 104
+cycle: 11
+total cells: 398
+total dofs: 398
+residual: 0.19349time: 47.6891
+residual: 0.127103time: 48.0797
+residual: 0.00476452time: 48.4703
+Steps taken: 1912
 compute error grid
-refinement cycle: 2
+refinement cycle: 12
 solving primal: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 214
+cycle: 12
+total cells: 518
+total dofs: 518
+residual: 0.0535298time: 49.1828
+residual: 0.018844time: 49.5734
+residual: 4.25112e-06time: 49.9641
+Steps taken: 1641
 solving adjoint: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 213
+cycle: 12
+total cells: 518
+total dofs: 518
+residual: 0.215917time: 50.4648
+residual: 0.0971782time: 50.8555
+residual: 0.000247266time: 51.2461
+Steps taken: 1774
 compute error grid
-refinement cycle: 3
+refinement cycle: 13
 solving primal: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 418
+cycle: 13
+total cells: 674
+total dofs: 674
+residual: 0.211079time: 51.6555
+residual: 0.0665302time: 51.8508
+residual: 0.0275383time: 52.0461
+residual: 0.0208024time: 52.2414
+residual: 0.00826692time: 52.4367
+residual: 0.000198562time: 52.632
+residual: 2.68651e-07time: 52.8273
+Steps taken: 3570
 solving adjoint: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 421
+cycle: 13
+total cells: 674
+total dofs: 674
+residual: 0.297978time: 53.05
+residual: 0.191043time: 53.2453
+residual: 0.12531time: 53.4406
+residual: 0.1543time: 53.6359
+residual: 0.140154time: 53.8313
+residual: 0.00860288time: 54.0266
+residual: 1.32844e-05time: 54.2219
+Steps taken: 3839
 compute error grid
-refinement cycle: 4
+refinement cycle: 14
 solving primal: 
-cycle: 4
-total cells: 2633
-total dofs: 2633
-residual: 0.000905802time: 13.6844
-Steps taken: 809
+cycle: 14
+total cells: 877
+total dofs: 877
+residual: 0.215213time: 54.5496
+residual: 0.0496456time: 54.7449
+residual: 0.0324197time: 54.9402
+residual: 0.0204276time: 55.1355
+residual: 0.00334652time: 55.3309
+residual: 8.98756e-06time: 55.5262
+Steps taken: 3317
 solving adjoint: 
-cycle: 4
-total cells: 2633
-total dofs: 2633
-residual: 0.00118232time: 14.9484
-Steps taken: 811
+cycle: 14
+total cells: 877
+total dofs: 877
+residual: 0.316126time: 55.8453
+residual: 0.265776time: 56.0406
+residual: 0.120297time: 56.2359
+residual: 0.116977time: 56.4313
+residual: 0.0942323time: 56.6266
+residual: 0.000913074time: 56.8219
+residual: 7.85534e-07time: 57.0172
+Steps taken: 3641
 compute error grid
-refinement cycle: 5
+refinement cycle: 15
 solving primal: 
-cycle: 5
-total cells: 5012
-total dofs: 5012
-residual: 0.029313time: 15.825
-residual: 0.000660716time: 16.2156
-residual: 6.64293e-07time: 16.6062
-Steps taken: 1614
+cycle: 15
+total cells: 1141
+total dofs: 1141
+residual: 0.399127time: 57.1699
+residual: 0.236145time: 57.2676
+residual: 0.120747time: 57.3652
+residual: 0.0690379time: 57.4629
+residual: 0.0438983time: 57.5605
+residual: 0.03314time: 57.6582
+residual: 0.0264885time: 57.7559
+residual: 0.0150699time: 57.8535
+residual: 0.00507485time: 57.9512
+residual: 0.00231808time: 58.0488
+residual: 0.000432049time: 58.1465
+residual: 9.55673e-06time: 58.2441
+Steps taken: 6439
 solving adjoint: 
-cycle: 5
-total cells: 5012
-total dofs: 5012
-residual: 0.0280852time: 17.0859
-residual: 0.000397307time: 17.4766
-residual: 3.70478e-07time: 17.8672
-Steps taken: 1579
+cycle: 15
+total cells: 1141
+total dofs: 1141
+residual: 0.734831time: 58.4275
+residual: 0.903029time: 58.5252
+residual: 1.13698time: 58.6229
+residual: 1.11859time: 58.7205
+residual: 0.782034time: 58.8182
+residual: 0.153921time: 58.9158
+residual: 0.127921time: 59.0135
+residual: 0.102188time: 59.1111
+residual: 0.0814945time: 59.2088
+residual: 0.0605522time: 59.3064
+residual: 0.00170733time: 59.4041
+residual: 6.02662e-06time: 59.5018
+Steps taken: 6320
 compute error grid
-refinement cycle: 6
+refinement cycle: 16
 solving primal: 
-cycle: 6
-total cells: 9542
-total dofs: 9542
-residual: 4.2457time: 18.1242
-residual: 0.0664705time: 18.3195
-residual: 0.00807673time: 18.5148
-residual: 0.00123404time: 18.7102
-residual: 6.62488e-05time: 18.9055
-residual: 1.60981e-06time: 19.1008
-Steps taken: 3338
-
-
-+---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |       393s |            |
-|                                             |            |            |
-| Section                         | no. calls |  wall time | % of total |
-+---------------------------------+-----------+------------+------------+
-| compute discretization error    |         6 |       7.6s |       1.9% |
-| perform adaptivity              |         6 |     0.057s |         0% |
-| solve adjoint                   |         6 |      77.9s |        20% |
-| solve primal                    |         7 |       303s |        77% |
-+---------------------------------+-----------+------------+------------+
-
-Sender: LSF System <lsfadmin@linuxbmc0854>
-Subject: Job 43909467: <2x1v_moments_Adp> in cluster <rcc> Done
-
-Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Mon Aug  6 18:14:50 2018
-Job was executed on host(s) <12*linuxbmc0854>, in queue <normal>, as user <ns179556> in cluster <rcc> at Mon Aug  6 18:14:55 2018
-                            <12*linuxbmc0862>
-                            <8*linuxbmc0863>
-</home/ns179556> was used as the home directory.
-</home/ns179556/DG_MPI> was used as the working directory.
-Started at Mon Aug  6 18:14:55 2018
-Terminated at Mon Aug  6 18:21:34 2018
-Results reported at Mon Aug  6 18:21:34 2018
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-#!/usr/bin/env zsh
- 
-### Job name
-#BSUB -J 2x1v_moments_Adp
- 
-### File / path where STDOUT & STDERR will be written
-###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2x1v_moments_Inflow_Adp
- 
-### Request the time you need for execution in minutes
-### The format for the parameter is: [hour:]minute,
-### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 1:20
- 
-### Request memory you need for your job per PROCESS in MB
-#BSUB -M 1000
- 
-### Request the number of compute slots you want to use
-#BSUB -n 32
- 
-### Use esub for Open MPI
-#BSUB -a openmpi
- 
-
-switch intel/16.0 gcc/system-default
-module load openmpi/1.10.2
-
-cd /home/ns179556/DG_MPI
- 
-export FLAGS_MPI_BATCH="-np 1"
-### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10
-
-------------------------------------------------------------
-
-Successfully completed.
-
-Resource usage summary:
-
-    CPU time :                                   775.28 sec.
-    Max Memory :                                 487 MB
-    Average Memory :                             449.50 MB
-    Total Requested Memory :                     32000.00 MB
-    Delta Memory :                               31513.00 MB
-    Max Swap :                                   -
-    Max Processes :                              8
-    Max Threads :                                20
-    Run time :                                   398 sec.
-    Turnaround time :                            404 sec.
-
-The output (if any) follows:
-
-/home/ns179556/.lsbatch/1533572090.43909467.shell:25: command not found: switch
-+(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
-[linuxbmc0854.rz.RWTH-Aachen.DE:26243] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
-preparing primal: 
-preparing adjoint: 
-refinement cycle: 0
-solving primal: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
+cycle: 16
+total cells: 1484
+total dofs: 1484
+residual: 16.9215time: 59.6619
+residual: 0.158252time: 59.7596
+residual: 0.0946805time: 59.8572
+residual: 0.0534328time: 59.9549
+residual: 0.0313937time: 60.0525
+residual: 0.0329876time: 60.1502
+residual: 0.0301684time: 60.2479
+residual: 0.0252924time: 60.3455
+residual: 0.017294time: 60.4432
+residual: 0.00710264time: 60.5408
+residual: 0.000407826time: 60.6385
+residual: 2.30941e-06time: 60.7361
+Steps taken: 6253
 solving adjoint: 
-cycle: 0
-total cells: 200
-total dofs: 200
-Steps taken: 100
+cycle: 16
+total cells: 1484
+total dofs: 1484
+residual: 10.8221time: 60.8832
+residual: 0.377933time: 60.9809
+residual: 0.379616time: 61.0785
+residual: 0.420459time: 61.1762
+residual: 0.233966time: 61.2738
+residual: 0.0993719time: 61.3715
+residual: 0.0787168time: 61.4691
+residual: 0.102257time: 61.5668
+residual: 0.0946472time: 61.6645
+residual: 0.100492time: 61.7621
+residual: 0.0163408time: 61.8598
+residual: 9.05375e-05time: 61.9574
+residual: 1.0418e-07time: 62.0551
+Steps taken: 6503
 compute error grid
-refinement cycle: 1
+refinement cycle: 17
 solving primal: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 105
+cycle: 17
+total cells: 1930
+total dofs: 1930
+residual: 0.353163time: 62.1533
+residual: 0.171283time: 62.251
+residual: 0.0958825time: 62.3486
+residual: 0.0477322time: 62.4463
+residual: 0.0419367time: 62.5439
+residual: 0.0397442time: 62.6416
+residual: 0.0312033time: 62.7393
+residual: 0.0188347time: 62.8369
+residual: 0.00665546time: 62.9346
+residual: 0.000185389time: 63.0322
+residual: 5.45834e-07time: 63.1299
+Steps taken: 5630
 solving adjoint: 
-cycle: 1
-total cells: 383
-total dofs: 383
-Steps taken: 100
+cycle: 17
+total cells: 1930
+total dofs: 1930
+residual: 21.7286time: 63.2529
+residual: 9.44094time: 63.3506
+residual: 0.383432time: 63.4482
+residual: 0.324633time: 63.5459
+residual: 0.171415time: 63.6436
+residual: 0.13316time: 63.7412
+residual: 0.13815time: 63.8389
+residual: 0.15425time: 63.9365
+residual: 0.13522time: 64.0342
+residual: 0.0929532time: 64.1318
+residual: 0.00195737time: 64.2295
+residual: 2.5471e-06time: 64.3271
+Steps taken: 6224
 compute error grid
-refinement cycle: 2
+refinement cycle: 18
 solving primal: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 216
+cycle: 18
+total cells: 2510
+total dofs: 2510
+residual: 21.5707time: 64.4197
+residual: 0.305892time: 64.4686
+residual: 0.231787time: 64.5174
+residual: 0.186689time: 64.5662
+residual: 0.147144time: 64.615
+residual: 0.109321time: 64.6639
+residual: 0.0857892time: 64.7127
+residual: 0.0583989time: 64.7615
+residual: 0.0445251time: 64.8104
+residual: 0.0354514time: 64.8592
+residual: 0.0338466time: 64.908
+residual: 0.032979time: 64.9568
+residual: 0.0306977time: 65.0057
+residual: 0.0255886time: 65.0545
+residual: 0.0224578time: 65.1033
+residual: 0.0195365time: 65.1521
+residual: 0.0157046time: 65.201
+residual: 0.0130264time: 65.2498
+residual: 0.00881088time: 65.2986
+residual: 0.00528746time: 65.3475
+residual: 0.00202101time: 65.3963
+residual: 0.000273758time: 65.4451
+residual: 1.61551e-05time: 65.4939
+residual: 6.00217e-07time: 65.5428
+Steps taken: 12258
 solving adjoint: 
-cycle: 2
-total cells: 728
-total dofs: 728
-Steps taken: 190
+cycle: 18
+total cells: 2510
+total dofs: 2510
+residual: 6.86659time: 65.6168
+residual: 0.364219time: 65.6656
+residual: 0.365952time: 65.7145
+residual: 0.37489time: 65.7633
+residual: 0.355415time: 65.8121
+residual: 0.339341time: 65.8609
+residual: 0.330213time: 65.9098
+residual: 0.313567time: 65.9586
+residual: 0.262029time: 66.0074
+residual: 0.15537time: 66.0563
+residual: 0.134287time: 66.1051
+residual: 0.149623time: 66.1539
+residual: 0.161126time: 66.2027
+residual: 0.16205time: 66.2516
+residual: 0.17051time: 66.3004
+residual: 0.201671time: 66.3492
+residual: 0.18153time: 66.398
+residual: 0.183007time: 66.4469
+residual: 0.191562time: 66.4957
+residual: 0.173698time: 66.5445
+residual: 0.145892time: 66.5934
+residual: 0.0286787time: 66.6422
+residual: 0.00198833time: 66.691
+residual: 7.92198e-05time: 66.7398
+residual: 2.42163e-06time: 66.7887
+Steps taken: 12942
 compute error grid
-refinement cycle: 3
+refinement cycle: 19
 solving primal: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 430
+cycle: 19
+total cells: 3264
+total dofs: 3264
+residual: 75.2698time: 66.8807
+residual: 33.4143time: 66.9295
+residual: 0.181347time: 66.9783
+residual: 0.13734time: 67.0271
+residual: 0.117757time: 67.076
+residual: 0.0830817time: 67.1248
+residual: 0.0674918time: 67.1736
+residual: 0.0465284time: 67.2225
+residual: 0.0325471time: 67.2713
+residual: 0.0304221time: 67.3201
+residual: 0.0309453time: 67.3689
+residual: 0.029365time: 67.4178
+residual: 0.0272708time: 67.4666
+residual: 0.0249822time: 67.5154
+residual: 0.0227084time: 67.5643
+residual: 0.0195961time: 67.6131
+residual: 0.0168275time: 67.6619
+residual: 0.011553time: 67.7107
+residual: 0.00679603time: 67.7596
+residual: 0.00183413time: 67.8084
+residual: 0.000168513time: 67.8572
+residual: 7.50351e-06time: 67.9061
+residual: 2.38689e-07time: 67.9549
+Steps taken: 11623
 solving adjoint: 
-cycle: 3
-total cells: 1385
-total dofs: 1385
-Steps taken: 370
+cycle: 19
+total cells: 3264
+total dofs: 3264
+residual: 33.4082time: 68.0157
+residual: 25.7505time: 68.0646
+residual: 12.7708time: 68.1134
+residual: 0.308172time: 68.1622
+residual: 0.324131time: 68.211
+residual: 0.332341time: 68.2599
+residual: 0.347949time: 68.3087
+residual: 0.318493time: 68.3575
+residual: 0.244916time: 68.4063
+residual: 0.130176time: 68.4552
+residual: 0.103309time: 68.504
+residual: 0.098314time: 68.5528
+residual: 0.0723315time: 68.6017
+residual: 0.0819757time: 68.6505
+residual: 0.0980574time: 68.6993
+residual: 0.100159time: 68.7481
+residual: 0.106331time: 68.797
+residual: 0.0918616time: 68.8458
+residual: 0.0896655time: 68.8946
+residual: 0.0816997time: 68.9435
+residual: 0.0250813time: 68.9923
+residual: 0.00180617time: 69.0411
+residual: 6.70294e-05time: 69.0899
+residual: 1.95355e-06time: 69.1388
+Steps taken: 12409
 compute error grid
-refinement cycle: 4
+refinement cycle: 20
 solving primal: 
-cycle: 4
-total cells: 2636
-total dofs: 2636
-residual: 0.00232084time: 13.3813
-Steps taken: 841
+cycle: 20
+total cells: 4244
+total dofs: 4244
+residual: 54.4448time: 69.2275
+residual: 0.256331time: 69.2764
+residual: 0.170041time: 69.3252
+residual: 0.146692time: 69.374
+residual: 0.114825time: 69.4229
+residual: 0.0896674time: 69.4717
+residual: 0.0717805time: 69.5205
+residual: 0.0548131time: 69.5693
+residual: 0.0497039time: 69.6182
+residual: 0.0446873time: 69.667
+residual: 0.0391688time: 69.7158
+residual: 0.0354525time: 69.7646
+residual: 0.0296178time: 69.8135
+residual: 0.0252124time: 69.8623
+residual: 0.0174543time: 69.9111
+residual: 0.0124563time: 69.96
+residual: 0.00594929time: 70.0088
+residual: 0.00072268time: 70.0576
+residual: 1.42714e-05time: 70.1064
+Steps taken: 9978
 solving adjoint: 
-cycle: 4
-total cells: 2636
-total dofs: 2636
-residual: 5.24263e-05time: 14.6953
-Steps taken: 700
+cycle: 20
+total cells: 4244
+total dofs: 4244
+residual: 30.4374time: 70.202
+residual: 30.4416time: 70.2508
+residual: 30.4472time: 70.2996
+residual: 24.2943time: 70.3484
+residual: 9.52745time: 70.3973
+residual: 1.48191time: 70.4461
+residual: 1.47997time: 70.4949
+residual: 1.47447time: 70.5438
+residual: 1.4583time: 70.5926
+residual: 1.1616time: 70.6414
+residual: 0.271554time: 70.6902
+residual: 0.115139time: 70.7391
+residual: 0.119317time: 70.7879
+residual: 0.13921time: 70.8367
+residual: 0.144313time: 70.8855
+residual: 0.165392time: 70.9344
+residual: 0.165157time: 70.9832
+residual: 0.15367time: 71.032
+residual: 0.129096time: 71.0809
+residual: 0.12112time: 71.1297
+residual: 0.0315812time: 71.1785
+residual: 0.000612187time: 71.2273
+residual: 2.29756e-06time: 71.2762
+Steps taken: 11750
 compute error grid
-refinement cycle: 5
+refinement cycle: 21
 solving primal: 
-cycle: 5
-total cells: 5009
-total dofs: 5009
-residual: 0.033369time: 15.3984
-residual: 0.000968428time: 15.7891
-residual: 1.21176e-06time: 16.1797
-Steps taken: 1653
+cycle: 21
+total cells: 5518
+total dofs: 5518
+residual: 114.902time: 71.325
+residual: 91.711time: 71.3494
+residual: 59.3397time: 71.3738
+residual: 0.254958time: 71.3982
+residual: 0.19611time: 71.4227
+residual: 0.166175time: 71.4471
+residual: 0.152298time: 71.4715
+residual: 0.140734time: 71.4959
+residual: 0.123737time: 71.5203
+residual: 0.117852time: 71.5447
+residual: 0.112496time: 71.5691
+residual: 0.090387time: 71.5936
+residual: 0.0768545time: 71.618
+residual: 0.0704647time: 71.6424
+residual: 0.0627811time: 71.6668
+residual: 0.0472832time: 71.6912
+residual: 0.0418971time: 71.7156
+residual: 0.0374596time: 71.74
+residual: 0.0336211time: 71.7645
+residual: 0.0303439time: 71.7889
+residual: 0.0299736time: 71.8133
+residual: 0.0297609time: 71.8377
+residual: 0.0295077time: 71.8621
+residual: 0.0294215time: 71.8865
+residual: 0.0283584time: 71.9109
+residual: 0.0269983time: 71.9354
+residual: 0.024741time: 71.9598
+residual: 0.0237951time: 71.9842
+residual: 0.0224435time: 72.0086
+residual: 0.0215797time: 72.033
+residual: 0.0209769time: 72.0574
+residual: 0.0201777time: 72.0818
+residual: 0.0183856time: 72.1063
+residual: 0.0176853time: 72.1307
+residual: 0.0168693time: 72.1551
+residual: 0.0144998time: 72.1795
+residual: 0.0112148time: 72.2039
+residual: 0.00988256time: 72.2283
+residual: 0.00797686time: 72.2527
+residual: 0.00569114time: 72.2771
+residual: 0.00318376time: 72.3016
+residual: 0.00108223time: 72.326
+residual: 0.000201796time: 72.3504
+residual: 2.18515e-05time: 72.3748
+residual: 1.53292e-06time: 72.3992
+Steps taken: 22960
 solving adjoint: 
-cycle: 5
-total cells: 5009
-total dofs: 5009
-residual: 0.00265824time: 16.6898
-residual: 4.00154e-05time: 17.0805
-Steps taken: 1412
+cycle: 21
+total cells: 5518
+total dofs: 5518
+residual: 36.8398time: 72.4461
+residual: 29.2768time: 72.4705
+residual: 18.8978time: 72.4949
+residual: 0.372139time: 72.5193
+residual: 0.382823time: 72.5438
+residual: 0.391125time: 72.5682
+residual: 0.398469time: 72.5926
+residual: 0.430834time: 72.617
+residual: 0.448996time: 72.6414
+residual: 0.460194time: 72.6658
+residual: 0.453739time: 72.6902
+residual: 0.452516time: 72.7146
+residual: 0.450838time: 72.7391
+residual: 0.457468time: 72.7635
+residual: 0.457369time: 72.7879
+residual: 0.479891time: 72.8123
+residual: 0.530435time: 72.8367
+residual: 0.531666time: 72.8611
+residual: 0.51764time: 72.8855
+residual: 0.346005time: 72.91
+residual: 0.273122time: 72.9344
+residual: 0.154612time: 72.9588
+residual: 0.117707time: 72.9832
+residual: 0.117997time: 73.0076
+residual: 0.11486time: 73.032
+residual: 0.11047time: 73.0564
+residual: 0.117574time: 73.0809
+residual: 0.122952time: 73.1053
+residual: 0.125316time: 73.1297
+residual: 0.13864time: 73.1541
+residual: 0.147572time: 73.1785
+residual: 0.151114time: 73.2029
+residual: 0.154451time: 73.2273
+residual: 0.154792time: 73.2518
+residual: 0.149239time: 73.2762
+residual: 0.154339time: 73.3006
+residual: 0.150878time: 73.325
+residual: 0.164819time: 73.3494
+residual: 0.159223time: 73.3738
+residual: 0.144175time: 73.3982
+residual: 0.130115time: 73.4227
+residual: 0.0582201time: 73.4471
+residual: 0.011189time: 73.4715
+residual: 0.001074time: 73.4959
+residual: 6.13463e-05time: 73.5203
+residual: 2.44947e-06time: 73.5447
+Steps taken: 23465
 compute error grid
-refinement cycle: 6
+refinement cycle: 22
 solving primal: 
-cycle: 6
-total cells: 9530
-total dofs: 9530
-residual: 0.490353time: 17.5977
-residual: 0.0535725time: 17.793
-residual: 0.00774112time: 17.9883
-residual: 0.000466738time: 18.1836
-residual: 4.16668e-05time: 18.3789
-residual: 1.3209e-06time: 18.5742
-Steps taken: 3330
-
-
-+---------------------------------------------+------------+------------+
-| Total wallclock time elapsed since start    |       386s |            |
-|                                             |            |            |
-| Section                         | no. calls |  wall time | % of total |
-+---------------------------------+-----------+------------+------------+
-| compute discretization error    |         6 |      7.49s |       1.9% |
-| perform adaptivity              |         6 |    0.0563s |         0% |
-| solve adjoint                   |         6 |      69.2s |        18% |
-| solve primal                    |         7 |       305s |        79% |
-+---------------------------------+-----------+------------+------------+
-
+cycle: 22
+total cells: 7174
+total dofs: 7174
+residual: 111.376time: 73.5918
+residual: 92.1968time: 73.6163
+residual: 65.6262time: 73.6407
+residual: 0.353868time: 73.6651
+residual: 0.205498time: 73.6895
+residual: 0.174557time: 73.7139
+residual: 0.160802time: 73.7383
+residual: 0.147449time: 73.7627
+residual: 0.130161time: 73.7872
+residual: 0.101605time: 73.8116
+residual: 0.0917391time: 73.836
+residual: 0.0827634time: 73.8604
+residual: 0.0727349time: 73.8848
+residual: 0.0624272time: 73.9092
+residual: 0.0540028time: 73.9336
+residual: 0.0496587time: 73.9581
+residual: 0.0428703time: 73.9825
+residual: 0.0408462time: 74.0069
+residual: 0.0375867time: 74.0313
+residual: 0.0379854time: 74.0557
+residual: 0.0353753time: 74.0801
+residual: 0.0340873time: 74.1045
+residual: 0.0334051time: 74.129
+residual: 0.0331918time: 74.1534
+residual: 0.0312193time: 74.1778
+residual: 0.0285061time: 74.2022
+residual: 0.0272355time: 74.2266
+residual: 0.0249991time: 74.251
+residual: 0.0207028time: 74.2754
+residual: 0.0182105time: 74.2999
+residual: 0.0171468time: 74.3243
+residual: 0.0159983time: 74.3487
+residual: 0.0145462time: 74.3731
+residual: 0.0112412time: 74.3975
+residual: 0.00953569time: 74.4219
+residual: 0.00717511time: 74.4463
+residual: 0.00414291time: 74.4708
+residual: 0.00142082time: 74.4952
+residual: 0.000248091time: 74.5196
+residual: 2.36007e-05time: 74.544
+residual: 1.42503e-06time: 74.5684
+Steps taken: 20929
+solving adjoint: 
+cycle: 22
+total cells: 7174
+total dofs: 7174
+residual: 44.5438time: 74.6138
+residual: 44.5434time: 74.6382
+residual: 44.5433time: 74.6626
+residual: 42.908time: 74.687
+residual: 36.6211time: 74.7114
+residual: 29.0021time: 74.7358
+residual: 18.4694time: 74.7603
+residual: 0.346678time: 74.7847
+residual: 0.355025time: 74.8091
+residual: 0.352235time: 74.8335
+residual: 0.38019time: 74.8579
+residual: 0.387886time: 74.8823
+residual: 0.38819time: 74.9067
+residual: 0.383094time: 74.9312
+residual: 0.385706time: 74.9556
+residual: 0.364598time: 74.98
+residual: 0.348992time: 75.0044
+residual: 0.306951time: 75.0288
+residual: 0.242628time: 75.0532
+residual: 0.188459time: 75.0776
+residual: 0.16077time: 75.1021
+residual: 0.139436time: 75.1265
+residual: 0.131703time: 75.1509
+residual: 0.126892time: 75.1753
+residual: 0.119851time: 75.1997
+residual: 0.122433time: 75.2241
+residual: 0.124368time: 75.2485
+residual: 0.123171time: 75.2729
+residual: 0.130162time: 75.2974
+residual: 0.132014time: 75.3218
+residual: 0.136152time: 75.3462
+residual: 0.133799time: 75.3706
+residual: 0.136916time: 75.395
+residual: 0.144381time: 75.4194
+residual: 0.144572time: 75.4438
+residual: 0.13102time: 75.4683
+residual: 0.121581time: 75.4927
+residual: 0.117298time: 75.5171
+residual: 0.100532time: 75.5415
+residual: 0.0948289time: 75.5659
+residual: 0.0492934time: 75.5903
+residual: 0.0086531time: 75.6147
+residual: 0.000630821time: 75.6392
+residual: 2.66224e-05time: 75.6636
+residual: 8.41597e-07time: 75.688
+Steps taken: 22799
+compute error grid
+refinement cycle: 23
+solving primal: 
+cycle: 23
+total cells: 9327
+total dofs: 9327
+residual: 75.1895time: 75.7148
+residual: 26.8703time: 75.727
+residual: 0.444023time: 75.7392
+residual: 0.385428time: 75.7514
+residual: 0.345311time: 75.7636
+residual: 0.31129time: 75.7758
+residual: 0.263286time: 75.788
+residual: 0.236743time: 75.8002
+residual: 0.218147time: 75.8125
+residual: 0.208384time: 75.8247
+residual: 0.199903time: 75.8369
+residual: 0.19352time: 75.8491
+residual: 0.181841time: 75.8613
+residual: 0.173722time: 75.8735
+residual: 0.168898time: 75.8857
+residual: 0.153114time: 75.8979
+residual: 0.142456time: 75.9101
+residual: 0.137945time: 75.9223
+residual: 0.134958time: 75.9345
+residual: 0.126161time: 75.9467
+residual: 0.120939time: 75.9589
+mpirun: Forwarding signal 12 to job
+User defined signal 2
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 26890 on node linuxbmc0344 exited on signal 12 (User defined signal 2).
+--------------------------------------------------------------------------

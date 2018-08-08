@@ -479,8 +479,8 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);
 
-	value(0) = exp(-pow((x-0.5),2)*100);
-
+	//value(0) = exp(-pow((x-0.5),2)*100);
+	value(0) = 1;
 }
 
 template<int dim>

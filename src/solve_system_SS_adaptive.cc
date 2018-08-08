@@ -333,10 +333,7 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                 else
                 {
 
-                    std::cout << "neighbor in " << std::endl;
-                    fflush(stdout);
-
-                   typename DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
+                     typename DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
 
                    if(!neighbor->has_children())  // if neighbor is active then either its on the same level or its 
                                               // coarser. 
@@ -386,18 +383,11 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
 
                      if(dim == 1)
                      {
-                      std::cout << "neighbor children in " << std::endl;
-                      fflush(stdout);
-
-                      std::cout << "find neighbor in" << std::endl;
-                      fflush(stdout);
                       const typename DoFHandler<dim>::cell_iterator 
                                                       neighbor_child = return_child_refined_neighbor(neighbor,cell); 
 
                       Assert(!neighbor_child->has_children(),ExcOrderingChanged(neighbor_child->n_children()));
-                      std::cout << "find neighbor out" << std::endl;
-                      fflush(stdout);
-
+                     
                       integrate_face(data.local_contri,
                                       neighbor_child,
                                       system_matrices,
@@ -410,16 +400,11 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                                       An_cell,
                                       data.local_dof_indices);
 
-                      std::cout << "neighbor children out " << std::endl;
-                      fflush(stdout);
-
-                    }
+                                        }
                      
                    }
 
-                  std::cout << "neighbor out " << std::endl;
-                  fflush(stdout);
-
+                 
                 } //end of else
 
 
@@ -681,7 +666,7 @@ Solve_System_SS_adaptive<1>::return_face_length(const typename DoFHandler<1>::fa
   return(1);
 }
 
-template<>
+/*template<>
 typename DoFHandler<1>::cell_iterator
 Solve_System_SS_adaptive<1>::return_child_refined_neighbor(const typename DoFHandler<1>::cell_iterator &neighbor,
                                                              const typename DoFHandler<1>::active_cell_iterator &cell)
@@ -704,12 +689,62 @@ Solve_System_SS_adaptive<1>::return_child_refined_neighbor(const typename DoFHan
             << " cener child 2: " << neighbor_child[1]->center() << std::endl;
 
   std::cout << "level neighbor: " << neighbor->level() 
+	    << "level cell: " << cell->level()
             << " level child 1: " << neighbor_child[0]->level()
             << " level child 2: " << neighbor_child[1]->level() << std::endl;
             
   Assert(fabs(distances[0]-distances[1]) > 1e-15,ExcInternalError());
   return(distances[0] >= distances[1] ? neighbor_child[1] : neighbor_child[0]);
   
+}*/
+
+template<>
+typename DoFHandler<1>::cell_iterator
+Solve_System_SS_adaptive<1>::return_child_refined_neighbor(const typename DoFHandler<1>::cell_iterator &neighbor,
+						           const typename DoFHandler<1>::active_cell_iterator &cell)
+{
+  std::vector<double> distances;
+  std::vector<typename DoFHandler<1>::cell_iterator> neighbor_child;
+
+  for(unsigned int i = 0 ; i < neighbor->n_children(); i++)
+  {
+	if(neighbor->child(i)->has_children())
+	{
+		for(unsigned int j = 0 ; j < neighbor->child(i)->n_children(); j++)
+		{
+			if(neighbor->child(i)->child(j)->has_children())
+			{
+				for(unsigned int k = 0 ; k < neighbor->child(i)->child(j)->n_children();k++)
+				{
+					if(neighbor->child(i)->child(j)->child(k)->has_children())
+					{
+						AssertThrow(1 == 0, ExcNotImplemented());
+					}
+					else
+					{
+						neighbor_child.push_back(neighbor->child(i)->child(j)->child(k));
+						distances.push_back(cell->center().distance(neighbor->child(i)->child(j)->child(k)->center()));
+					}
+				}
+			}
+			else
+			{
+				neighbor_child.push_back(neighbor->child(i)->child(j));
+				distances.push_back(cell->center().distance(neighbor->child(i)->child(j)->center()));
+			}
+		}
+	}
+	else
+	{
+		neighbor_child.push_back(neighbor->child(i));
+		distances.push_back(cell->center().distance(neighbor->child(i)->center()));
+	}
+  }
+
+  AssertThrow(neighbor_child.size() != 0, ExcInternalError());
+  const long unsigned int location_min = std::distance(distances.begin(),std::min_element(distances.begin(),distances.end()));
+  return(neighbor_child[location_min]);
+
 }
 
 template<int dim>
