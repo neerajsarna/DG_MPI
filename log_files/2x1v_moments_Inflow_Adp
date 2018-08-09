@@ -826,3 +826,736 @@ User defined signal 2
 --------------------------------------------------------------------------
 mpirun noticed that process rank 0 with PID 26890 on node linuxbmc0344 exited on signal 12 (User defined signal 2).
 --------------------------------------------------------------------------
+Sender: LSF System <lsfadmin@linuxbmc0937>
+Subject: Job 43952329: <2x1v_moments_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Thu Aug  9 18:45:44 2018
+Job was executed on host(s) <12*linuxbmc0937>, in queue <normal>, as user <ns179556> in cluster <rcc> at Thu Aug  9 18:45:48 2018
+                            <4*linuxbmc0940>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Thu Aug  9 18:45:48 2018
+Terminated at Thu Aug  9 19:26:16 2018
+Results reported at Thu Aug  9 19:26:16 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_Inflow_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 1:20
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 1000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 16 10
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   4821.07 sec.
+    Max Memory :                                 467 MB
+    Average Memory :                             459.21 MB
+    Total Requested Memory :                     16000.00 MB
+    Delta Memory :                               15533.00 MB
+    Max Swap :                                   -
+    Max Processes :                              7
+    Max Threads :                                19
+    Run time :                                   2428 sec.
+    Turnaround time :                            2432 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1533833144.43952329.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0937.rz.RWTH-Aachen.DE:25387] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+ADAPTIVE REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 20
+total dofs: 20
+Steps taken: 100
+solving adjoint: 
+cycle: 0
+total cells: 20
+total dofs: 20
+Steps taken: 100
+compute error grid
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 27
+total dofs: 27
+Steps taken: 136
+solving adjoint: 
+cycle: 1
+total cells: 27
+total dofs: 27
+Steps taken: 128
+compute error grid
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 36
+total dofs: 36
+Steps taken: 264
+solving adjoint: 
+cycle: 2
+total cells: 36
+total dofs: 36
+Steps taken: 249
+compute error grid
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 47
+total dofs: 47
+residual: 0.00149637time: 13.0688
+Steps taken: 725
+solving adjoint: 
+cycle: 3
+total cells: 47
+total dofs: 47
+Steps taken: 462
+compute error grid
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 62
+total dofs: 62
+residual: 6.11241e-05time: 16.7781
+Steps taken: 631
+solving adjoint: 
+cycle: 4
+total cells: 62
+total dofs: 62
+Steps taken: 384
+compute error grid
+refinement cycle: 5
+solving primal: 
+cycle: 5
+total cells: 81
+total dofs: 81
+residual: 0.0128401time: 19.1688
+residual: 2.82043e-07time: 19.95
+Steps taken: 1039
+solving adjoint: 
+cycle: 5
+total cells: 81
+total dofs: 81
+residual: 0.00102738time: 20.7922
+Steps taken: 828
+compute error grid
+refinement cycle: 6
+solving primal: 
+cycle: 6
+total cells: 106
+total dofs: 106
+residual: 0.00286887time: 22.0859
+Steps taken: 963
+solving adjoint: 
+cycle: 6
+total cells: 106
+total dofs: 106
+residual: 0.000650489time: 23.5906
+Steps taken: 777
+compute error grid
+refinement cycle: 7
+solving primal: 
+cycle: 7
+total cells: 138
+total dofs: 138
+residual: 0.257463time: 24.8047
+residual: 0.000129401time: 25.5859
+Steps taken: 1276
+solving adjoint: 
+cycle: 7
+total cells: 138
+total dofs: 138
+residual: 0.000367023time: 26.7984
+Steps taken: 659
+compute error grid
+refinement cycle: 8
+solving primal: 
+cycle: 8
+total cells: 180
+total dofs: 180
+residual: 0.027194time: 27.4375
+residual: 0.0008333time: 27.8281
+residual: 5.81109e-06time: 28.2187
+Steps taken: 1824
+solving adjoint: 
+cycle: 8
+total cells: 180
+total dofs: 180
+residual: 0.0190441time: 28.8625
+residual: 0.000318336time: 29.2531
+Steps taken: 1331
+compute error grid
+refinement cycle: 9
+solving primal: 
+cycle: 9
+total cells: 235
+total dofs: 235
+residual: 0.217496time: 29.9023
+residual: 0.00608043time: 30.293
+residual: 6.31736e-05time: 30.6836
+residual: 1.18492e-07time: 31.0742
+Steps taken: 2013
+solving adjoint: 
+cycle: 9
+total cells: 235
+total dofs: 235
+residual: 0.0114223time: 31.475
+residual: 0.000153244time: 31.8656
+Steps taken: 1263
+compute error grid
+refinement cycle: 10
+solving primal: 
+cycle: 10
+total cells: 306
+total dofs: 306
+residual: 0.656934time: 32.2664
+residual: 0.768998time: 32.4617
+residual: 0.64979time: 32.657
+residual: 0.198878time: 32.8523
+residual: 0.0488157time: 33.0477
+residual: 0.0100455time: 33.243
+residual: 0.000818547time: 33.4383
+residual: 4.31329e-05time: 33.6336
+residual: 1.79571e-06time: 33.8289
+Steps taken: 4936
+solving adjoint: 
+cycle: 10
+total cells: 306
+total dofs: 306
+residual: 0.0280339time: 34.1945
+residual: 0.00789723time: 34.3898
+residual: 0.00242509time: 34.5852
+residual: 0.000228146time: 34.7805
+residual: 7.97626e-07time: 34.9758
+Steps taken: 2619
+compute error grid
+refinement cycle: 11
+solving primal: 
+cycle: 11
+total cells: 398
+total dofs: 398
+residual: 0.484426time: 35.2176
+residual: 0.383643time: 35.4129
+residual: 0.0768743time: 35.6082
+residual: 0.00876758time: 35.8035
+residual: 0.00229676time: 35.9988
+residual: 0.000202308time: 36.1941
+residual: 1.09597e-05time: 36.3895
+residual: 4.62274e-07time: 36.5848
+Steps taken: 4234
+solving adjoint: 
+cycle: 11
+total cells: 398
+total dofs: 398
+residual: 0.0341226time: 36.8715
+residual: 0.00679637time: 37.0668
+residual: 0.00379123time: 37.2621
+residual: 1.57071e-05time: 37.4574
+Steps taken: 2239
+compute error grid
+refinement cycle: 12
+solving primal: 
+cycle: 12
+total cells: 518
+total dofs: 518
+residual: 0.506794time: 37.7461
+residual: 0.327077time: 37.9414
+residual: 0.015564time: 38.1367
+residual: 0.00356265time: 38.332
+residual: 0.000498574time: 38.5273
+residual: 3.28352e-05time: 38.7227
+residual: 1.53733e-06time: 38.918
+Steps taken: 3922
+solving adjoint: 
+cycle: 12
+total cells: 518
+total dofs: 518
+residual: 0.084021time: 39.2781
+residual: 0.0191702time: 39.4734
+residual: 0.00237778time: 39.6688
+residual: 0.000138898time: 39.8641
+Steps taken: 2443
+compute error grid
+refinement cycle: 13
+solving primal: 
+cycle: 13
+total cells: 674
+total dofs: 674
+residual: 0.438758time: 40.1348
+residual: 0.361358time: 40.2324
+residual: 0.252968time: 40.3301
+residual: 0.188171time: 40.4277
+residual: 0.0779439time: 40.5254
+residual: 0.012972time: 40.623
+residual: 0.00337214time: 40.7207
+residual: 0.00212508time: 40.8184
+residual: 0.000983101time: 40.916
+residual: 0.000333913time: 41.0137
+residual: 9.36496e-05time: 41.1113
+residual: 2.31802e-05time: 41.209
+residual: 5.25908e-06time: 41.3066
+residual: 1.11928e-06time: 41.4043
+residual: 2.26855e-07time: 41.502
+Steps taken: 7752
+solving adjoint: 
+cycle: 13
+total cells: 674
+total dofs: 674
+residual: 0.133607time: 41.6488
+residual: 0.0544008time: 41.7465
+residual: 0.0152293time: 41.8441
+residual: 0.00539785time: 41.9418
+residual: 0.00355644time: 42.0395
+residual: 0.00246207time: 42.1371
+residual: 0.00023932time: 42.2348
+residual: 2.98104e-05time: 42.3324
+residual: 8.57905e-07time: 42.4301
+Steps taken: 4703
+compute error grid
+refinement cycle: 14
+solving primal: 
+cycle: 14
+total cells: 877
+total dofs: 877
+residual: 1.00986time: 42.5674
+residual: 1.10159time: 42.665
+residual: 1.06835time: 42.7627
+residual: 1.08434time: 42.8604
+residual: 0.925943time: 42.958
+residual: 0.759566time: 43.0557
+residual: 0.424911time: 43.1533
+residual: 0.160635time: 43.251
+residual: 0.048742time: 43.3486
+residual: 0.0239069time: 43.4463
+residual: 0.0108664time: 43.5439
+residual: 0.00333462time: 43.6416
+residual: 0.000780057time: 43.7393
+residual: 0.000156863time: 43.8369
+residual: 2.88974e-05time: 43.9346
+residual: 5.04117e-06time: 44.0322
+residual: 8.48024e-07time: 44.1299
+residual: 1.39023e-07time: 44.2275
+Steps taken: 9091
+solving adjoint: 
+cycle: 14
+total cells: 877
+total dofs: 877
+residual: 0.116954time: 44.343
+residual: 0.0447206time: 44.4406
+residual: 0.0157775time: 44.5383
+residual: 0.00552696time: 44.6359
+residual: 0.0033396time: 44.7336
+residual: 0.00159661time: 44.8312
+residual: 0.00039971time: 44.9289
+residual: 2.31968e-05time: 45.0266
+residual: 5.31848e-06time: 45.1242
+residual: 1.05621e-06time: 45.2219
+Steps taken: 5418
+compute error grid
+refinement cycle: 15
+solving primal: 
+cycle: 15
+total cells: 1141
+total dofs: 1141
+residual: 0.968003time: 45.3523
+residual: 0.967626time: 45.4012
+residual: 1.10837time: 45.45
+residual: 1.12626time: 45.4988
+residual: 1.20183time: 45.5477
+residual: 1.10461time: 45.5965
+residual: 1.25239time: 45.6453
+residual: 1.07863time: 45.6941
+residual: 1.12186time: 45.743
+residual: 0.962173time: 45.7918
+residual: 0.790026time: 45.8406
+residual: 0.543921time: 45.8895
+residual: 0.339484time: 45.9383
+residual: 0.18476time: 45.9871
+residual: 0.0985978time: 46.0359
+residual: 0.0566022time: 46.0848
+residual: 0.0325894time: 46.1336
+residual: 0.0217405time: 46.1824
+residual: 0.0145795time: 46.2312
+residual: 0.0086906time: 46.2801
+residual: 0.0046577time: 46.3289
+residual: 0.00231317time: 46.3777
+residual: 0.0010891time: 46.4266
+residual: 0.000493635time: 46.4754
+residual: 0.000217595time: 46.5242
+residual: 9.39236e-05time: 46.573
+residual: 3.98882e-05time: 46.6219
+residual: 1.6723e-05time: 46.6707
+residual: 6.93813e-06time: 46.7195
+residual: 2.85379e-06time: 46.7684
+residual: 1.16535e-06time: 46.8172
+residual: 4.72947e-07time: 46.866
+residual: 1.90926e-07time: 46.9148
+Steps taken: 16855
+solving adjoint: 
+cycle: 15
+total cells: 1141
+total dofs: 1141
+residual: 0.208002time: 46.9983
+residual: 0.145442time: 47.0472
+residual: 0.103066time: 47.096
+residual: 0.0642562time: 47.1448
+residual: 0.0379507time: 47.1937
+residual: 0.0233665time: 47.2425
+residual: 0.0174305time: 47.2913
+residual: 0.0141673time: 47.3401
+residual: 0.0119946time: 47.389
+residual: 0.00785954time: 47.4378
+residual: 0.00499668time: 47.4866
+residual: 0.00100408time: 47.5354
+residual: 0.000597052time: 47.5843
+residual: 0.000434116time: 47.6331
+residual: 0.000154969time: 47.6819
+residual: 4.04587e-05time: 47.7308
+residual: 1.49477e-05time: 47.7796
+residual: 4.75926e-06time: 47.8284
+residual: 8.53396e-07time: 47.8772
+Steps taken: 9969
+compute error grid
+refinement cycle: 16
+solving primal: 
+cycle: 16
+total cells: 1484
+total dofs: 1484
+residual: 0.364897time: 47.9719
+residual: 0.361155time: 48.0207
+residual: 0.350031time: 48.0695
+residual: 0.302381time: 48.1184
+residual: 0.219819time: 48.1672
+residual: 0.227123time: 48.216
+residual: 0.21577time: 48.2648
+residual: 0.139939time: 48.3137
+residual: 0.0904596time: 48.3625
+residual: 0.0460937time: 48.4113
+residual: 0.0205179time: 48.4602
+residual: 0.00735556time: 48.509
+residual: 0.00372551time: 48.5578
+residual: 0.00189887time: 48.6066
+residual: 0.0011228time: 48.6555
+residual: 0.000765443time: 48.7043
+residual: 0.00047562time: 48.7531
+residual: 0.000262583time: 48.802
+residual: 0.000132986time: 48.8508
+residual: 6.34464e-05time: 48.8996
+residual: 2.90255e-05time: 48.9484
+residual: 1.28815e-05time: 48.9973
+residual: 5.58885e-06time: 49.0461
+residual: 2.38302e-06time: 49.0949
+residual: 1.00227e-06time: 49.1437
+residual: 4.16911e-07time: 49.1926
+residual: 1.71855e-07time: 49.2414
+Steps taken: 13804
+solving adjoint: 
+cycle: 16
+total cells: 1484
+total dofs: 1484
+residual: 0.130978time: 49.3199
+residual: 0.10149time: 49.3687
+residual: 0.0746475time: 49.4176
+residual: 0.0483156time: 49.4664
+residual: 0.0265722time: 49.5152
+residual: 0.0122407time: 49.5641
+residual: 0.00610995time: 49.6129
+residual: 0.00351111time: 49.6617
+residual: 0.00250841time: 49.7105
+residual: 0.00230641time: 49.7594
+residual: 0.00218492time: 49.8082
+residual: 0.00184287time: 49.857
+residual: 0.000598791time: 49.9059
+residual: 0.000104032time: 49.9547
+residual: 3.96482e-05time: 50.0035
+residual: 1.0613e-05time: 50.0523
+residual: 8.17457e-07time: 50.1012
+Steps taken: 8782
+compute error grid
+refinement cycle: 17
+solving primal: 
+cycle: 17
+total cells: 1930
+total dofs: 1930
+residual: 0.78012time: 50.1775
+residual: 0.924631time: 50.2264
+residual: 1.06464time: 50.2752
+residual: 1.01063time: 50.324
+residual: 0.849905time: 50.3729
+residual: 0.809326time: 50.4217
+residual: 0.866896time: 50.4705
+residual: 0.810425time: 50.5193
+residual: 0.582215time: 50.5682
+residual: 0.347622time: 50.617
+residual: 0.179607time: 50.6658
+residual: 0.0697667time: 50.7146
+residual: 0.0297892time: 50.7635
+residual: 0.0124646time: 50.8123
+residual: 0.00635616time: 50.8611
+residual: 0.0041404time: 50.91
+residual: 0.00270316time: 50.9588
+residual: 0.00155706time: 51.0076
+residual: 0.000811476time: 51.0564
+residual: 0.000394701time: 51.1053
+residual: 0.000183019time: 51.1541
+residual: 8.20205e-05time: 51.2029
+residual: 3.58472e-05time: 51.2518
+residual: 1.53715e-05time: 51.3006
+residual: 6.49413e-06time: 51.3494
+residual: 2.71121e-06time: 51.3982
+residual: 1.12096e-06time: 51.4471
+residual: 4.59741e-07time: 51.4959
+residual: 1.87276e-07time: 51.5447
+Steps taken: 14848
+solving adjoint: 
+cycle: 17
+total cells: 1930
+total dofs: 1930
+residual: 0.179669time: 51.6275
+residual: 0.131594time: 51.6764
+residual: 0.0892301time: 51.7252
+residual: 0.0497123time: 51.774
+residual: 0.0274662time: 51.8229
+residual: 0.0170462time: 51.8717
+residual: 0.0110422time: 51.9205
+residual: 0.00834394time: 51.9693
+residual: 0.00684038time: 52.0182
+residual: 0.00470133time: 52.067
+residual: 0.00320378time: 52.1158
+residual: 0.000679821time: 52.1646
+residual: 0.000544472time: 52.2135
+residual: 0.000261598time: 52.2623
+residual: 8.96527e-05time: 52.3111
+residual: 2.46783e-05time: 52.36
+residual: 7.53726e-06time: 52.4088
+residual: 1.32239e-06time: 52.4576
+Steps taken: 9459
+compute error grid
+refinement cycle: 18
+solving primal: 
+cycle: 18
+total cells: 2510
+total dofs: 2510
+residual: 0.764023time: 52.5269
+residual: 0.72454time: 52.5513
+residual: 0.741804time: 52.5757
+residual: 0.779523time: 52.6001
+residual: 0.908745time: 52.6245
+residual: 0.933673time: 52.6489
+residual: 0.933607time: 52.6733
+residual: 1.03487time: 52.6978
+residual: 1.09163time: 52.7222
+residual: 0.840707time: 52.7466
+residual: 0.803288time: 52.771
+residual: 0.813717time: 52.7954
+residual: 0.922082time: 52.8198
+residual: 1.13954time: 52.8442
+residual: 1.14294time: 52.8687
+residual: 0.990866time: 52.8931
+residual: 1.07246time: 52.9175
+residual: 1.06342time: 52.9419
+residual: 0.837851time: 52.9663
+residual: 0.712487time: 52.9907
+residual: 0.652717time: 53.0151
+residual: 0.708538time: 53.0396
+residual: 0.83463time: 53.064
+residual: 0.795159time: 53.0884
+residual: 0.659119time: 53.1128
+residual: 0.628288time: 53.1372
+residual: 0.57644time: 53.1616
+residual: 0.467312time: 53.186
+residual: 0.38674time: 53.2104
+residual: 0.302352time: 53.2349
+residual: 0.231397time: 53.2593
+residual: 0.171573time: 53.2837
+residual: 0.120348time: 53.3081
+residual: 0.0818937time: 53.3325
+residual: 0.0556702time: 53.3569
+residual: 0.0397848time: 53.3813
+residual: 0.0303128time: 53.4058
+residual: 0.0240505time: 53.4302
+residual: 0.0197279time: 53.4546
+residual: 0.0163881time: 53.479
+residual: 0.0134079time: 53.5034
+residual: 0.0106535time: 53.5278
+residual: 0.00820407time: 53.5522
+residual: 0.00614079time: 53.5767
+residual: 0.00448588time: 53.6011
+residual: 0.0032107time: 53.6255
+residual: 0.00225917time: 53.6499
+residual: 0.00156716time: 53.6743
+residual: 0.0010742time: 53.6987
+residual: 0.000728915time: 53.7231
+residual: 0.00049039time: 53.7476
+residual: 0.000327502time: 53.772
+residual: 0.000217338time: 53.7964
+residual: 0.000143438time: 53.8208
+residual: 9.42107e-05time: 53.8452
+residual: 6.16159e-05time: 53.8696
+residual: 4.01469e-05time: 53.894
+residual: 2.60707e-05time: 53.9185
+residual: 1.68791e-05time: 53.9429
+residual: 1.08985e-05time: 53.9673
+residual: 7.01971e-06time: 53.9917
+residual: 4.5113e-06time: 54.0161
+residual: 2.89334e-06time: 54.0405
+residual: 1.85219e-06time: 54.0649
+residual: 1.18366e-06time: 54.0894
+residual: 7.55226e-07time: 54.1138
+residual: 4.81161e-07time: 54.1382
+residual: 3.06135e-07time: 54.1626
+residual: 1.94529e-07time: 54.187
+residual: 1.23464e-07time: 54.2114
+Steps taken: 35232
+solving adjoint: 
+cycle: 18
+total cells: 2510
+total dofs: 2510
+residual: 0.148524time: 54.2472
+residual: 0.12309time: 54.2716
+residual: 0.103472time: 54.296
+residual: 0.0764691time: 54.3204
+residual: 0.0603448time: 54.3448
+residual: 0.0522189time: 54.3692
+residual: 0.0421929time: 54.3937
+residual: 0.0309069time: 54.4181
+residual: 0.0276861time: 54.4425
+residual: 0.021891time: 54.4669
+residual: 0.0157341time: 54.4913
+residual: 0.0135397time: 54.5157
+residual: 0.0106504time: 54.5401
+residual: 0.00847731time: 54.5646
+residual: 0.00731839time: 54.589
+residual: 0.00630537time: 54.6134
+residual: 0.00529648time: 54.6378
+residual: 0.0046041time: 54.6622
+residual: 0.00407073time: 54.6866
+residual: 0.00328485time: 54.711
+residual: 0.00282129time: 54.7354
+residual: 0.00217492time: 54.7599
+residual: 0.00197129time: 54.7843
+residual: 0.00165755time: 54.8087
+residual: 0.000589364time: 54.8331
+residual: 0.000209325time: 54.8575
+residual: 0.000177036time: 54.8819
+residual: 0.000126737time: 54.9063
+residual: 7.06612e-05time: 54.9308
+residual: 4.21321e-05time: 54.9552
+residual: 2.80147e-05time: 54.9796
+residual: 2.04828e-05time: 55.004
+residual: 1.20568e-05time: 55.0284
+residual: 4.43824e-06time: 55.0528
+residual: 8.88116e-07time: 55.0772
+Steps taken: 17986
+compute error grid
+refinement cycle: 19
+solving primal: 
+cycle: 19
+total cells: 3264
+total dofs: 3264
+residual: 0.579223time: 55.1254
+residual: 0.531274time: 55.1498
+residual: 0.532684time: 55.1742
+residual: 0.578807time: 55.1986
+residual: 0.618824time: 55.223
+residual: 0.645722time: 55.2475
+residual: 0.619901time: 55.2719
+residual: 0.561107time: 55.2963
+residual: 0.474461time: 55.3207
+residual: 0.400154time: 55.3451
+residual: 0.443715time: 55.3695
+residual: 0.493692time: 55.3939
+residual: 0.48124time: 55.4184
+residual: 0.450459time: 55.4428
+residual: 0.388158time: 55.4672
+residual: 0.300203time: 55.4916
+residual: 0.269822time: 55.516
+residual: 0.20163time: 55.5404
+residual: 0.142451time: 55.5648
+residual: 0.0951951time: 55.5893
+residual: 0.0650979time: 55.6137
+residual: 0.0392201time: 55.6381
+residual: 0.0219193time: 55.6625
+residual: 0.0125745time: 55.6869
+residual: 0.00603505time: 55.7113
+residual: 0.00346929time: 55.7357
+residual: 0.00231143time: 55.7602
+residual: 0.00159878time: 55.7846
+residual: 0.00115351time: 55.809
+residual: 0.000910783time: 55.8334
+residual: 0.000752325time: 55.8578
+residual: 0.000615317time: 55.8822
+residual: 0.000488006time: 55.9066
+residual: 0.000374545time: 55.9311
+residual: 0.000279221time: 55.9555
+residual: 0.000203131time: 55.9799
+residual: 0.000144818time: 56.0043
+residual: 0.000101535time: 56.0287
+residual: 7.02083e-05time: 56.0531
+residual: 4.79884e-05time: 56.0775
+residual: 3.24827e-05time: 56.102
+residual: 2.18061e-05time: 56.1264
+residual: 1.45355e-05time: 56.1508
+residual: 9.63006e-06time: 56.1752
+residual: 6.34634e-06time: 56.1996
+residual: 4.16292e-06time: 56.224
+residual: 2.71952e-06time: 56.2484
+residual: 1.77013e-06time: 56.2729
+residual: 1.14844e-06time: 56.2973
+residual: 7.42925e-07time: 56.3217
+residual: 4.79333e-07time: 56.3461
+residual: 3.08528e-07time: 56.3705
+residual: 1.98156e-07time: 56.3949
+residual: 1.27016e-07time: 56.4193
+Steps taken: 27268
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |  2.42e+03s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |        19 |      2.36s |         0% |
+| perform adaptivity              |        19 |    0.0613s |         0% |
+| solve adjoint                   |        19 |       664s |        28% |
+| solve primal                    |        20 |  1.75e+03s |        72% |
++---------------------------------+-----------+------------+------------+
+

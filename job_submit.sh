@@ -16,7 +16,7 @@
 #BSUB -M 1000
  
 ### Request the number of compute slots you want to use
-#BSUB -n 32
+#BSUB -n 16
  
 ### Use esub for Open MPI
 #BSUB -a openmpi
@@ -29,4 +29,4 @@ cd /home/ns179556/DG_MPI
  
 export FLAGS_MPI_BATCH="-np 1"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 32 10
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 16 10

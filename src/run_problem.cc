@@ -365,7 +365,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table()
 {
-      std::ofstream output_convergence("convergence_table_uniform.txt");
+      std::ofstream output_convergence("convergence_table.txt");
 
       convergence_table.evaluate_convergence_rates("primal error",
                                                   "dofs primal",
