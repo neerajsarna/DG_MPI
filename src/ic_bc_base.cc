@@ -6,5 +6,5 @@ ic_bc_base<dim>::ic_bc_base()
 
 // explicit initiation to avoid linker error
 template class ic_bc_base<2>;
-template class ic_bc_base<1>;
+
 

@@ -15,10 +15,12 @@ Solve_System_SS_adaptive
 						Triangulation<dim> &triangulation,
 					 	const int poly_degree,
 						ic_bc_base<dim> *ic_bc,
-						const unsigned int &maximum_neqn);
+						const unsigned int &maximum_neqn,
+						const unsigned int &dim_problem);
 		
 		~Solve_System_SS_adaptive();
 
+		const unsigned int dim_problem;
 		MPI_Comm mpi_comm;
 		DoFHandler<dim> dof_handler;
       	FE_DGQ<dim> fe_basic;
@@ -88,8 +90,6 @@ Solve_System_SS_adaptive
     			FEFaceValues<dim> fe_v_face;    			
 		};
 
-		typename DoFHandler<dim>::cell_iterator return_child_refined_neighbor(const typename DoFHandler<dim>::cell_iterator &neighbor,
-		 																const typename DoFHandler<dim>::active_cell_iterator &cell);
 
 
 		void assemble_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
@@ -100,7 +100,28 @@ Solve_System_SS_adaptive
                                       const std::vector<Vector<double>> &g,
                                       const std::vector<Vector<double>> &force_vector);
 
+
+		void assemble_per_cell_dummy(const typename DoFHandler<dim>::active_cell_iterator &cell,
+                                      PerCellAssembleScratch &scratch,
+                                      PerCellAssemble &data,
+                                      const std::vector<Vector<double>> &component_to_system,
+                                      const double &t,
+                                      const std::vector<Vector<double>> &g,
+                                      const std::vector<Vector<double>> &force_vector);
+
 		void integrate_face(Vector<double> &result,
+			const typename DoFHandler<dim>::cell_iterator &neighbor,
+			const std::vector<system_data> &system_matrices,
+			const std::vector<Vector<double>> &component_to_system,
+			const unsigned int &this_fe_index,
+			const double &face_length,
+			const double &volume,
+			const double &nx,
+			const double &ny,
+			const Sparse_Matrix &An_cell,
+			const std::vector<types::global_dof_index> &local_dof_indices);
+
+		void integrate_face_dummy(Vector<double> &result,
 			const typename DoFHandler<dim>::cell_iterator &neighbor,
 			const std::vector<system_data> &system_matrices,
 			const std::vector<Vector<double>> &component_to_system,
@@ -169,7 +190,6 @@ Solve_System_SS_adaptive
 									 PerCellError &data);
 
 		 void copy_error_to_global(const PerCellError &data);
-		 double return_face_length(const typename DoFHandler<dim>::face_iterator &face_itr);
 
 };
 

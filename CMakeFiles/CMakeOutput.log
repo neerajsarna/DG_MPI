@@ -28,29 +28,29 @@ The CXX compiler identification is AppleClang, found in "/Users/neerajsarna/scie
 Determining if the C compiler works passed with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_4d36b/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_4d36b.dir/build.make CMakeFiles/cmTC_4d36b.dir/build
-Building C object CMakeFiles/cmTC_4d36b.dir/testCCompiler.c.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc     -o CMakeFiles/cmTC_4d36b.dir/testCCompiler.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_4d36b
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4d36b.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_4d36b.dir/testCCompiler.c.o  -o cmTC_4d36b  
+Run Build Command:"/usr/bin/make" "cmTC_7138d/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_7138d.dir/build.make CMakeFiles/cmTC_7138d.dir/build
+Building C object CMakeFiles/cmTC_7138d.dir/testCCompiler.c.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc     -o CMakeFiles/cmTC_7138d.dir/testCCompiler.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_7138d
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7138d.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_7138d.dir/testCCompiler.c.o  -o cmTC_7138d  
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_1e7b8/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_1e7b8.dir/build.make CMakeFiles/cmTC_1e7b8.dir/build
-Building C object CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc     -o CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCCompilerABI.c
-Linking C executable cmTC_1e7b8
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1e7b8.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o  -o cmTC_1e7b8   
+Run Build Command:"/usr/bin/make" "cmTC_d1e7d/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_d1e7d.dir/build.make CMakeFiles/cmTC_d1e7d.dir/build
+Building C object CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc     -o CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_d1e7d
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d1e7d.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o  -o cmTC_d1e7d   
 Apple LLVM version 7.0.2 (clang-700.1.81)
 Target: x86_64-apple-darwin14.5.0
 Thread model: posix
- "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_1e7b8 -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o -lmpi -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a
+ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_d1e7d -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o -lmpi -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a
 @(#)PROGRAM:ld  PROJECT:ld64-253.9
 configured to support archs: armv6 armv7 armv7s arm64 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em (tvOS)
 Library search paths:
@@ -66,17 +66,17 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_1e7b8/fast"]
-  ignore line: [/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_1e7b8.dir/build.make CMakeFiles/cmTC_1e7b8.dir/build]
-  ignore line: [Building C object CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc     -o CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTC_1e7b8]
-  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1e7b8.dir/link.txt --verbose=1]
-  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o  -o cmTC_1e7b8   ]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_d1e7d/fast"]
+  ignore line: [/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_d1e7d.dir/build.make CMakeFiles/cmTC_d1e7d.dir/build]
+  ignore line: [Building C object CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc     -o CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_d1e7d]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d1e7d.dir/link.txt --verbose=1]
+  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o  -o cmTC_d1e7d   ]
   ignore line: [Apple LLVM version 7.0.2 (clang-700.1.81)]
   ignore line: [Target: x86_64-apple-darwin14.5.0]
   ignore line: [Thread model: posix]
-  link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_1e7b8 -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o -lmpi -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a]
+  link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_d1e7d -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o -lmpi -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a]
     arg [/Library/Developer/CommandLineTools/usr/bin/ld] ==> ignore
     arg [-demangle] ==> ignore
     arg [-dynamic] ==> ignore
@@ -85,12 +85,12 @@ Parsed C implicit link information from above output:
     arg [-macosx_version_min] ==> ignore
     arg [10.10.0] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_1e7b8] ==> ignore
+    arg [cmTC_d1e7d] ==> ignore
     arg [-L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib] ==> dir [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib]
     arg [-search_paths_first] ==> ignore
     arg [-headerpad_max_install_names] ==> ignore
     arg [-v] ==> ignore
-    arg [CMakeFiles/cmTC_1e7b8.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_d1e7d.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lmpi] ==> lib [mpi]
     arg [-lSystem] ==> lib [System]
     arg [/Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a] ==> lib [/Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a]
@@ -114,13 +114,13 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_58236/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_58236.dir/build.make CMakeFiles/cmTC_58236.dir/build
-Building C object CMakeFiles/cmTC_58236.dir/feature_tests.c.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -std=c11 -o CMakeFiles/cmTC_58236.dir/feature_tests.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.c
-Linking C executable cmTC_58236
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_58236.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_58236.dir/feature_tests.c.o  -o cmTC_58236  
+Run Build Command:"/usr/bin/make" "cmTC_25200/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_25200.dir/build.make CMakeFiles/cmTC_25200.dir/build
+Building C object CMakeFiles/cmTC_25200.dir/feature_tests.c.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -std=c11 -o CMakeFiles/cmTC_25200.dir/feature_tests.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.c
+Linking C executable cmTC_25200
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25200.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_25200.dir/feature_tests.c.o  -o cmTC_25200  
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -132,13 +132,13 @@ Linking C executable cmTC_58236
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_86dd1/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_86dd1.dir/build.make CMakeFiles/cmTC_86dd1.dir/build
-Building C object CMakeFiles/cmTC_86dd1.dir/feature_tests.c.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -std=c99 -o CMakeFiles/cmTC_86dd1.dir/feature_tests.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.c
-Linking C executable cmTC_86dd1
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_86dd1.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_86dd1.dir/feature_tests.c.o  -o cmTC_86dd1  
+Run Build Command:"/usr/bin/make" "cmTC_94048/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_94048.dir/build.make CMakeFiles/cmTC_94048.dir/build
+Building C object CMakeFiles/cmTC_94048.dir/feature_tests.c.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -std=c99 -o CMakeFiles/cmTC_94048.dir/feature_tests.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.c
+Linking C executable cmTC_94048
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_94048.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_94048.dir/feature_tests.c.o  -o cmTC_94048  
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -150,13 +150,13 @@ Linking C executable cmTC_86dd1
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_ecac1/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_ecac1.dir/build.make CMakeFiles/cmTC_ecac1.dir/build
-Building C object CMakeFiles/cmTC_ecac1.dir/feature_tests.c.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -std=c90 -o CMakeFiles/cmTC_ecac1.dir/feature_tests.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.c
-Linking C executable cmTC_ecac1
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ecac1.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_ecac1.dir/feature_tests.c.o  -o cmTC_ecac1  
+Run Build Command:"/usr/bin/make" "cmTC_14206/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_14206.dir/build.make CMakeFiles/cmTC_14206.dir/build
+Building C object CMakeFiles/cmTC_14206.dir/feature_tests.c.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -std=c90 -o CMakeFiles/cmTC_14206.dir/feature_tests.c.o   -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.c
+Linking C executable cmTC_14206
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_14206.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpicc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_14206.dir/feature_tests.c.o  -o cmTC_14206  
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -166,29 +166,29 @@ Linking C executable cmTC_ecac1
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_640e3/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_640e3.dir/build.make CMakeFiles/cmTC_640e3.dir/build
-Building CXX object CMakeFiles/cmTC_640e3.dir/testCXXCompiler.cxx.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++      -o CMakeFiles/cmTC_640e3.dir/testCXXCompiler.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTC_640e3
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_640e3.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_640e3.dir/testCXXCompiler.cxx.o  -o cmTC_640e3  
+Run Build Command:"/usr/bin/make" "cmTC_3eb8a/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_3eb8a.dir/build.make CMakeFiles/cmTC_3eb8a.dir/build
+Building CXX object CMakeFiles/cmTC_3eb8a.dir/testCXXCompiler.cxx.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++      -o CMakeFiles/cmTC_3eb8a.dir/testCXXCompiler.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_3eb8a
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3eb8a.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_3eb8a.dir/testCXXCompiler.cxx.o  -o cmTC_3eb8a  
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_9379b/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_9379b.dir/build.make CMakeFiles/cmTC_9379b.dir/build
-Building CXX object CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++      -o CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp
-Linking CXX executable cmTC_9379b
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9379b.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_9379b   
+Run Build Command:"/usr/bin/make" "cmTC_4cd5d/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_4cd5d.dir/build.make CMakeFiles/cmTC_4cd5d.dir/build
+Building CXX object CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++      -o CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTC_4cd5d
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4cd5d.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_4cd5d   
 Apple LLVM version 7.0.2 (clang-700.1.81)
 Target: x86_64-apple-darwin14.5.0
 Thread model: posix
- "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_9379b -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o -lmpi_cxx -lmpi -lc++ -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a
+ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_4cd5d -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o -lmpi_cxx -lmpi -lc++ -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a
 @(#)PROGRAM:ld  PROJECT:ld64-253.9
 configured to support archs: armv6 armv7 armv7s arm64 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em (tvOS)
 Library search paths:
@@ -204,17 +204,17 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_9379b/fast"]
-  ignore line: [/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_9379b.dir/build.make CMakeFiles/cmTC_9379b.dir/build]
-  ignore line: [Building CXX object CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++      -o CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp]
-  ignore line: [Linking CXX executable cmTC_9379b]
-  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9379b.dir/link.txt --verbose=1]
-  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_9379b   ]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_4cd5d/fast"]
+  ignore line: [/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_4cd5d.dir/build.make CMakeFiles/cmTC_4cd5d.dir/build]
+  ignore line: [Building CXX object CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++      -o CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.5/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTC_4cd5d]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4cd5d.dir/link.txt --verbose=1]
+  ignore line: [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_4cd5d   ]
   ignore line: [Apple LLVM version 7.0.2 (clang-700.1.81)]
   ignore line: [Target: x86_64-apple-darwin14.5.0]
   ignore line: [Thread model: posix]
-  link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_9379b -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o -lmpi_cxx -lmpi -lc++ -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a]
+  link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.10.0 -o cmTC_4cd5d -L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o -lmpi_cxx -lmpi -lc++ -lSystem /Library/Developer/CommandLineTools/usr/bin/../lib/clang/7.0.2/lib/darwin/libclang_rt.osx.a]
     arg [/Library/Developer/CommandLineTools/usr/bin/ld] ==> ignore
     arg [-demangle] ==> ignore
     arg [-dynamic] ==> ignore
@@ -223,12 +223,12 @@ Parsed CXX implicit link information from above output:
     arg [-macosx_version_min] ==> ignore
     arg [10.10.0] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_9379b] ==> ignore
+    arg [cmTC_4cd5d] ==> ignore
     arg [-L/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib] ==> dir [/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/lib]
     arg [-search_paths_first] ==> ignore
     arg [-headerpad_max_install_names] ==> ignore
     arg [-v] ==> ignore
-    arg [CMakeFiles/cmTC_9379b.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_4cd5d.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lmpi_cxx] ==> lib [mpi_cxx]
     arg [-lmpi] ==> lib [mpi]
     arg [-lc++] ==> lib [c++]
@@ -254,13 +254,13 @@ Parsed CXX implicit link information from above output:
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_2799d/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_2799d.dir/build.make CMakeFiles/cmTC_2799d.dir/build
-Building CXX object CMakeFiles/cmTC_2799d.dir/feature_tests.cxx.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -std=c++14 -o CMakeFiles/cmTC_2799d.dir/feature_tests.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_2799d
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2799d.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_2799d.dir/feature_tests.cxx.o  -o cmTC_2799d  
+Run Build Command:"/usr/bin/make" "cmTC_db990/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_db990.dir/build.make CMakeFiles/cmTC_db990.dir/build
+Building CXX object CMakeFiles/cmTC_db990.dir/feature_tests.cxx.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -std=c++14 -o CMakeFiles/cmTC_db990.dir/feature_tests.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_db990
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_db990.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_db990.dir/feature_tests.cxx.o  -o cmTC_db990  
 
 
     Feature record: CXX_FEATURE:1cxx_aggregate_default_initializers
@@ -325,13 +325,13 @@ Linking CXX executable cmTC_2799d
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_1806a/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_1806a.dir/build.make CMakeFiles/cmTC_1806a.dir/build
-Building CXX object CMakeFiles/cmTC_1806a.dir/feature_tests.cxx.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -std=c++11 -o CMakeFiles/cmTC_1806a.dir/feature_tests.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_1806a
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1806a.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_1806a.dir/feature_tests.cxx.o  -o cmTC_1806a  
+Run Build Command:"/usr/bin/make" "cmTC_c3ed8/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_c3ed8.dir/build.make CMakeFiles/cmTC_c3ed8.dir/build
+Building CXX object CMakeFiles/cmTC_c3ed8.dir/feature_tests.cxx.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -std=c++11 -o CMakeFiles/cmTC_c3ed8.dir/feature_tests.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_c3ed8
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c3ed8.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_c3ed8.dir/feature_tests.cxx.o  -o cmTC_c3ed8  
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
@@ -396,13 +396,13 @@ Linking CXX executable cmTC_1806a
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
 Change Dir: /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_da4b4/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_da4b4.dir/build.make CMakeFiles/cmTC_da4b4.dir/build
-Building CXX object CMakeFiles/cmTC_da4b4.dir/feature_tests.cxx.o
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -std=c++98 -o CMakeFiles/cmTC_da4b4.dir/feature_tests.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_da4b4
-/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_da4b4.dir/link.txt --verbose=1
-/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_da4b4.dir/feature_tests.cxx.o  -o cmTC_da4b4  
+Run Build Command:"/usr/bin/make" "cmTC_7bf29/fast"
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_7bf29.dir/build.make CMakeFiles/cmTC_7bf29.dir/build
+Building CXX object CMakeFiles/cmTC_7bf29.dir/feature_tests.cxx.o
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -std=c++98 -o CMakeFiles/cmTC_7bf29.dir/feature_tests.cxx.o -c /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_7bf29
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7bf29.dir/link.txt --verbose=1
+/Applications/deal.II.app/Contents/Resources/opt/openmpi-1.10.2/bin/mpic++     -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_7bf29.dir/feature_tests.cxx.o  -o cmTC_7bf29  
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers

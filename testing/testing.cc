@@ -7,6 +7,15 @@ double
 function_value(const Point<dim> &p);
 
 template<int dim>
+void
+write_grid(const std::string &filename,const Triangulation<dim> &triangulation)
+{
+      std::ofstream out (filename.c_str());
+      GridOut grid_out;
+      grid_out.write_eps (triangulation, out);
+}
+
+template<int dim>
 void 
 write_solution(const std::string &filename,
                const FiniteElement<dim> &fe,
@@ -26,25 +35,34 @@ int main(int argc, char *argv[])
 	Triangulation<dim> triangulation;
 
       //The diagonal of the rectangle is the line joining p1 and p2
-    GridGenerator::subdivided_hyper_cube(triangulation,atoi(argv[1]));
-  
+  GridGenerator::subdivided_hyper_cube(triangulation,atoi(argv[1]));
 
-    DoFHandler<dim> dof_handler(triangulation);
-    FE_DGQ<dim> fe(30);
+  typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),endc = triangulation.end();
 
-    dof_handler.distribute_dofs(fe);
+  for(; cell != endc ; cell++)
+  {
+    if(cell->center()(0) > 0.5)
+    cell->set_refine_flag(RefinementCase<dim>::cut_axis(0));
+  }
 
-    std::cout << "memory consumed(GB): " << dof_handler.memory_consumption()/1e9 << std::endl;
-    Vector<double> vec1(dof_handler.n_dofs());
-    Vector<double> vec2(dof_handler.n_dofs());
-    Vector<double> vec3(dof_handler.n_dofs());
-    Vector<double> vec4(dof_handler.n_dofs());
-    Vector<double> vec5(dof_handler.n_dofs());
-    Vector<double> vec6(dof_handler.n_dofs());
+  triangulation.execute_coarsening_and_refinement();
 
-    std::cout << "memory consumed(GB): " << vec1.memory_consumption()/1e9 << std::endl;
+  cell = triangulation.begin_active();
+  endc = triangulation.end();
 
-    dof_handler.clear();
+  for(; cell != endc ; cell++)
+   {
+    std::cout << cell->center() << std::endl;
+    for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
+      if(!cell->face(face)->at_boundary())
+    {
+        typename Triangulation<dim>::cell_iterator neighbor = cell->neighbor(face);
+        std::cout << "children" << neighbor->n_children() << std::endl; 
+    }    
+  }
+
+  write_grid<dim>("grid",triangulation);
+
 }
 
 template<int dim>

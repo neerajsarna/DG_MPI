@@ -133,7 +133,8 @@ int main(int argc, char *argv[])
       const unsigned int num_threads = atoi(argv[1]);
       Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, num_threads);
 
-      const int dim = 1;
+      const int dim = 2;
+      const int dim_problem = 1;
       const int poly_degree = 0;
       std::string foldername = "2D_advection_gaussian";
 
@@ -157,26 +158,38 @@ int main(int argc, char *argv[])
 
       std::vector<unsigned int> repetitions(dim);
 
-      // const double left_edge = 0;
-      // const double right_edge = 1;
-      // // Point<dim> p1;
-      // // Point<dim> p2;
+      const double left_edge = 0;
+      const double right_edge = 1;
+      Point<dim> p1;
+      Point<dim> p2;
 
-      // // // corners of the diagonal
-      // // p1(0) = left_edge;
-      // // p1(1) = left_edge;
+      // corners of the diagonal
+      p1(0) = left_edge;
+      p1(1) = left_edge;
 
-      // // p2(0) = right_edge;
-      // // p2(1) = right_edge;
+      p2(0) = right_edge;
+      p2(1) = right_edge;
 
       repetitions[0] = atoi(argv[2]);
-      //repetitions[1] = 5;
+      repetitions[1] = dim_problem == 1 ?  1 : repetitions[0];
 
       Triangulation<dim> triangulation;
-      //GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
-      GridGenerator::subdivided_hyper_cube(triangulation,repetitions[0]);
+      GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
 
-      triangulation.refine_global(1);
+      typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(), endc = triangulation.end();
+
+      for(; cell != endc ; cell++)
+      {
+      	if(dim_problem == 1)
+      	{
+      		cell->set_refine_flag(RefinementCase<dim>::cut_axis(0));
+      	}
+      	else
+      	{
+      		cell->set_refine_flag();
+      	}
+      }
+      triangulation.execute_coarsening_and_refinement();
 
       set_square_bid(triangulation);
 
@@ -187,6 +200,29 @@ int main(int argc, char *argv[])
       const unsigned int max_neqn_primal = system_matrices[system_matrices.size()-1].Ax.rows();
       const unsigned int max_neqn_adjoint = system_matrices_adjoint[system_matrices_adjoint.size()-1].Ax.rows();
 
+
+      if(dim_problem == 1)
+      {
+      	system_matrices[0].Ay.coeffRef(0,0) = 0;
+      	system_matrices[0].Ay.makeCompressed();
+
+      	system_matrices[0].B[3].coeffRef(0,0) = 0;
+      	system_matrices[0].B[3].makeCompressed();
+		system_matrices[0].penalty[3].coeffRef(0,0) = 0;
+		system_matrices[0].penalty[3].makeCompressed();
+		system_matrices[0].penalty_B[3].coeffRef(0,0) = 0;
+		system_matrices[0].penalty_B[3].makeCompressed();
+
+      	system_matrices_adjoint[0].B[1].coeffRef(0,0) = 0;
+      	system_matrices_adjoint[0].B[1].makeCompressed();
+		system_matrices_adjoint[0].penalty[1].coeffRef(0,0) = 0;
+		system_matrices_adjoint[0].penalty[1].makeCompressed();
+		system_matrices_adjoint[0].penalty_B[1].coeffRef(0,0) = 0;
+		system_matrices_adjoint[0].penalty_B[1].makeCompressed();
+
+
+      }
+
 	  run_problem<dim> Run_Problem(system_matrices,	  			 // system data
        								system_matrices,
 				  			  		system_matrices_adjoint, 	// adjoint data
@@ -196,7 +232,8 @@ int main(int argc, char *argv[])
 					          		&initial_boundary_adjoint,
 					          		foldername,
 					          		max_neqn_primal,
-					          		max_neqn_adjoint);
+					          		max_neqn_adjoint,
+					          		dim_problem);
      //}
 }
 
@@ -373,7 +410,7 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 
 	value(0) = sin(M_PI * x);
 	//value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
-	//value(0) = exp(-pow((x-0.5),2)*100);
+	//value(0) = exp(-pow((x),2)*100);
 	//value(0) = sin(M_PI * x) * sin(M_PI * y);
 
 }
@@ -405,6 +442,7 @@ ic_bc<dim>::force(Vector<double> &value,
 	//value(0) = M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
 	//value(0) = -100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	value(0) = M_PI * cos(M_PI * x);
+	//value(0) = -200 * exp(-100*pow((x),2)) * (x);
 }
 
 template<int dim>
@@ -415,6 +453,9 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	const int num_bc = B.rows();
 	value.reinit(num_bc);
 	value = 0;
+
+	if(bc_id == 2)
+		value(0) = 0;
 }
 
 template<int dim>
@@ -479,8 +520,8 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);
 
-	//value(0) = exp(-pow((x-0.6),2)*100);
-	value(0) = 0;
+	value(0) = exp(-pow((x-0.5),2)*100);
+	//value(0) = 1;
 }
 
 template<int dim>
@@ -493,5 +534,5 @@ ic_bc_adjoint<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	value = 0;
 
 	if(bc_id == 0)
-		value(0) = 1;
+		value(0) = 0;
 }

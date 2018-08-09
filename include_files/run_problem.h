@@ -14,7 +14,8 @@ run_problem
 					ic_bc_base<dim> *ic_bc_adjoint,
 					const std::string &foldername,
           const unsigned int &max_equations_primal,
-          const unsigned int &max_equations_adjoint);
+          const unsigned int &max_equations_adjoint,
+          const unsigned int &dim_problem);
 
 
     DoFHandler<dim> dummy_dof_handler_grid;      // a dummy dof handler for grid refinement
@@ -77,8 +78,6 @@ run_problem
                                 ic_bc_base<dim> *ic_bc_primal,
                                 const Triangulation<dim> &triangulation);
 
-    typename DoFHandler<dim>::cell_iterator return_child_refined_neighbor(const typename DoFHandler<dim>::cell_iterator &neighbor,
-                                                                         const typename DoFHandler<dim>::active_cell_iterator &cell);
 
     void compute_error_per_cell(const typename DoFHandler<dim>::active_cell_iterator &cell,
                                 PerCellErrorScratch &scratch,
@@ -87,7 +86,8 @@ run_problem
                                         const std::vector<system_data> &system_matrices,
                                         const Vector<double> &adjoint_solution,
                                         const Vector<double> &primal_solution,
-                                        const std::vector<Vector<double>> &component_to_system);
+                                        const std::vector<Vector<double>> &component_to_system,
+                                        ic_bc_base<dim> *ic_bc_primal);
 
 
     void error_face(const typename DoFHandler<dim>::cell_iterator &neighbor,  // iterator of the neighbor
@@ -155,5 +155,15 @@ run_problem
                                      const std::vector<system_data> &system_matrices_adjoint,
                                      const double &t);
 
-    double return_face_length(const typename DoFHandler<dim>::face_iterator &face_itr);
+    const unsigned int dim_problem;
+
+
+    void compute_error_dummy(const Vector<double> &primal_solution,
+                                const Vector<double> &adjoint_solution,
+                                const DoFHandler<dim> &dof_handler_adjoint,
+                                const std::vector<system_data> &system_matrices,
+                                ic_bc_base<dim> *ic_bc_primal,
+                                Vector<double> &error_vector,
+                                const unsigned int &quad_points,
+                                const typename DoFHandler<dim>::active_cell_iterator &cell);
 };

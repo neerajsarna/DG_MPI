@@ -6,8 +6,10 @@ Solve_System_SS_adaptive<dim>::Solve_System_SS_adaptive(std::vector<system_data>
                                                         Triangulation<dim> &triangulation,
 							                                         	const int poly_degree,
 								                                        ic_bc_base<dim> *ic_bc,
-                                                        const unsigned int &maximum_eqn)
+                                                        const unsigned int &maximum_eqn,
+                                                        const unsigned int &dim_problem)
 :
+dim_problem(dim_problem),
 mpi_comm(MPI_COMM_WORLD),
 dof_handler(triangulation),
 fe_basic(poly_degree),
@@ -275,7 +277,7 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                 const double ny = temp_normal_vec[1];
 
                 const typename DoFHandler<dim>::face_iterator face_itr = cell->face(face);
-                const double face_length = return_face_length(face_itr);
+                const double face_length = face_itr->measure();
 
                   // construct An of the current cell
                   Sparse_Matrix An_cell = system_matrices[this_fe_index].Ax * nx
@@ -285,6 +287,12 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                 {
 
                   const unsigned int bc_id = face_itr->boundary_id();
+
+                  if(bc_id == 1 && dim_problem == 1)
+                    continue;
+
+                  if(bc_id == 3 && dim_problem == 1)
+                    continue;
                   // only compute for times greater than zero, already computed for t= 0 before
                     if (system_matrices[this_fe_index].bc_inhomo_time && t > 1e-16)
                                 initial_boundary->bc_inhomo(system_matrices[this_fe_index].B[bc_id],bc_id,
@@ -355,10 +363,9 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                    }
                    else
                    {
-                     Assert(neighbor->has_children(),ExcInternalError()); // the neighbor should have children in this case
+                     Assert(neighbor->has_children() && dim != 1,ExcInternalError()); // the neighbor should have children in this case
                      Assert(neighbor->n_children() > 0, ExcInternalError());
-                     if (dim != 1)
-                     {
+
                      for(unsigned int subface = 0 ; subface < face_itr->n_children() ; subface ++) // loop over the subfaces of the present cell
                      {
                       Assert(subface < 2,ExcInternalError());
@@ -379,28 +386,6 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                                       An_cell,
                                       data.local_dof_indices);
                      }
-                   }
-
-                     if(dim == 1)
-                     {
-                      const typename DoFHandler<dim>::cell_iterator 
-                                                      neighbor_child = return_child_refined_neighbor(neighbor,cell); 
-
-                      Assert(!neighbor_child->has_children(),ExcOrderingChanged(neighbor_child->n_children()));
-                     
-                      integrate_face(data.local_contri,
-                                      neighbor_child,
-                                      system_matrices,
-                                      component_to_system,
-                                      this_fe_index,
-                                      face_length,      // only for isotropic refinement, the length of the subface
-                                      volume,
-                                      nx,
-                                      ny,
-                                      An_cell,
-                                      data.local_dof_indices);
-
-                                        }
                      
                    }
 
@@ -412,6 +397,283 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
               //end of loop over the faces
 
 
+ }
+
+template<int dim>
+void 
+Solve_System_SS_adaptive<dim>::assemble_per_cell_dummy(const typename DoFHandler<dim>::active_cell_iterator &cell,
+                                      PerCellAssembleScratch &scratch,
+                                      PerCellAssemble &data,
+                                      const std::vector<Vector<double>> &component_to_system,
+                                      const double &t,
+                                      const std::vector<Vector<double>> &g,
+                                      const std::vector<Vector<double>> &force_vector)
+ {
+
+              // operations to avoid data races
+              std::vector<Vector<double>> temp_g = g;
+
+              // no hanging nodes check
+              Assert(!cell->has_children(), ExcInternalError());
+              
+              const unsigned int this_fe_index = cell->user_index();
+
+              data.this_neqn = n_eqn[this_fe_index];
+              data.local_dof_indices.resize(fe.dofs_per_cell);
+              cell->get_dof_indices(data.local_dof_indices);
+              const double volume = cell->measure();
+
+              data.local_contri.reinit(fe.dofs_per_cell);
+              data.local_contri = 0;
+
+
+              // contribution from collisions P
+              for (unsigned int m = 0 ; m < system_matrices[this_fe_index].P.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].P,m); n ; ++n)
+                  {
+              // 0 because of finite volume
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+
+              // the solution id which meets An
+                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n.col()](0)];
+
+              // explicit euler update, 
+                    data.local_contri(dof_sol) +=  n.value() * dt
+                                             * locally_relevant_solution(dof_sol_col);
+
+                  }
+
+              if(system_matrices[this_fe_index].have_force)
+              {
+                Vector<double> force_value(n_eqn[this_fe_index]);
+                initial_boundary->force(force_value,force_vector[cell->active_cell_index()],
+                                        cell->center(),t);
+
+                for(unsigned int i = 0 ; i < n_eqn[this_fe_index] ; i++)
+                    data.local_contri(component_to_system[i](0)) += dt * force_value(i);                
+              }
+
+
+
+              // loop over the faces, we assume no hanging nodes 
+              for(unsigned int face  = 0; face < GeometryInfo<dim>::faces_per_cell; face++ )
+              {
+                scratch.fe_v_face.reinit(cell,face);                
+                // normal to the face assuming cartesian grid
+                Tensor<1,dim> normal_vec = scratch.fe_v_face.normal_vector(0);
+                Vector<double> temp_normal_vec(2);      // 2 is the current maximum dimension
+
+                for(unsigned int space = 0 ; space < dim; space ++)
+                  temp_normal_vec(space) = normal_vec[space];
+
+                const double nx = temp_normal_vec[0];
+                const double ny = temp_normal_vec[1];
+
+                const typename DoFHandler<dim>::face_iterator face_itr = cell->face(face);
+                const double face_length = face_itr->measure();
+
+                  // construct An of the current cell
+                  Sparse_Matrix An_cell = system_matrices[this_fe_index].Ax * nx
+                                          + system_matrices[this_fe_index].Ay * ny;
+
+                if (face_itr->at_boundary())
+                {
+
+                  const unsigned int bc_id = face_itr->boundary_id();
+
+                  if(bc_id == 1 && dim_problem == 1)
+                    continue;
+
+                  if(bc_id == 3 && dim_problem == 1)
+                    continue;
+                  // only compute for times greater than zero, already computed for t= 0 before
+                    if (system_matrices[this_fe_index].bc_inhomo_time && t > 1e-16)
+                                initial_boundary->bc_inhomo(system_matrices[this_fe_index].B[bc_id],bc_id,
+                                                          temp_g[bc_id],t);
+
+
+                  // for (unsigned int m = 0 ; m < An_cell.outerSize() ; m++)
+                  //   for (Sparse_Matrix::InnerIterator n(An_cell,m); n ; ++n)
+                  // {
+                  //     // 0 because of finite volume
+                  //     unsigned int dof_sol = component_to_system[n.row()](0);
+
+                  //    // the solution id which meets An
+                  //     unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n.col()](0)];
+
+                  //   // explicit euler update
+                  //     data.local_contri(dof_sol) -=  n.value() * dt
+                  //                            * locally_relevant_solution(dof_sol_col) * face_length/volume;
+
+                  // }
+
+                  // contribution from penalty_B
+                  for (unsigned int m = 0 ; m < system_matrices[this_fe_index].penalty_B[bc_id].outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].penalty_B[bc_id],m); n ; ++n)
+                  {
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n.col()](0)];
+                    std::cout << "sol assembly: " << locally_relevant_solution(dof_sol_col) << std::endl;
+                    std::cout << "matrix value: " << n.value() << std::endl;
+                    std::cout << "face_length: " << face_length << std::endl;
+                    std::cout << "value: " << n.value()
+                                             * locally_relevant_solution(dof_sol_col) * face_length << std::endl;
+                    data.local_contri(dof_sol) +=  n.value() * dt
+                                             * locally_relevant_solution(dof_sol_col) * face_length/volume;
+
+                  }
+                  // contribution from penalty * g
+                  // for (unsigned int m = 0 ; m < system_matrices[this_fe_index].penalty[bc_id].outerSize() ; m++)
+                  //   for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].penalty[bc_id],m); n ; ++n)
+                  // {
+              
+                  //   unsigned int dof_sol = component_to_system[n.row()](0);
+                  //   unsigned int dof_sol_col = data.local_dof_indices[component_to_system[n.col()](0)];
+                  //   data.local_contri(dof_sol) -=  n.value() * dt
+                  //                                 * temp_g[bc_id](n.col()) * face_length/volume;
+
+                  // }
+
+
+                }
+                // else
+                // {
+
+                //      typename DoFHandler<dim>::cell_iterator neighbor = cell->neighbor(face);
+
+                //    if(!neighbor->has_children())  // if neighbor is active then either its on the same level or its 
+                //                               // coarser. 
+                //    {
+
+                //     Assert(!face_itr->has_children(),ExcInternalError());
+                //     integrate_face(data.local_contri,
+                //                  neighbor,
+                //                  system_matrices,
+                //                  component_to_system,
+                //                  this_fe_index,
+                //                  face_length,
+                //                  volume,
+                //                  nx,
+                //                  ny,
+                //                  An_cell,
+                //                  data.local_dof_indices);
+
+                //    }
+                //    else
+                //    {
+                //      Assert(neighbor->has_children() && dim != 1,ExcInternalError()); // the neighbor should have children in this case
+                //      Assert(neighbor->n_children() > 0, ExcInternalError());
+
+                //      for(unsigned int subface = 0 ; subface < face_itr->n_children() ; subface ++) // loop over the subfaces of the present cell
+                //      {
+                //       Assert(subface < 2,ExcInternalError());
+                //       Assert(dim != 1,ExcMessage("should not have reached here"));
+
+                //       const typename DoFHandler<dim>::active_cell_iterator neighbor_child 
+                //       = cell->neighbor_child_on_subface(face,subface);
+
+                //       integrate_face(data.local_contri,
+                //         neighbor_child,
+                //         system_matrices,
+                //         component_to_system,
+                //         this_fe_index,
+                //                       face_length/2,      // only for isotropic refinement, the length of the subface
+                //                       volume,
+                //                       nx,
+                //                       ny,
+                //                       An_cell,
+                //                       data.local_dof_indices);
+                //      }
+                     
+                //    }
+
+                 
+                // } //end of else
+
+
+              } 
+              //end of loop over the faces
+
+
+ }
+
+
+template<int dim>
+ void
+ Solve_System_SS_adaptive<dim>::integrate_face_dummy(Vector<double> &result,
+                                               const typename DoFHandler<dim>::cell_iterator &neighbor,
+                                              const std::vector<system_data> &system_matrices,
+                                              const std::vector<Vector<double>> &component_to_system,
+                                              const unsigned int &this_fe_index,
+                                              const double &face_length,
+                                              const double &volume,
+                                              const double &nx,
+                                              const double &ny,
+                                              const Sparse_Matrix &An_cell,
+                                              const std::vector<types::global_dof_index> &local_dof_indices)
+ {
+
+                   const unsigned int neighbor_fe_index = neighbor->user_index();
+                   const unsigned int dofs_per_cell_neighbor = fe.dofs_per_cell;
+                   std::vector<types::global_dof_index> local_dof_indices_neighbor(dofs_per_cell_neighbor);
+
+                   neighbor->get_dof_indices(local_dof_indices_neighbor);
+
+
+                   Sparse_Matrix An_neighbor = system_matrices[neighbor_fe_index].Ax * nx
+                                              + system_matrices[neighbor_fe_index].Ay * ny;
+
+                   Sparse_Matrix An_effective = construct_An_effective(An_cell,An_neighbor);
+
+                   Sparse_Matrix Amod = system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ax_mod * fabs(nx) 
+                                        +system_matrices[std::max(this_fe_index,neighbor_fe_index)].Ay_mod * fabs(ny);
+
+
+                   // contribution from the present cell
+                  for (unsigned int m = 0 ; m < An_cell.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(An_cell,m); n ; ++n)
+                  {
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
+                    result(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col))
+                                                   * face_length/(2 * volume);
+
+                  }
+
+                  // we add the diffusion now
+                  for (unsigned int m = 0 ; m < Amod.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(Amod,m); n ; ++n)
+                      if(n.row() < n_eqn[this_fe_index] && n.col() < n_eqn[this_fe_index])
+                  {
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_sol_col = local_dof_indices[component_to_system[n.col()](0)];
+                    result(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_sol_col))
+                                                   * face_length/(2 * volume);
+
+                  }
+
+                  // contribution from the neighboring cell
+                  for (unsigned int m = 0 ; m < An_effective.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(An_effective,m); n ; ++n)
+                  {
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n.col()](0)];
+                    result(dof_sol) -=  dt * n.value() * (locally_relevant_solution(dof_neighbor_col))
+                                                   * face_length/(2 * volume);
+
+                  }
+
+                  // diffusion with the neighbouring cell
+                  for (unsigned int m = 0 ; m < Amod.outerSize() ; m++)
+                    for (Sparse_Matrix::InnerIterator n(Amod,m); n ; ++n)
+                      if(n.row() < n_eqn[this_fe_index] && n.col() < n_eqn[neighbor_fe_index])
+                  {
+                    unsigned int dof_sol = component_to_system[n.row()](0);
+                    unsigned int dof_neighbor_col = local_dof_indices_neighbor[component_to_system[n.col()](0)];
+                    result(dof_sol) -=  dt * n.value() * (-locally_relevant_solution(dof_neighbor_col))
+                                                   * face_length/(2 * volume);
+
+                  }
  }
 
 
@@ -652,100 +914,6 @@ Solve_System_SS_adaptive<1>::min_h(Triangulation<1> &triangulation)
   return(GridTools::minimal_cell_diameter(triangulation));
 }
 
-template<>
-double
-Solve_System_SS_adaptive<2>::return_face_length(const typename DoFHandler<2>::face_iterator &face_itr)
-{
-  return(face_itr->measure());
-}
-
-template<>
-double
-Solve_System_SS_adaptive<1>::return_face_length(const typename DoFHandler<1>::face_iterator &face_itr)
-{
-  return(1);
-}
-
-/*template<>
-typename DoFHandler<1>::cell_iterator
-Solve_System_SS_adaptive<1>::return_child_refined_neighbor(const typename DoFHandler<1>::cell_iterator &neighbor,
-                                                             const typename DoFHandler<1>::active_cell_iterator &cell)
-{
-  std::vector<double> distances(2);
-  Assert(neighbor->n_children() == 2,ExcInternalError());
-  std::vector<typename DoFHandler<1>::cell_iterator> neighbor_child(2);
-
-
-  neighbor_child[0] = neighbor->child(0);
-  
-  distances[0] = cell->center().distance(neighbor_child[0]->center());
-
-  neighbor_child[1] = neighbor->child(1);
-  
-  distances[1] = cell->center().distance(neighbor_child[1]->center());
-
-  std::cout << "center neighbor: " << neighbor->center() 
-            << " center child 1: " << neighbor_child[0]->center()
-            << " cener child 2: " << neighbor_child[1]->center() << std::endl;
-
-  std::cout << "level neighbor: " << neighbor->level() 
-	    << "level cell: " << cell->level()
-            << " level child 1: " << neighbor_child[0]->level()
-            << " level child 2: " << neighbor_child[1]->level() << std::endl;
-            
-  Assert(fabs(distances[0]-distances[1]) > 1e-15,ExcInternalError());
-  return(distances[0] >= distances[1] ? neighbor_child[1] : neighbor_child[0]);
-  
-}*/
-
-template<>
-typename DoFHandler<1>::cell_iterator
-Solve_System_SS_adaptive<1>::return_child_refined_neighbor(const typename DoFHandler<1>::cell_iterator &neighbor,
-						           const typename DoFHandler<1>::active_cell_iterator &cell)
-{
-  std::vector<double> distances;
-  std::vector<typename DoFHandler<1>::cell_iterator> neighbor_child;
-
-  for(unsigned int i = 0 ; i < neighbor->n_children(); i++)
-  {
-	if(neighbor->child(i)->has_children())
-	{
-		for(unsigned int j = 0 ; j < neighbor->child(i)->n_children(); j++)
-		{
-			if(neighbor->child(i)->child(j)->has_children())
-			{
-				for(unsigned int k = 0 ; k < neighbor->child(i)->child(j)->n_children();k++)
-				{
-					if(neighbor->child(i)->child(j)->child(k)->has_children())
-					{
-						AssertThrow(1 == 0, ExcNotImplemented());
-					}
-					else
-					{
-						neighbor_child.push_back(neighbor->child(i)->child(j)->child(k));
-						distances.push_back(cell->center().distance(neighbor->child(i)->child(j)->child(k)->center()));
-					}
-				}
-			}
-			else
-			{
-				neighbor_child.push_back(neighbor->child(i)->child(j));
-				distances.push_back(cell->center().distance(neighbor->child(i)->child(j)->center()));
-			}
-		}
-	}
-	else
-	{
-		neighbor_child.push_back(neighbor->child(i));
-		distances.push_back(cell->center().distance(neighbor->child(i)->center()));
-	}
-  }
-
-  AssertThrow(neighbor_child.size() != 0, ExcInternalError());
-  const long unsigned int location_min = std::distance(distances.begin(),std::min_element(distances.begin(),distances.end()));
-  return(neighbor_child[location_min]);
-
-}
 
 template<int dim>
 Solve_System_SS_adaptive<dim>::PerCellAssembleScratch::PerCellAssembleScratch(const FESystem<dim> &fe,
@@ -852,6 +1020,6 @@ Solve_System_SS_adaptive<dim>::~Solve_System_SS_adaptive()
 
 // explicit initiation to avoid linker error
 template class Solve_System_SS_adaptive<2>;
-template class Solve_System_SS_adaptive<1>;
+
 
 
