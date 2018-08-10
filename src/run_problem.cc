@@ -20,7 +20,7 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1),
 dim_problem(dim_problem)
 {
      AssertThrow(max_equations_primal <= max_equations_adjoint,ExcInternalError()); 
-     const unsigned int refinement_type = 1;
+     const unsigned int refinement_type = 0;
 
      switch (refinement_type)
      {
@@ -87,7 +87,7 @@ dim_problem(dim_problem)
      solve_adjoint.allocate_memory();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 20;
+	   const unsigned int refine_cycles = 5;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
@@ -164,7 +164,7 @@ dim_problem(dim_problem)
                               + std::to_string(cycle)
 					                    + std::string(".txt");
 
-        solve_primal.create_output(filename);
+        //solve_primal.create_output(filename);
 
         filename = "grid" + std::to_string(cycle);
         write_grid(filename,triangulation);
@@ -191,13 +191,13 @@ dim_problem(dim_problem)
           filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
                      + std::string(".txt");
           
-          write_error(filename,triangulation,error_per_cell_grid_target);
+          //write_error(filename,triangulation,error_per_cell_grid_target);
 
 
           filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
                  + std::string(".txt");
           
-          solve_adjoint.create_output(filename);
+          //solve_adjoint.create_output(filename);
 
           // timer.enter_subsection("compute velocity error");
           // compute_error_velocity(solve_primal.locally_owned_solution,
@@ -218,6 +218,7 @@ dim_problem(dim_problem)
                         system_mat_error_comp,
                         ic_bc_primal,
                         triangulation);
+          std::cout << "finished computing error" << std::endl;
 
           develop_convergence_table(solve_primal.discretization_error,
                                     solve_adjoint.discretization_error,
@@ -229,10 +230,11 @@ dim_problem(dim_problem)
           filename = foldername + std::string("/error_predicted_cycle") + std::to_string(cycle)
                  + std::string(".txt");
           
-          write_error(filename,triangulation,error_per_cell_grid);
+          //write_error(filename,triangulation,error_per_cell_grid);
 
           timer.enter_subsection("perform adaptivity");
           //update_index_vector(triangulation,refinement_type);  // update the user indices based upon the error
+
           update_grid_refine_flags(triangulation,refinement_type);  
           perform_grid_refinement_and_sol_transfer(triangulation,solve_primal,solve_adjoint); // perform grid refinement and solution transfer
           fill_user_index_from_index_vector();  // update the user indices 
@@ -345,13 +347,19 @@ run_problem<dim>::develop_convergence_table(const double &error_primal,
   std::string col4 = "dofs primal";
   std::string col5 = "target error";
   std::string col6 = "predicted error";
+  std::string col7 = "corrected error";
+
+  const double error_observed = error_per_cell_grid_target.mean_value() * error_per_cell_grid_target.size();
+  const double error_predicted = error_per_cell_grid.mean_value() * error_per_cell_grid.size();
+  const double error_corrected = error_observed - error_predicted;
 
   convergence_table.add_value(col1,error_primal);
   convergence_table.add_value(col2,error_adjoint);
   convergence_table.add_value(col3,min_h);
   convergence_table.add_value(col4,num_dofs);
-  convergence_table.add_value(col5,fabs(error_per_cell_grid_target.mean_value() * error_per_cell_grid_target.size()));
-  convergence_table.add_value(col6,fabs(error_per_cell_grid.mean_value() * error_per_cell_grid.size()));
+  convergence_table.add_value(col5,fabs(error_observed));
+  convergence_table.add_value(col6,fabs(error_predicted));
+  convergence_table.add_value(col7,fabs(error_corrected));
 
   convergence_table.set_scientific(col1,true);
   convergence_table.set_scientific(col2,true);
@@ -359,13 +367,14 @@ run_problem<dim>::develop_convergence_table(const double &error_primal,
   convergence_table.set_scientific(col4,true);
   convergence_table.set_scientific(col5,true);
   convergence_table.set_scientific(col6,true);
+  convergence_table.set_scientific(col7,true);
 }
 
 template<int dim>
 void
 run_problem<dim>::print_convergence_table()
 {
-      std::ofstream output_convergence("convergence_table.txt");
+      std::ofstream output_convergence("convergence_table_uniform.txt");
 
       convergence_table.evaluate_convergence_rates("primal error",
                                                   "dofs primal",
@@ -379,6 +388,13 @@ run_problem<dim>::print_convergence_table()
                                                   "dofs primal",
                                                   ConvergenceTable::reduction_rate_log2,dim_problem);
 
+      convergence_table.evaluate_convergence_rates("predicted error",
+                                                  "dofs primal",
+                                                  ConvergenceTable::reduction_rate_log2,dim_problem);
+
+      convergence_table.evaluate_convergence_rates("corrected error",
+                                                  "dofs primal",
+                                                  ConvergenceTable::reduction_rate_log2,dim_problem);
       convergence_table.write_text(output_convergence);
 
 }
@@ -443,60 +459,6 @@ run_problem<dim>::compute_error(const Vector<double> &primal_solution,
              std::ref(error_vector)),
            per_cell_error_scratch,
            per_cell_error);
-
-}
-
-template<int dim>
-void 
-run_problem<dim>::compute_error_dummy(const Vector<double> &primal_solution,
-                                const Vector<double> &adjoint_solution,
-                                const DoFHandler<dim> &dof_handler_adjoint,
-                                const std::vector<system_data> &system_matrices,
-                                ic_bc_base<dim> *ic_bc_primal,
-                                Vector<double> &error_vector,
-                                const unsigned int &quad_points,
-                                const typename DoFHandler<dim>::active_cell_iterator &cell)
-{
-        std::vector<Vector<double>> component_to_system(dof_handler_adjoint.get_fe().n_components());
-        const unsigned int dofs_per_comp = dof_handler_adjoint.get_fe().dofs_per_cell/dof_handler_adjoint.get_fe().n_components();     // considering a finite volume scheme
-
-        for (unsigned int k = 0 ; k < component_to_system.size() ;k ++)
-        {
-          component_to_system[k].reinit(dofs_per_comp);
-              for (unsigned int j = 0 ; j < dofs_per_comp ; j++)
-                component_to_system[k](j) = dof_handler_adjoint.get_fe().component_to_system_index(k,j);          
-        }
-
-
-
-        // one points is enough for constant functions
-        QGauss<dim> quadrature_basic(quad_points);
-        QGauss<dim-1> face_quadrature_basic(quad_points);
-
-        PerCellError per_cell_error;
-        PerCellErrorScratch per_cell_error_scratch(dof_handler_adjoint.get_fe(),
-                                                 quadrature_basic,
-                                                 face_quadrature_basic);
-
-
-        std::vector<Vector<double>> g(4);
-
-        for (unsigned int id = 0 ; id < 4 ; id++) // develop the boundary for the biggest inhomogeneity anyhow
-            ic_bc_primal->bc_inhomo(system_matrices[system_matrices.size()-1].B[id],id,g[id],t);
-
-
-        // compute_error_per_cell(
-        //      cell,
-        //      per_cell_error_scratch,
-        //      per_cell_error,
-        //      std::cref(g),
-        //      std::cref(system_matrices),
-        //      std::cref(adjoint_solution),
-        //      std::cref(primal_solution),
-        //      std::cref(component_to_system));
-
-
-      std::cout << "local contri residual: " << per_cell_error.local_contri << std::endl;
 
 }
 
@@ -1015,6 +977,11 @@ run_problem<dim>::update_grid_refine_flags(Triangulation<dim> &triangulation,
       GridRefinement::refine_and_coarsen_fixed_number(triangulation,modulus_Vec(error_per_cell_grid),
                                                       frac_refine,frac_coarsen); 
 
+      
+    // refine_and_coarsen_cancellation(triangulation,
+    //                                  error_per_cell_grid,
+    //                                  frac_refine);
+
       if(dim_problem == 1)
       {
       typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),
@@ -1029,6 +996,88 @@ run_problem<dim>::update_grid_refine_flags(Triangulation<dim> &triangulation,
     }
   }
 }
+
+// the following routine takes care of the inter element cancellation
+template<int dim>
+void 
+run_problem<dim>::refine_and_coarsen_cancellation(Triangulation<dim> &triangulation,
+                                     Vector<double> &error,
+                                     const double &refine_frac)
+{
+  
+
+  Vector<double> error_sorted = error;  // the array which stores the sorted error
+  Vector<int> index_cell(triangulation.n_active_cells());  // array which store the index of the error, error(index_cell) = error_sorted
+  const double total_error = error_sorted.mean_value() * error_sorted.size();
+
+  for(unsigned int i = 0 ; i < index_cell.size() ; i++)
+      index_cell(i) = i;
+
+  typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active();
+  bool neg_error = total_error > 0 ? false : true;  
+  // check whether the present error is negative or positive. If negative then sort the error array in 
+  // increasing order. If error positive then arrange in decreasing order. 
+
+    unsigned int stop_location = 0;
+    double sum = 0;
+
+
+
+  if(neg_error)
+  {
+    auto compare = std::bind (&run_problem<dim>::compare_lesser,this,std::placeholders::_1,std::placeholders::_2,error);   
+   
+    std::sort(error_sorted.begin(),error_sorted.end(),std::less<double>());
+   
+   AssertThrow(error_sorted.size() == index_cell.size(), ExcInternalError());
+    std::sort(index_cell.begin(),index_cell.end(),compare);
+  
+
+   
+    
+    while(fabs(sum) <= refine_frac * fabs(total_error) && error_sorted(stop_location) < 0)
+    {
+      sum += error_sorted(stop_location);
+   
+      stop_location++;
+      
+    }
+  }
+  else
+  {
+    
+    auto compare = std::bind (&run_problem<dim>::compare_greater,this,std::placeholders::_1,std::placeholders::_2,error);   
+   
+    std::sort(error_sorted.begin(),error_sorted.end(),std::greater<double>());
+   
+    std::sort(index_cell.begin(),index_cell.end(),compare);
+
+   
+    
+    while(fabs(sum) <= refine_frac * fabs(total_error) && error_sorted(stop_location) > 0)
+    {
+      
+      sum += error_sorted(stop_location);
+   
+      stop_location++;
+      
+    }   
+  }
+
+
+
+    AssertThrow(stop_location >0 && stop_location < error.size(), ExcMessage("location cannot be negative"));
+
+    for(unsigned int loc = 0 ; loc <= stop_location ; loc ++)
+    {
+      typename Triangulation<dim>::active_cell_iterator temp = triangulation.begin_active();
+      std::advance(temp,index_cell(loc));  // go to the cell which has to be refined
+      Assert(temp->active(),ExcInternalError());
+      temp->set_refine_flag();
+    }
+
+}
+
 
 template<int dim>
 void
@@ -1141,6 +1190,20 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
     }
 
   }
+}
+
+template<int dim>
+bool 
+run_problem<dim>::compare_greater(int i,int j,const Vector<double> &error)
+{
+  return(error[i]>error[j]);
+}
+
+template<int dim>
+bool 
+run_problem<dim>::compare_lesser(int i,int j,const Vector<double> &error)
+{
+  return(error[i]<error[j]);
 }
 
 

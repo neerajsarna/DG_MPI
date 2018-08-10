@@ -101,13 +101,6 @@ Solve_System_SS_adaptive
                                       const std::vector<Vector<double>> &force_vector);
 
 
-		void assemble_per_cell_dummy(const typename DoFHandler<dim>::active_cell_iterator &cell,
-                                      PerCellAssembleScratch &scratch,
-                                      PerCellAssemble &data,
-                                      const std::vector<Vector<double>> &component_to_system,
-                                      const double &t,
-                                      const std::vector<Vector<double>> &g,
-                                      const std::vector<Vector<double>> &force_vector);
 
 		void integrate_face(Vector<double> &result,
 			const typename DoFHandler<dim>::cell_iterator &neighbor,
@@ -121,17 +114,6 @@ Solve_System_SS_adaptive
 			const Sparse_Matrix &An_cell,
 			const std::vector<types::global_dof_index> &local_dof_indices);
 
-		void integrate_face_dummy(Vector<double> &result,
-			const typename DoFHandler<dim>::cell_iterator &neighbor,
-			const std::vector<system_data> &system_matrices,
-			const std::vector<Vector<double>> &component_to_system,
-			const unsigned int &this_fe_index,
-			const double &face_length,
-			const double &volume,
-			const double &nx,
-			const double &ny,
-			const Sparse_Matrix &An_cell,
-			const std::vector<types::global_dof_index> &local_dof_indices);
 
 
 		void assemble_to_global(const PerCellAssemble &data,

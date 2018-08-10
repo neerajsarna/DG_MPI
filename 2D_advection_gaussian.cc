@@ -410,7 +410,7 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 
 	value(0) = sin(M_PI * x);
 	//value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
-	//value(0) = exp(-pow((x),2)*100);
+	//value(0) = exp(-pow((x-1),2)*100);
 	//value(0) = sin(M_PI * x) * sin(M_PI * y);
 
 }
@@ -442,7 +442,7 @@ ic_bc<dim>::force(Vector<double> &value,
 	//value(0) = M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
 	//value(0) = -100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	value(0) = M_PI * cos(M_PI * x);
-	//value(0) = -200 * exp(-100*pow((x),2)) * (x);
+	//value(0) = -200 * exp(-100*pow((x-1),2)) * (x-1);
 }
 
 template<int dim>
@@ -520,7 +520,7 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);
 
-	value(0) = exp(-pow((x-0.5),2)*100);
+	value(0) = exp(-pow((x-0.8),2)*100);
 	//value(0) = 1;
 }
 

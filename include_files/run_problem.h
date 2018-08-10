@@ -158,12 +158,10 @@ run_problem
     const unsigned int dim_problem;
 
 
-    void compute_error_dummy(const Vector<double> &primal_solution,
-                                const Vector<double> &adjoint_solution,
-                                const DoFHandler<dim> &dof_handler_adjoint,
-                                const std::vector<system_data> &system_matrices,
-                                ic_bc_base<dim> *ic_bc_primal,
-                                Vector<double> &error_vector,
-                                const unsigned int &quad_points,
-                                const typename DoFHandler<dim>::active_cell_iterator &cell);
+    void refine_and_coarsen_cancellation(Triangulation<dim> &triangulation,
+                                         Vector<double> &error,
+                                         const double &refine_frac);
+
+    bool compare_greater(int i,int j,const Vector<double> &error);
+    bool compare_lesser(int i,int j,const Vector<double> &error);
 };

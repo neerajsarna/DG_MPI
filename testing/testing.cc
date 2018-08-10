@@ -28,41 +28,73 @@ get_interpolated_values(const DoFHandler<dim> &dof1,
                         const Vector<double> &value1,
                         const Triangulation<dim> &triangulation);
 
+bool
+compare(int i,int j,const std::vector<int> &x)
+{
+  return(x[i]<=x[j]);
+}
+
+double my_divide (double x, double y) {return x/y;}
+
 int main(int argc, char *argv[])
 {
-	const int dim = 2;
+	// const int dim = 2;
 
-	Triangulation<dim> triangulation;
+	// Triangulation<dim> triangulation;
 
-      //The diagonal of the rectangle is the line joining p1 and p2
-  GridGenerator::subdivided_hyper_cube(triangulation,atoi(argv[1]));
+ //      //The diagonal of the rectangle is the line joining p1 and p2
+ //  GridGenerator::subdivided_hyper_cube(triangulation,atoi(argv[1]));
 
-  typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),endc = triangulation.end();
+ //  typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),endc = triangulation.end();
 
-  for(; cell != endc ; cell++)
-  {
-    if(cell->center()(0) > 0.5)
-    cell->set_refine_flag(RefinementCase<dim>::cut_axis(0));
-  }
+ //  for(; cell != endc ; cell++)
+ //  {
+ //    if(cell->center()(0) > 0.5)
+ //    cell->set_refine_flag(RefinementCase<dim>::cut_axis(0));
+ //  }
 
-  triangulation.execute_coarsening_and_refinement();
+ //  triangulation.execute_coarsening_and_refinement();
 
-  cell = triangulation.begin_active();
-  endc = triangulation.end();
+ //  cell = triangulation.begin_active();
+ //  endc = triangulation.end();
 
-  for(; cell != endc ; cell++)
-   {
-    std::cout << cell->center() << std::endl;
-    for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
-      if(!cell->face(face)->at_boundary())
-    {
-        typename Triangulation<dim>::cell_iterator neighbor = cell->neighbor(face);
-        std::cout << "children" << neighbor->n_children() << std::endl; 
-    }    
-  }
+ //  for(; cell != endc ; cell++)
+ //   {
+ //    std::cout << cell->center() << std::endl;
+ //    for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
+ //      if(!cell->face(face)->at_boundary())
+ //    {
+ //        typename Triangulation<dim>::cell_iterator neighbor = cell->neighbor(face);
+ //        std::cout << "children" << neighbor->n_children() << std::endl; 
+ //    }    
+ //  }
 
-  write_grid<dim>("grid",triangulation);
+ //  write_grid<dim>("grid",triangulation);
 
+  std::vector<int> error;
+  std::vector<int> index;
+
+
+  error.push_back(0);
+  error.push_back(-1);
+  error.push_back(2);
+  error.push_back(1);
+
+  index.push_back(0);
+  index.push_back(1);
+  index.push_back(2);
+  index.push_back(3);
+
+  std::vector<int> error_sorted = error;
+
+  std::sort(std::begin(error_sorted),std::end(error_sorted),std::less_equal<int>());
+
+  auto fn_half = std::bind (compare,std::placeholders::_1,std::placeholders::_2,std::cref(error));  
+
+  std::sort(std::begin(index),std::end(index),fn_half);
+
+  for(unsigned int i = 0 ; i < 4 ; i++)
+    std::cout << "error: " << error[i] << " sorted: " << error_sorted[i] << " index " << index[i] << std::endl;
 }
 
 template<int dim>
