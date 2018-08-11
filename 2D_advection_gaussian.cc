@@ -5,6 +5,15 @@ void develop_system(system_data &system_matrices);
 void develop_system_adjoint(system_data &system_matrices);
 //template<int dim> void set_boundary_id(Triangulation<dim> &triangulation);
 
+
+// compute the derivative of exp(-(x-mu1)^2*var1-(y-mu1)^2*var1)
+double 
+dxdy_bi_modal(const double &mu,const double &var,
+			  const double &x,const double &y)
+{
+	return(-2 * var * exp(-(pow(x-mu,2)+pow(y-mu,2))*var) * (x-mu + y-mu));
+}	
+
 Full_matrix compute_Amod(const Sparse_Matrix &A)
 {
       EigenSolver<MatrixXd> ES(A);
@@ -17,7 +26,7 @@ Full_matrix compute_Amod(const Sparse_Matrix &A)
 
 }
 
-// now we specify the iniital and the boundary conditions
+// now we specify the inital and the boundary conditions
 template<int dim>
 class
 ic_bc:public ic_bc_base<dim>
@@ -97,34 +106,6 @@ set_square_bid(Triangulation<2> &triangulation)
 }
 
 
-void 
-set_square_bid(Triangulation<1> &triangulation)
-{
-	typename Triangulation<1>::active_cell_iterator cell = triangulation.begin_active(),
-											 endc = triangulation.end();
-
-    const double left_edge = 0;
-    const double right_edge = 1;
-
-    for(; cell != endc ; cell++)
-    	if(cell->is_locally_owned())
-    	{
-                for (unsigned int face = 0 ; face < GeometryInfo<1>::faces_per_cell ; face++)
-              
-                  if (cell->face(face)->at_boundary())
-                  { 
-                    double x_cord = cell->face(face)->center()(0);
-                   // right
-                    if (x_cord == right_edge)
-                      cell->face(face)->set_boundary_id(0);
-                    // left edge
-                    if (x_cord == left_edge)
-                      cell->face(face)->set_boundary_id(2);
-
-                   }
-    	}
-}
-
 
 int main(int argc, char *argv[])
 {
@@ -134,7 +115,7 @@ int main(int argc, char *argv[])
       Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, num_threads);
 
       const int dim = 2;
-      const int dim_problem = 1;
+      const int dim_problem = 2;
       const int poly_degree = 0;
       std::string foldername = "2D_advection_gaussian";
 
@@ -219,8 +200,6 @@ int main(int argc, char *argv[])
 		system_matrices_adjoint[0].penalty[1].makeCompressed();
 		system_matrices_adjoint[0].penalty_B[1].coeffRef(0,0) = 0;
 		system_matrices_adjoint[0].penalty_B[1].makeCompressed();
-
-
       }
 
 	  run_problem<dim> Run_Problem(system_matrices,	  			 // system data
@@ -295,9 +274,6 @@ void develop_system(system_data &system_matrices)
 	system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
 	system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
 
-	// system_matrices.B[bc_id].coeffRef(0,0) = 0;
-	// system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
-	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
 
 	// loop over all the boundaries
 	for (unsigned int i = 0 ; i < 4 ; i ++)
@@ -352,10 +328,6 @@ void develop_system_adjoint(system_data &system_matrices)
 	system_matrices.penalty[bc_id].coeffRef(0,0) = -1;
 	system_matrices.penalty_B[bc_id].coeffRef(0,0) = -1;
 
-	// system_matrices.B[bc_id].coeffRef(0,0) = 0;
-	// system_matrices.penalty[bc_id].coeffRef(0,0) = 0;
-	// system_matrices.penalty_B[bc_id].coeffRef(0,0) = 0;
-
 	// left boundary x = 0
 	bc_id = 2;
 
@@ -408,8 +380,14 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 	const double x = temp_p[0];
 	const double y = temp_p[1];
 
-	value(0) = sin(M_PI * x);
-	//value(0) = exp(-pow((x-0.5),2)*100) * exp(-pow((y-0.5),2)*100);
+	const double mu1 = 0.5;
+	const double mu2 = 0.8;
+	const double var1 = 100;
+	const double var2 = 50;
+
+	//value(0) = sin(M_PI * x);
+	value(0) = (exp(-(pow((x-mu1),2)+pow((y-mu1),2))*var1) 
+				+ exp(-(pow((x-mu2),2)+pow((y-mu2),2))*var2)) * 0.5;
 	//value(0) = exp(-pow((x-1),2)*100);
 	//value(0) = sin(M_PI * x) * sin(M_PI * y);
 
@@ -437,12 +415,18 @@ ic_bc<dim>::force(Vector<double> &value,
 	const double x = temp_p[0];
 	const double y = temp_p[1];
 
+	const double mu1 = 0.5;
+	const double mu2 = 0.8;
+	const double var1 = 100;
+	const double var2 = 50;
+
 
 	//value(0) = (-200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
 	//value(0) = M_PI * (cos(M_PI * x)*sin(M_PI*y)+cos(M_PI * y)*sin(M_PI*x));
 	//value(0) = -100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
-	value(0) = M_PI * cos(M_PI * x);
+	//value(0) = M_PI * cos(M_PI * x);
 	//value(0) = -200 * exp(-100*pow((x-1),2)) * (x-1);
+	value(0) = 0.5 * (dxdy_bi_modal(mu1,var1,x,y) + dxdy_bi_modal(mu2,var2,x,y));
 }
 
 template<int dim>
@@ -520,8 +504,8 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	//value(0) = 100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = -M_PI * cos(M_PI * x);
 
-	value(0) = exp(-pow((x-0.8),2)*100);
-	//value(0) = 1;
+	//value(0) = exp(-pow((x-0.8),2)*100);
+	value(0) = 1;
 }
 
 template<int dim>

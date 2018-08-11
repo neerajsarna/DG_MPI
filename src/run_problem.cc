@@ -87,77 +87,22 @@ dim_problem(dim_problem)
      solve_adjoint.allocate_memory();
      solve_adjoint.prescribe_initial_conditions();
 
-	   const unsigned int refine_cycles = 5;
+	   //const unsigned int refine_cycles = 8;
+     unsigned int cycle = 0;
 	   t = 0;						// we solve for the steady state so set t only initially
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
+     const unsigned int max_dofs = 40000;
 
-     //>>>>>>>>>>>>>>>>>>DEBUGGING<<<<<<<<<<<<<<<<<<<<
-    //  solve_primal.run_time_loop(triangulation,0,refine_cycles,t,temp);
-    //  solve_adjoint.run_time_loop(triangulation,0,refine_cycles,t,temp);
-
-    //  typename DoFHandler<dim>::active_cell_iterator cell_primal = solve_primal.dof_handler.begin_active();
-
-    // QGauss<dim-1> face_quadrature(1);
-
-    // typename Solve_System_SS_adaptive<dim>::PerCellAssemble per_cell_assemble;
-    // typename Solve_System_SS_adaptive<dim>::PerCellAssembleScratch per_cell_assemble_scratch(solve_primal.fe,face_quadrature);
-
-    // std::vector<Vector<double>> g(4);
-
-    // for (unsigned int id = 0 ; id < 4 ; id++)
-    //         ic_bc_primal->bc_inhomo(system_mat_primal[0].B[id],id,g[id],t);
-
-    //  solve_primal.assemble_per_cell_dummy(cell_primal,
-    //                                   per_cell_assemble_scratch,
-    //                                   per_cell_assemble,
-    //                                   component_to_system,
-    //                                   t,
-    //                                   g,
-    //                                   temp);
-
-    //     Vector<double> temp_primal(dummy_dof_handler_grid.n_dofs());
-    //     Vector<double> temp_adjoint(dummy_dof_handler_grid.n_dofs());
-
-    //     // interpolate the primal solution onto the higher dimensional space. But only interpolate, not extrapolate
-    //     // interpolation provides us with a constant function anyhow.
-    //     FETools::interpolate(solve_primal.dof_handler,
-    //                         solve_primal.locally_owned_solution,
-    //                         dummy_dof_handler_grid,
-    //                         temp_primal);
-
-    //     // extrapolate the adjiont solution to P1 space
-    //     FETools::extrapolate(solve_adjoint.dof_handler,
-    //                          solve_adjoint.locally_owned_solution,
-    //                          dummy_dof_handler_grid,
-    //                          temp_adjoint);
-
-    //     for(unsigned int i = 0 ; i < temp_adjoint.size() ; i++)
-    //       temp_adjoint(i) = 1;
-
-    //     typename DoFHandler<dim>::active_cell_iterator cell_adjoint = dummy_dof_handler_grid.begin_active();
-
-    //     compute_error_dummy(temp_primal,
-    //                             temp_adjoint,
-    //                             dummy_dof_handler_grid,
-    //                             system_mat_primal,
-    //                             ic_bc_primal,
-    //                             error_per_cell_grid,
-    //                             2,
-    //                             cell_adjoint);
-
-
-    //   std::cout << "local contribution assembly " 
-    //             << per_cell_assemble.local_contri(0) * cell_primal->measure()/solve_primal.dt << std::endl;
-
-	   for(unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
+     while(solve_primal.dof_handler.n_dofs() <= 1600)
+	   //for(unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
 	   {
 
         std::cout << "refinement cycle: " << cycle <<  std::endl;
 	   		std::cout << "solving primal: " << std::endl;
         timer.enter_subsection("solve primal");
-	   		solve_primal.run_time_loop(triangulation,cycle,refine_cycles,t,temp);
+	   		solve_primal.run_time_loop(triangulation,cycle,t,temp);
         timer.leave_subsection();
    
         std::string filename = foldername + std::string("/result_cycle") 
@@ -166,19 +111,22 @@ dim_problem(dim_problem)
 
         //solve_primal.create_output(filename);
 
-        filename = "grid" + std::to_string(cycle);
-        write_grid(filename,triangulation);
+        filename = foldername + "/grid" + std::to_string(cycle);
 
+        if(refinement_type == 1)  // write the grid when doing adaptive refinement
+            write_grid(filename,triangulation);
 
-	   		if(cycle != refine_cycles-1)
-	   		{
-	   			std::cout << "solving adjoint: " << std::endl;
-          timer.enter_subsection("solve adjoint");
-	   			solve_adjoint.run_time_loop(triangulation,cycle,refine_cycles,t,temp);
-          timer.leave_subsection();
+	   		// if(cycle != refine_cycles-1)
+	   		// {
+          if(refinement_type == 1)
+          {
+	   			  std::cout << "solving adjoint: " << std::endl;
+            timer.enter_subsection("solve adjoint");
+	   			  solve_adjoint.run_time_loop(triangulation,cycle,t,temp);
+            timer.leave_subsection();
+          }
 
           solve_primal.compute_error(); 
-          solve_adjoint.compute_error();
 
           compute_error_in_target(triangulation,
                                   ic_bc_primal,
@@ -188,14 +136,14 @@ dim_problem(dim_problem)
                                   system_mat_adjoint,
                                   t);
 
-          filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
-                     + std::string(".txt");
+          // filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
+          //            + std::string(".txt");
           
           //write_error(filename,triangulation,error_per_cell_grid_target);
 
 
-          filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
-                 + std::string(".txt");
+          // filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
+          //        + std::string(".txt");
           
           //solve_adjoint.create_output(filename);
 
@@ -208,9 +156,10 @@ dim_problem(dim_problem)
           //               ic_bc_primal);
           // timer.leave_subsection();
 
+          if(refinement_type == 1)
+          {
           timer.enter_subsection("compute discretization error");
           std::cout << "compute error grid" << std::endl;
-          fflush(stdout);
           compute_error_grid(solve_primal.locally_owned_solution,
                         solve_primal.dof_handler,
                         solve_adjoint.locally_owned_solution,
@@ -219,13 +168,15 @@ dim_problem(dim_problem)
                         ic_bc_primal,
                         triangulation);
           std::cout << "finished computing error" << std::endl;
+          timer.leave_subsection();
+          }
 
           develop_convergence_table(solve_primal.discretization_error,
                                     solve_adjoint.discretization_error,
                                     solve_primal.min_h(triangulation),
                                     solve_primal.dof_handler.n_dofs());
 
-          timer.leave_subsection();
+          
 
           filename = foldername + std::string("/error_predicted_cycle") + std::to_string(cycle)
                  + std::string(".txt");
@@ -233,22 +184,25 @@ dim_problem(dim_problem)
           //write_error(filename,triangulation,error_per_cell_grid);
 
           timer.enter_subsection("perform adaptivity");
+          
           //update_index_vector(triangulation,refinement_type);  // update the user indices based upon the error
-
           update_grid_refine_flags(triangulation,refinement_type);  
           perform_grid_refinement_and_sol_transfer(triangulation,solve_primal,solve_adjoint); // perform grid refinement and solution transfer
           fill_user_index_from_index_vector();  // update the user indices 
+
           timer.leave_subsection();
 
           error_per_cell_velocity.reinit(triangulation.n_active_cells());
           error_per_cell_grid.reinit(triangulation.n_active_cells());
           error_per_cell_grid_target.reinit(triangulation.n_active_cells());
 
-	   		} // end of if condition
+	   		//} // end of if condition
+
+        cycle++;
       
 	   } // end of loop over cycles
 
-     print_convergence_table();
+     print_convergence_table(foldername);
      dummy_dof_handler_grid.clear();
      dummy_dof_handler_velocity.clear();
 
@@ -372,9 +326,9 @@ run_problem<dim>::develop_convergence_table(const double &error_primal,
 
 template<int dim>
 void
-run_problem<dim>::print_convergence_table()
+run_problem<dim>::print_convergence_table(const std::string &foldername)
 {
-      std::ofstream output_convergence("convergence_table_uniform.txt");
+      std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform.txt"));
 
       convergence_table.evaluate_convergence_rates("primal error",
                                                   "dofs primal",

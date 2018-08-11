@@ -121,7 +121,6 @@ template<int dim>
 void
 Solve_System_SS_adaptive<dim>::run_time_loop(Triangulation<dim> &triangulation,
                                              const unsigned int &cycle,
-                                             const unsigned int &refine_cycles,
                                              double &t,
                                              const std::vector<Vector<double>> &force_vector)
 {      

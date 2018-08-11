@@ -39,7 +39,7 @@ run_problem
                                    const double &error_adjoint,
                                    const double &min_h,
                                    const unsigned int &num_dofs);
-    void print_convergence_table();
+    void print_convergence_table(const std::string &foldername);
 
     struct PerCellErrorScratch
     {
