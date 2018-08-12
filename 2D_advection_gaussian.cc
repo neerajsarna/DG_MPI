@@ -381,13 +381,13 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 	const double y = temp_p[1];
 
 	const double mu1 = 0.5;
-	const double mu2 = 0.8;
 	const double var1 = 100;
-	const double var2 = 50;
+
+	const double mu2 = 1;
+	const double var2 = 30;
 
 	//value(0) = sin(M_PI * x);
-	value(0) = (exp(-(pow((x-mu1),2)+pow((y-mu1),2))*var1) 
-				+ exp(-(pow((x-mu2),2)+pow((y-mu2),2))*var2)) * 0.5;
+	value(0) = (exp(-(pow((x-mu2),2)+pow((y-mu2),2))*var2));
 	//value(0) = exp(-pow((x-1),2)*100);
 	//value(0) = sin(M_PI * x) * sin(M_PI * y);
 
@@ -416,9 +416,10 @@ ic_bc<dim>::force(Vector<double> &value,
 	const double y = temp_p[1];
 
 	const double mu1 = 0.5;
-	const double mu2 = 0.8;
 	const double var1 = 100;
-	const double var2 = 50;
+
+	const double mu2 = 1.0;
+	const double var2 = 30;
 
 
 	//value(0) = (-200.*(-1. + x + y))*exp(-100*(0.5 - x + pow(x,2) -y + pow(y,2)));
@@ -426,7 +427,7 @@ ic_bc<dim>::force(Vector<double> &value,
 	//value(0) = -100 * exp(-100 * pow(x-0.5,2)) * (-1 + 2 * x);
 	//value(0) = M_PI * cos(M_PI * x);
 	//value(0) = -200 * exp(-100*pow((x-1),2)) * (x-1);
-	value(0) = 0.5 * (dxdy_bi_modal(mu1,var1,x,y) + dxdy_bi_modal(mu2,var2,x,y));
+	value(0) = (dxdy_bi_modal(mu2,var2,x,y));
 }
 
 template<int dim>
@@ -506,6 +507,7 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 
 	//value(0) = exp(-pow((x-0.8),2)*100);
 	value(0) = 1;
+	//value(0) = exp(-(pow((x-1),2)+pow((y-1),2))*50);
 }
 
 template<int dim>

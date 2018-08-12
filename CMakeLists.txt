@@ -1,5 +1,5 @@
 # Set the name of the project and target:
-SET(TARGET "2x1v_moments_wall_Adp")
+SET(TARGET "2D_advection_gaussian")
 
 # Declare all source files the target consists of. Here, this is only
 # the one step-X.cc file, but as you expand your project you may wish
@@ -17,8 +17,8 @@ SET(TARGET_SRC
 
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-SET(LAPTOP OFF)
-SET(CLUSTER ON)
+SET(LAPTOP ON)
+SET(CLUSTER OFF)
 
 
 IF(LAPTOP)

@@ -49,7 +49,8 @@ run_problem
 
          PerCellErrorScratch(const PerCellErrorScratch &scratch);  // copy constructor
           
-         FEValues<dim> fe_v;      
+         FEValues<dim> fe_v;
+         FEValues<dim> fe_v_neighbor;
          FEFaceValues<dim> fe_v_face;          
          FESubfaceValues<dim> fe_v_subface;          
                 
@@ -96,7 +97,9 @@ run_problem
                                 const Vector<double> &adjoint_solution,                         // the adjoint solution
                                 const std::vector<system_data> &system_matrices,          // matrices
                                 const std::vector<Vector<double>> &component_to_system,         // component to system index of the adjoint
-                                const FEValuesBase<dim> &fe_v_face,                       
+                                const FEValuesBase<dim> &fe_v_face, 
+                                const FEValuesBase<dim> &fe_v,                      
+                                const FEValuesBase<dim> &fe_v_neighbor, 
                                 double &result);
 
      void get_value_at_quad(const std::vector<types::global_dof_index> &local_dof_indices,

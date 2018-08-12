@@ -93,7 +93,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 2000;
+     const unsigned int max_dofs = 3000;
 
 
      while(solve_primal.dof_handler.n_dofs() <= max_dofs)
@@ -106,16 +106,18 @@ dim_problem(dim_problem)
 	   		solve_primal.run_time_loop(triangulation,cycle,t,temp);
         timer.leave_subsection();
    
-        std::string filename = foldername + std::string("/result_cycle") 
-                              + std::to_string(cycle)
-					                    + std::string(".txt");
+        // std::string filename = foldername + std::string("/result_cycle") 
+        //                       + std::to_string(cycle)
+					   //                  + std::string(".txt");
 
-        solve_primal.create_output(filename);
-
-        filename = foldername + "/grid" + std::to_string(cycle);
+        // solve_primal.create_output(filename);
 
         if(refinement_type == 1)  // write the grid when doing adaptive refinement
+        {
+            filename = foldername + "/grid" + std::to_string(cycle);
             write_grid(filename,triangulation);
+        }
+            
 
 	   		// if(cycle != refine_cycles-1)
 	   		// {
@@ -125,6 +127,11 @@ dim_problem(dim_problem)
             timer.enter_subsection("solve adjoint");
 	   			  solve_adjoint.run_time_loop(triangulation,cycle,t,temp);
             timer.leave_subsection();
+
+            filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
+                      + std::string(".txt");
+          
+            solve_adjoint.create_output(filename);
           }
 
           solve_primal.compute_error(); 
@@ -143,10 +150,7 @@ dim_problem(dim_problem)
           //write_error(filename,triangulation,error_per_cell_grid_target);
 
 
-          // filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
-          //        + std::string(".txt");
-          
-          //solve_adjoint.create_output(filename);
+
 
           // timer.enter_subsection("compute velocity error");
           // compute_error_velocity(solve_primal.locally_owned_solution,
@@ -639,6 +643,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
 
                    if(!neighbor->has_children()) // having no children
                    {
+                    scratch.fe_v_neighbor.reinit(neighbor);
                     error_face(neighbor,
                                cell,
                                 primal_solution,
@@ -646,6 +651,8 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                 system_matrices,
                                 component_to_system,
                                 scratch.fe_v_face,
+                                scratch.fe_v,
+                                scratch.fe_v_neighbor,
                                 data.local_contri);
                      
                   }//end over if neighbor children
@@ -659,6 +666,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                           = cell->neighbor_child_on_subface(face,subface);
 
                         scratch.fe_v_subface.reinit(cell,face,subface);
+                        scratch.fe_v_neighbor.reinit(neighbor_child);
 
                         error_face(neighbor_child,
                                    cell,
@@ -667,6 +675,8 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                      system_matrices,
                                      component_to_system,
                                      scratch.fe_v_subface,
+                                     scratch.fe_v,
+                                     scratch.fe_v_neighbor,
                                      data.local_contri);
                      } // end of loop over the subfaces                      
 
@@ -685,7 +695,9 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                 const Vector<double> &adjoint_solution,                         // the adjoint solution
                                 const std::vector<system_data> &system_matrices,          // matrices
                                 const std::vector<Vector<double>> &component_to_system,         // component to system index of the adjoint
-                                const FEValuesBase<dim> &fe_v_face,                       
+                                const FEValuesBase<dim> &fe_v_face,  
+                                const FEValuesBase<dim> &fe_v,                     
+                                const FEValuesBase<dim> &fe_v_neighbor, 
                                 double &result)
  {
                     const unsigned int num_comp = cell->get_fe().n_components();
@@ -705,9 +717,26 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                     Vector<double> primal_value(num_comp);
                     Vector<double> primal_value_neighbor(num_comp);
 
-                    // we have a finite volume scheme
-                    VectorTools::point_value(cell->get_dof_handler(),primal_solution,cell->center(),primal_value);
-                    VectorTools::point_value(cell->get_dof_handler(),primal_solution,neighbor->center(),primal_value_neighbor);
+                    // reinitialise the finite element object over the cell
+                    get_value_at_quad(local_dof_indices,
+                                    component_to_system,
+                                    primal_value,
+                                    dofs_per_component,
+                                    primal_solution,
+                                    fe_v,
+                                    0);   
+                    // since we are dealing with a finite volume primal solution, the value remains the same at all the quadrature 
+                    // points
+                    get_value_at_quad(local_dof_indices_neighbor,
+                                    component_to_system,
+                                    primal_value_neighbor,
+                                    dofs_per_component,
+                                    primal_solution,
+                                    fe_v_neighbor,
+                                    0);   
+
+                    // VectorTools::point_value(cell->get_dof_handler(),primal_solution,cell->center(),primal_value);
+                    // VectorTools::point_value(cell->get_dof_handler(),primal_solution,neighbor->center(),primal_value_neighbor);
                    
                     Tensor<1,dim> normal_vec = fe_v_face.normal_vector(0);
 
@@ -745,7 +774,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
 
 
                       result += xAy(adjoint_value,An_effective,primal_value)
-                                           * Jacobians_face[q]/2;
+                                           * Jacobians_face[q]/2; 
 
                       result -= xAy(adjoint_value,Amod,primal_value)
                                            * Jacobians_face[q]/2;
@@ -1168,6 +1197,7 @@ run_problem<dim>::PerCellErrorScratch::PerCellErrorScratch(const FiniteElement<d
                                     const QGauss<dim-1> &   quadrature_face)
 :
 fe_v(fe,quadrature_int,update_values|update_JxW_values|update_quadrature_points),
+fe_v_neighbor(fe,quadrature_int,update_values|update_JxW_values|update_quadrature_points),
 fe_v_face(fe,quadrature_face,update_values|update_normal_vectors|update_JxW_values),
 fe_v_subface(fe,quadrature_face,update_values|update_normal_vectors|update_JxW_values)
 {;}
@@ -1176,6 +1206,7 @@ template<int dim>
 run_problem<dim>::PerCellErrorScratch::PerCellErrorScratch(const PerCellErrorScratch &scratch)
 :
 fe_v(scratch.fe_v.get_fe(),scratch.fe_v.get_quadrature(),update_values|update_JxW_values|update_quadrature_points),
+fe_v_neighbor(scratch.fe_v_neighbor.get_fe(),scratch.fe_v_neighbor.get_quadrature(),update_values|update_JxW_values|update_quadrature_points),
 fe_v_face(scratch.fe_v_face.get_fe(),scratch.fe_v_face.get_quadrature(),update_values|update_normal_vectors|update_JxW_values),
 fe_v_subface(scratch.fe_v_subface.get_fe(),scratch.fe_v_subface.get_quadrature(),update_values|update_normal_vectors|update_JxW_values)
 {;}
