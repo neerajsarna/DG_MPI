@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0 EPSF-1.2
 %%Title: deal.II Output
 %%Creator: the deal.II library
-%%Creation Date: 2018/8/11 - 11:36: 2
+%%Creation Date: 2018/8/11 - 13:54:45
 %%BoundingBox: 0 0 301 301
 /m {moveto} bind def
 /x {lineto stroke} bind def
@@ -284,22 +284,6 @@ b 135 75 m 135 90 x
 b 150 75 m 150 90 x
 b 135 75 m 150 75 x
 b 135 90 m 150 90 x
-b 120 90 m 120 105 x
-b 135 90 m 135 105 x
-b 120 90 m 135 90 x
-b 120 105 m 135 105 x
-b 135 90 m 135 105 x
-b 150 90 m 150 105 x
-b 135 90 m 150 90 x
-b 135 105 m 150 105 x
-b 120 105 m 120 120 x
-b 135 105 m 135 120 x
-b 120 105 m 135 105 x
-b 120 120 m 135 120 x
-b 135 105 m 135 120 x
-b 150 105 m 150 120 x
-b 135 105 m 150 105 x
-b 135 120 m 150 120 x
 b 150 90 m 150 105 x
 b 165 90 m 165 105 x
 b 150 90 m 165 90 x

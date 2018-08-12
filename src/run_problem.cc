@@ -95,6 +95,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> temp;
      const unsigned int max_dofs = 2000;
 
+
      while(solve_primal.dof_handler.n_dofs() <= max_dofs)
 	   //for(unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
 	   {
@@ -327,8 +328,8 @@ run_problem<dim>::develop_convergence_table(const double &error_primal,
 template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
-{
-      std::ofstream output_convergence(foldername + std::string("/convergence_table_adaptive.txt"));
+{ 
+       std::ofstream output_convergence(foldername + std::string("/convergence_table_adaptive.txt"));
 
       convergence_table.evaluate_convergence_rates("primal error",
                                                   "dofs primal",
