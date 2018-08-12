@@ -20,7 +20,7 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1),
 dim_problem(dim_problem)
 {
      AssertThrow(max_equations_primal <= max_equations_adjoint,ExcInternalError()); 
-     const unsigned int refinement_type = 0;
+     const unsigned int refinement_type = 1;
 
      switch (refinement_type)
      {
@@ -93,9 +93,9 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 40000;
+     const unsigned int max_dofs = 2000;
 
-     while(solve_primal.dof_handler.n_dofs() <= 1600)
+     while(solve_primal.dof_handler.n_dofs() <= max_dofs)
 	   //for(unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
 	   {
 
@@ -109,7 +109,7 @@ dim_problem(dim_problem)
                               + std::to_string(cycle)
 					                    + std::string(".txt");
 
-        //solve_primal.create_output(filename);
+        solve_primal.create_output(filename);
 
         filename = foldername + "/grid" + std::to_string(cycle);
 
@@ -328,7 +328,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 {
-      std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform.txt"));
+      std::ofstream output_convergence(foldername + std::string("/convergence_table_adaptive.txt"));
 
       convergence_table.evaluate_convergence_rates("primal error",
                                                   "dofs primal",

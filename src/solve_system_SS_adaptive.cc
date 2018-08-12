@@ -1,6 +1,5 @@
 #include "solve_system_SS_adaptive.h"
 
-
 template<int dim>
 Solve_System_SS_adaptive<dim>::Solve_System_SS_adaptive(std::vector<system_data> &system_mat,
                                                         Triangulation<dim> &triangulation,

@@ -114,61 +114,6 @@ set_square_bid(Triangulation<2> &triangulation)
     	}
 }
 
-void count_bc_id(Triangulation<2> &triangulation)
-{
-	  typename Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
-	  													 endc = triangulation.end();
-
-
-	  
-	  int id0 = 0,id1 = 0, id2 = 0, id3 = 0; 
-
-	  for(; cell != endc ; cell++)   
-	  	if (cell->is_locally_owned())
-	  {
-
-	  	for(unsigned int face = 0 ; face < GeometryInfo<2>::faces_per_cell ; face++)
-	  		if (cell->face(face)->at_boundary())
-	  			switch (cell->face(face)->boundary_id())
-	  			{
-	  				case 0:
-	  				{
-	  					id0++;
-	  					break;
-	  				}
-
-	  				case 1:
-	  				{
-	  					id1++;
-	  					break;
-	  				}
-
-	  				case 2:
-	  				{
-	  					id2++;
-	  					break;
-	  				}
-
-	  				case 3:
-	  				{
-	  					id3++;
-	  					break;
-	  				}
-	  			}
-	  		}
-	  		
-	  
-
-	  	  	std::cout << "id0 " << id0 
-	  			<< " id1 " << id1 
-	  			<< " id2 " << id2 
-	  			<< " id3 " << id3 << std::endl;
-
-	  		fflush(stdout);
-
-
-}
-
 
 int main(int argc, char *argv[])
 {
@@ -178,6 +123,7 @@ int main(int argc, char *argv[])
       Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, num_threads);
 
       const int dim = 2;
+      const int dim_problem = 1;
       const int poly_degree = 0;
 
      
@@ -227,23 +173,28 @@ int main(int argc, char *argv[])
 
       p2(0) = right_edge;
       p2(1) = right_edge;
-
      
       repetitions[0] = atoi(argv[2]);
       repetitions[1] = 1;
 
       //The diagonal of the rectangle is the line joining p1 and p2
       GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
+      typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(), endc = triangulation.end();
+
+      for(; cell != endc ; cell++)
+      		cell->set_refine_flag(RefinementCase<dim>::cut_axis(0));
+
+      triangulation.execute_coarsening_and_refinement();
       set_square_bid(triangulation);
 
      
-      triangulation.signals.post_refinement.connect(std::bind (&set_square_bid,
-                      								std::ref(triangulation)));
-
       ic_bc<dim> initial_boundary;	
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
-      std::string foldername = "2x1v_moments_Inflow_Adp/temp";
+      std::string foldername = "2x1v_moments_wall_Adp/";
+
+      const unsigned int max_neqn_primal = system_matrices[system_matrices.size()-1].Ax.rows();
+      const unsigned int max_neqn_adjoint = system_matrices_adjoint[system_matrices_adjoint.size()-1].Ax.rows();
 
        run_problem<dim> Run_Problem(system_matrices,	  // system data
        								system_matrices_error,
@@ -252,7 +203,10 @@ int main(int argc, char *argv[])
 							  		poly_degree,
 							  		&initial_boundary,
 					          		&initial_boundary_adjoint,
-					          		foldername);
+					          		foldername,
+					          		max_neqn_primal,
+					          		max_neqn_adjoint,
+					          		dim_problem);
 
 }
 
@@ -459,10 +413,23 @@ template<int dim>
 void 
 ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
 {
-	const double x = p[0];
+	const double shift = 0.5;
+	const double x = p[0] - shift; // we need to shift the x coordinate for the reference solution
 	const double y = p[1];
 
-	value(0) = 0;
+
+	value(0) = -1.4071724662748193*x + 0.006890984629645171*
+    (cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) - 
+   0.006890984629645171*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
+   value(1) = 0;
+	value(2) = 0.9950211932019232*x - 0.0048726619606743685*
+    		  (cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) + 
+   			 0.0048726619606743685*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
+   value(3) = -0.17234272612335388;
+   value(4) = 0.0042198490419980954*(cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) - 
+   0.0042198490419980954*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
+   value(5) = 0.0042198490419980954*(cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) + 
+   0.0042198490419980954*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
 
 }
 
