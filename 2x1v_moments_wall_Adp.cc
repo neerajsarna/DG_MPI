@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
      M[2] = 16;
      M[3] = 40;*/
 
-     M_adjoint[0] = 6;
+     M_adjoint[0] = 8;
 /*     M_adjoint[1] = 8;
      M_adjoint[2] = 10;
      M_adjoint[3] = 11;
@@ -411,30 +411,6 @@ ic_bc<dim>::ic(const Point<dim> &p,const int &id)
 
 template<int dim>
 void 
-ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
-{
-	const double shift = 0.5;
-	const double x = p[0] - shift; // we need to shift the x coordinate for the reference solution
-	const double y = p[1];
-
-
-	value(0) = -1.4071724662748193*x + 0.006890984629645171*
-    (cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) - 
-   0.006890984629645171*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
-   value(1) = 0;
-	value(2) = 0.9950211932019232*x - 0.0048726619606743685*
-    		  (cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) + 
-   			 0.0048726619606743685*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
-   value(3) = -0.17234272612335388;
-   value(4) = 0.0042198490419980954*(cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) - 
-   0.0042198490419980954*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
-   value(5) = 0.0042198490419980954*(cosh(4.47213595499958*x) - sinh(4.47213595499958*x)) + 
-   0.0042198490419980954*(cosh(4.47213595499958*x) + sinh(4.47213595499958*x));
-
-}
-
-template<int dim>
-void 
 ic_bc<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
 {
 	Assert(value.size() != 0 ,ExcNotImplemented());
@@ -452,6 +428,7 @@ ic_bc<dim>::force(Vector<double> &value,
 	const double x = p[0];
 	
 	value = 0;
+	value(2) = pow(x-0.5,2);
 	//value(2) = x;
 }
 
@@ -464,53 +441,53 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 {
 
 	const int num_bc = B.rows();
-	double thetaW;
+	double thetaW = 0;
 	value.reinit(num_bc);
 	value = 0;
 
-	if (t <= 1)
-        thetaW = exp(-1/(1-pow((t-1),2))) * exp(1);
-    else
-        thetaW = 1;
+	// if (t <= 1)
+ //        thetaW = exp(-1/(1-pow((t-1),2))) * exp(1);
+ //    else
+ //        thetaW = 1;
 
     
-	switch (bc_id)
-	{
-		case 1:
-		case 3:
-		{
-			value = 0;
-			break;
-		}
-		case 0:
-		{
+	// switch (bc_id)
+	// {
+	// 	case 1:
+	// 	case 3:
+	// 	{
+	// 		value = 0;
+	// 		break;
+	// 	}
+	// 	case 0:
+	// 	{
 
-			double bc_normal = 1.0;
-			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
-                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
-                    	if (n.col() == 2)
-                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
+	// 		double bc_normal = 1.0;
+	// 		for (unsigned int m = 0 ; m < B.outerSize() ; m++)
+ //                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
+ //                    	if (n.col() == 2)
+ //                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
                     	
-			break;
-		}
+	// 		break;
+	// 	}
 
-		case 2:
-		{
-			double bc_normal = -1.0;
-			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
-                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
-                    	if (n.col() == 2)
-                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
+	// 	case 2:
+	// 	{
+	// 		double bc_normal = -1.0;
+	// 		for (unsigned int m = 0 ; m < B.outerSize() ; m++)
+ //                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
+ //                    	if (n.col() == 2)
+ //                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
                     	
-			break;
-		}
+	// 		break;
+	// 	}
 
-		default:
-		{
-			Assert(1 == 0, ExcMessage("should not have reached"));
-			break;
-		}
-	}
+	// 	default:
+	// 	{
+	// 		Assert(1 == 0, ExcMessage("should not have reached"));
+	// 		break;
+	// 	}
+	// }
 
 }
 
@@ -526,8 +503,6 @@ void
 ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
 {
 	value = 0;
-
-
 }
 
 
@@ -559,13 +534,50 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 				  		 const Point<dim> &p,
 				  		 const double &t)
 {
-	Assert(value.size() != 0,ExcNotImplemented());
-	Assert(force_vec.size() != 0,ExcNotImplemented());
+	Assert(value.size() != 0,ExcNotInitialized());
+	Assert(force_vec.size() != 0,ExcNotInitialized());
 	const double x = p[0];
 	value = 0;
 
-	value(2) = pow(x-0.5,1);
+	//value(2) = pow(x-0.5,1);
+	value(2) = 1;	// the mean value
 	// value(0) = -M_PI * cos(M_PI*x);
 	// value(2) = -sqrt(2) * M_PI * cos(M_PI * x); 
 }
 
+
+template<int dim>
+void 
+ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
+{
+	const double shift = 0.5;
+	const double x = p[0] - shift; // we need to shift the x coordinate for the reference solution
+	const double y = p[1];
+
+
+	value = 0;
+
+	// M = 6 solution
+	// value(2) = 0.05593013555027514 - 0.00949275700536624*cosh(4.47213595499958*x) + 
+ //   			   0.13333333333333333*pow(x,2) - 0.2777777777777778*pow(x,4);
+
+	// M = 50 solution
+	value(2) = 0.05675652938784245 - 1.885785904226701e-10*cos(1.2164242712795965*x) - 
+   2.7876822809820403e-9*cos(1.300836291991083*x) - 
+   7.468332872581869e-8*cos(1.3949307476490418*x) - 
+   1.0090697487505715e-6*cos(1.5008767648286245*x) - 
+   9.968151997001748e-6*cos(1.6214533765602968*x) - 
+   0.0000651927833578932*cos(1.760369867221947*x) - 
+   0.0002886729478932784*cos(1.9230376940277825*x) - 
+   0.0008371102541164165*cos(2.1185341987559996*x) - 
+   0.0016251305742381954*cos(2.363144361900141*x) - 
+   0.002218203071810823*cos(2.6846345639401537*x) - 
+   0.002300207035646814*cos(3.1292573226008424*x) - 
+   0.0018637654307691162*cos(3.781063129233608*x) - 
+   0.0011541895786560002*cos(4.8177192940816855*x) - 
+   0.0004425560342281727*cos(6.700113944875086*x) - 
+   0.00004918022799979444*cos(11.118134592435387*x) - 
+   7.549678748260056e-10*cos(33.28216542054585*x) + 0.13333333333333333*pow(x,2) - 
+   0.2777777777777778*pow(x,4);
+
+}

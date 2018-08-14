@@ -76,7 +76,6 @@ Solve_System_SS_adaptive<dim>::solve_steady_state(Triangulation<dim> &triangulat
         double residual_ss = 100;
 
         std::vector<Vector<double>> g(4);
-
         for (unsigned int id = 0 ; id < 4 ; id++)
             initial_boundary->bc_inhomo(system_matrices[current_max_index].B[id],id,g[id],t);
         
@@ -231,7 +230,6 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
               data.local_contri.reinit(fe.dofs_per_cell);
               data.local_contri = 0;
 
-
               // contribution from collisions P
               for (unsigned int m = 0 ; m < system_matrices[this_fe_index].P.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(system_matrices[this_fe_index].P,m); n ; ++n)
@@ -248,17 +246,20 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
 
                   }
 
+
               if(system_matrices[this_fe_index].have_force)
               {
                 Vector<double> force_value(n_eqn[this_fe_index]);
-                initial_boundary->force(force_value,force_vector[cell->active_cell_index()],
+                Vector<double> temp(1);
+
+                Assert(temp.size() != 0 ,ExcNotInitialized());
+                
+                initial_boundary->force(force_value,temp,
                                         cell->center(),t);
 
                 for(unsigned int i = 0 ; i < n_eqn[this_fe_index] ; i++)
                     data.local_contri(component_to_system[i](0)) += dt * force_value(i);                
               }
-
-
 
               // loop over the faces, we assume no hanging nodes 
               for(unsigned int face  = 0; face < GeometryInfo<dim>::faces_per_cell; face++ )
@@ -292,7 +293,7 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                   if(bc_id == 3 && dim_problem == 1)
                     continue;
                   // only compute for times greater than zero, already computed for t= 0 before
-                    if (system_matrices[this_fe_index].bc_inhomo_time && t > 1e-16)
+                  if (system_matrices[this_fe_index].bc_inhomo_time && t > 1e-16)
                                 initial_boundary->bc_inhomo(system_matrices[this_fe_index].B[bc_id],bc_id,
                                                           temp_g[bc_id],t);
 
@@ -333,7 +334,6 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                                                   * temp_g[bc_id](n.col()) * face_length/volume;
 
                   }
-
 
                 }
                 else

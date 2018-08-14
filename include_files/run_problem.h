@@ -17,6 +17,8 @@ run_problem
           const unsigned int &max_equations_adjoint,
           const unsigned int &dim_problem);
 
+    DeclException2 (ExcTooManyCycles, unsigned int,unsigned int,
+                        << "index: " << arg1 << "components: " << arg2);
 
     DoFHandler<dim> dummy_dof_handler_grid;      // a dummy dof handler for grid refinement
     DoFHandler<dim> dummy_dof_handler_velocity; // a dummy dof handler for the velocity space refinement
@@ -130,7 +132,8 @@ run_problem
     void fill_user_index_from_index_vector();
 
     void update_index_vector(Triangulation<dim> &triangulation,
-                             const unsigned int &refinement_type);
+                             const unsigned int &refinement_type,
+                             const unsigned int &num_systems);
 
     void update_grid_refine_flags(Triangulation<dim> &triangulation,
                               const unsigned int &refinement_type);

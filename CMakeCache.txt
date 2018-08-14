@@ -20,6 +20,12 @@
 //Value Computed by CMake
 2D_advection_gaussian_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
 
+//Value Computed by CMake
+2x1v_moments_wall_Adp_BINARY_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
+
+//Value Computed by CMake
+2x1v_moments_wall_Adp_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
+
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
@@ -133,7 +139,7 @@ CMAKE_OSX_DEPLOYMENT_TARGET:STRING=
 CMAKE_OSX_SYSROOT:STRING=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=2D_advection_gaussian
+CMAKE_PROJECT_NAME:STATIC=2x1v_moments_wall_Adp
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
