@@ -42,6 +42,7 @@ dim_problem(dim_problem)
       }
      }
 
+    std::string filename;
 
      dummy_dof_handler_grid.distribute_dofs(dummy_fe_grid);
      dummy_dof_handler_velocity.distribute_dofs(dummy_fe_velocity);
@@ -95,6 +96,7 @@ dim_problem(dim_problem)
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
      const unsigned int max_dofs = solve_primal.dof_handler.n_dofs();
+
 
 
      while(solve_primal.dof_handler.n_dofs() <= max_dofs)
