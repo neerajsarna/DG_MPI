@@ -604,3 +604,780 @@ finished computing error
 | solve primal                    |        11 |  1.05e+03s |        28% |
 +---------------------------------+-----------+------------+------------+
 
+Sender: LSF System <lsfadmin@linuxbmc0631>
+Subject: Job 43987795: <2D_advection_gaussian> in cluster <rcc> Exited
+
+Job <2D_advection_gaussian> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug 12 10:38:37 2018
+Job was executed on host(s) <3*linuxbmc0631>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug 12 10:38:41 2018
+                            <3*linuxbmc0632>
+                            <3*linuxbmc0633>
+                            <3*linuxbmc0634>
+                            <3*linuxbmc0635>
+                            <1*linuxbmc0636>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Aug 12 10:38:41 2018
+Terminated at Sun Aug 12 10:38:53 2018
+Results reported at Sun Aug 12 10:38:53 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2D_advection_gaussian
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2D_advection_gaussian
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 16 5
+
+------------------------------------------------------------
+
+Exited with exit code 134.
+
+Resource usage summary:
+
+    CPU time :                                   13.00 sec.
+    Max Memory :                                 306 MB
+    Average Memory :                             86.00 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95694.00 MB
+    Max Swap :                                   -
+    Max Processes :                              6
+    Max Threads :                                8
+    Run time :                                   12 sec.
+    Turnaround time :                            16 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534063117.43987795.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0631.rz.RWTH-Aachen.DE:02175] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+ADAPTIVE REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 100
+total dofs: 100
+Steps taken: 100
+terminate called after throwing an instance of 'dealii::StandardExceptions::ExcIO'
+  what():  
+--------------------------------------------------------
+An error occurred in line <4117> of file </home/ns179556/dealii-9.0.0/source/grid/grid_out.cc> in function
+    void dealii::internal::{anonymous}::write_eps(const dealii::Triangulation<dim, spacedim>&, std::ostream&, const dealii::Mapping<dim, spacedim>*, const dealii::GridOutFlags::Eps<2>&, const dealii::GridOutFlags::Eps<3>&) [with int dim = 2; int spacedim = 2; std::ostream = std::basic_ostream<char>]
+The violated condition was: 
+    out
+Additional information: 
+    An input/output error has occurred. There are a number of reasons why this may be happening, both for reading and writing operations.
+
+If this happens during an operation that tries to read data: First, you may be trying to read from a file that doesn't exist or that is not readable given its file permissions. Second, deal.II uses this error at times if it tries to read information from a file but where the information in the file does not correspond to the expected format. An example would be a truncated file, or a mesh file that contains not only sections that describe the vertices and cells, but also sections for additional data that deal.II does not understand.
+
+If this happens during an operation that tries to write data: you may be trying to write to a file to which file or directory permissions do not allow you to write. A typical example is where you specify an output file in a directory that does not exist.
+--------------------------------------------------------
+
+[linuxbmc0631:02178] *** Process received signal ***
+[linuxbmc0631:02178] Signal: Aborted (6)
+[linuxbmc0631:02178] Signal code:  (-6)
+[linuxbmc0631:02178] [ 0] /lib64/libc.so.6(+0x35270)[0x7fbcecc99270]
+[linuxbmc0631:02178] [ 1] /lib64/libc.so.6(gsignal+0x37)[0x7fbcecc991f7]
+[linuxbmc0631:02178] [ 2] /lib64/libc.so.6(abort+0x148)[0x7fbcecc9a8e8]
+[linuxbmc0631:02178] [ 3] /lib64/libstdc++.so.6(_ZN9__gnu_cxx27__verbose_terminate_handlerEv+0x165)[0x7fbced389ac5]
+[linuxbmc0631:02178] [ 4] /lib64/libstdc++.so.6(+0x5ea36)[0x7fbced387a36]
+[linuxbmc0631:02178] [ 5] /lib64/libstdc++.so.6(+0x5ea63)[0x7fbced387a63]
+[linuxbmc0631:02178] [ 6] /lib64/libstdc++.so.6(+0x5ec83)[0x7fbced387c83]
+[linuxbmc0631:02178] [ 7] /home/ns179556/dealii/lib/libdeal_II.so.9.1.0-pre(_ZN6dealii18deal_II_exceptions9internals20issue_error_noreturnINS_18StandardExceptions5ExcIOEEEvNS1_17ExceptionHandlingEPKciS7_S7_S7_T_+0x72)[0x7fbd0355de72]
+[linuxbmc0631:02178] [ 8] /home/ns179556/dealii/lib/libdeal_II.so.9.1.0-pre(+0x79fa6cb)[0x7fbd07f2a6cb]
+[linuxbmc0631:02178] [ 9] ./2D_advection_gaussian.out(_ZN11run_problemILi2EE10write_gridERKSsRKN6dealii13TriangulationILi2ELi2EEE+0x134)[0x4b7584]
+[linuxbmc0631:02178] [10] ./2D_advection_gaussian.out(_ZN11run_problemILi2EEC2ERSt6vectorI11system_dataSaIS2_EES5_S5_RN6dealii13TriangulationILi2ELi2EEEiP10ic_bc_baseILi2EESC_RKSsRKjSG_SG_+0x62a)[0x4c3fca]
+[linuxbmc0631:02178] [11] ./2D_advection_gaussian.out(main+0x4f0)[0x455af0]
+[linuxbmc0631:02178] [12] /lib64/libc.so.6(__libc_start_main+0xf5)[0x7fbcecc85c05]
+[linuxbmc0631:02178] [13] ./2D_advection_gaussian.out[0x455d59]
+[linuxbmc0631:02178] *** End of error message ***
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 2178 on node linuxbmc0631 exited on signal 6 (Aborted).
+--------------------------------------------------------------------------
+Sender: LSF System <lsfadmin@linuxbmc0888>
+Subject: Job 43989076: <2D_advection_gaussian> in cluster <rcc> Done
+
+Job <2D_advection_gaussian> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug 12 13:16:13 2018
+Job was executed on host(s) <3*linuxbmc0888>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug 12 13:16:17 2018
+                            <3*linuxbmc0890>
+                            <3*linuxbmc0891>
+                            <3*linuxbmc0892>
+                            <3*linuxbmc0893>
+                            <1*linuxbmc0894>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Aug 12 13:16:17 2018
+Terminated at Sun Aug 12 14:38:06 2018
+Results reported at Sun Aug 12 14:38:06 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2D_advection_gaussian
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2D_advection_gaussian
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 16 5
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9729.10 sec.
+    Max Memory :                                 616 MB
+    Average Memory :                             593.99 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95384.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   4909 sec.
+    Turnaround time :                            4913 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534072573.43989076.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0888.rz.RWTH-Aachen.DE:10103] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+ADAPTIVE REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 100
+total dofs: 100
+Steps taken: 100
+solving adjoint: 
+cycle: 0
+total cells: 100
+total dofs: 100
+Steps taken: 100
+compute error grid
+finished computing error
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 193
+total dofs: 193
+Steps taken: 100
+solving adjoint: 
+cycle: 1
+total cells: 193
+total dofs: 193
+Steps taken: 100
+compute error grid
+finished computing error
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 367
+total dofs: 367
+Steps taken: 100
+solving adjoint: 
+cycle: 2
+total cells: 367
+total dofs: 367
+Steps taken: 154
+compute error grid
+finished computing error
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 700
+total dofs: 700
+Steps taken: 100
+solving adjoint: 
+cycle: 3
+total cells: 700
+total dofs: 700
+Steps taken: 311
+compute error grid
+finished computing error
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 1333
+total dofs: 1333
+Steps taken: 130
+solving adjoint: 
+cycle: 4
+total cells: 1333
+total dofs: 1333
+residual: 8.93521e-06time: 22.7125
+Steps taken: 612
+compute error grid
+finished computing error
+refinement cycle: 5
+solving primal: 
+cycle: 5
+total cells: 2536
+total dofs: 2536
+Steps taken: 492
+solving adjoint: 
+cycle: 5
+total cells: 2536
+total dofs: 2536
+residual: 0.00736216time: 24.6125
+residual: 1.06339e-05time: 25.3937
+Steps taken: 1229
+compute error grid
+finished computing error
+refinement cycle: 6
+solving primal: 
+cycle: 6
+total cells: 4825
+total dofs: 4825
+Steps taken: 408
+solving adjoint: 
+cycle: 6
+total cells: 4825
+total dofs: 4825
+residual: 0.00437509time: 27.1703
+residual: 6.91109e-06time: 27.9516
+Steps taken: 1209
+compute error grid
+finished computing error
+refinement cycle: 7
+solving primal: 
+cycle: 7
+total cells: 9178
+total dofs: 9178
+residual: 0.00117477time: 28.6687
+residual: 1.20257e-07time: 29.0594
+Steps taken: 1009
+solving adjoint: 
+cycle: 7
+total cells: 9178
+total dofs: 9178
+residual: 0.0714201time: 29.457
+residual: 0.0073413time: 29.8477
+residual: 0.000454641time: 30.2383
+residual: 5.88845e-06time: 30.6289
+Steps taken: 2391
+compute error grid
+finished computing error
+refinement cycle: 8
+solving primal: 
+cycle: 8
+total cells: 17446
+total dofs: 17446
+residual: 0.000647176time: 31.325
+Steps taken: 856
+solving adjoint: 
+cycle: 8
+total cells: 17446
+total dofs: 17446
+residual: 0.0211341time: 31.9937
+residual: 0.00235406time: 32.3844
+residual: 0.000180984time: 32.775
+residual: 2.46363e-06time: 33.1656
+Steps taken: 2311
+compute error grid
+finished computing error
+refinement cycle: 9
+solving primal: 
+cycle: 9
+total cells: 33157
+total dofs: 33157
+residual: 0.0109107time: 33.7992
+Steps taken: 869
+solving adjoint: 
+cycle: 9
+total cells: 33157
+total dofs: 33157
+residual: 0.0449485time: 34.4781
+residual: 0.00381818time: 34.8688
+residual: 0.000219166time: 35.2594
+residual: 2.58753e-06time: 35.65
+Steps taken: 2311
+compute error grid
+finished computing error
+refinement cycle: 10
+solving primal: 
+cycle: 10
+total cells: 63025
+total dofs: 63025
+residual: 1.09837time: 36.0883
+residual: 0.00254747time: 36.2836
+residual: 4.12033e-06time: 36.4789
+Steps taken: 1903
+solving adjoint: 
+cycle: 10
+total cells: 63025
+total dofs: 63025
+residual: 0.470412time: 36.8316
+residual: 0.0210665time: 37.027
+residual: 0.00620557time: 37.2223
+residual: 0.00243509time: 37.4176
+residual: 0.00068174time: 37.6129
+residual: 0.00012086time: 37.8082
+residual: 1.45839e-05time: 38.0035
+residual: 1.31363e-06time: 38.1988
+Steps taken: 4491
+compute error grid
+finished computing error
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |   4.9e+03s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |        11 |       3.7s |         0% |
+| perform adaptivity              |        11 |     0.697s |         0% |
+| solve adjoint                   |        11 |  3.31e+03s |        68% |
+| solve primal                    |        11 |  1.38e+03s |        28% |
++---------------------------------+-----------+------------+------------+
+
+Sender: LSF System <lsfadmin@linuxbmc0289>
+Subject: Job 43990266: <2D_advection_gaussian> in cluster <rcc> Done
+
+Job <2D_advection_gaussian> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug 12 17:41:17 2018
+Job was executed on host(s) <3*linuxbmc0289>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug 12 17:41:23 2018
+                            <3*linuxbmc0298>
+                            <3*linuxbmc0299>
+                            <3*linuxbmc0300>
+                            <3*linuxbmc0302>
+                            <1*linuxbmc0303>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Aug 12 17:41:23 2018
+Terminated at Sun Aug 12 17:53:10 2018
+Results reported at Sun Aug 12 17:53:10 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2D_advection_gaussian
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2D_advection_gaussian
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 16 5
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1267.95 sec.
+    Max Memory :                                 602 MB
+    Average Memory :                             572.52 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95398.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   707 sec.
+    Turnaround time :                            713 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534088477.43990266.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0289.rz.RWTH-Aachen.DE:15623] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+UNIFORM REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 100
+total dofs: 100
+Steps taken: 100
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 400
+total dofs: 400
+Steps taken: 100
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 1600
+total dofs: 1600
+Steps taken: 100
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 6400
+total dofs: 6400
+Steps taken: 100
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 25600
+total dofs: 25600
+Steps taken: 183
+refinement cycle: 5
+solving primal: 
+cycle: 5
+total cells: 102400
+total dofs: 102400
+Steps taken: 364
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       695s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| perform adaptivity              |         6 |      1.28s |      0.18% |
+| solve primal                    |         6 |       344s |        49% |
++---------------------------------+-----------+------------+------------+
+
+Sender: LSF System <lsfadmin@linuxbmc0888>
+Subject: Job 43990688: <2D_advection_gaussian> in cluster <rcc> Done
+
+Job <2D_advection_gaussian> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Sun Aug 12 19:44:59 2018
+Job was executed on host(s) <3*linuxbmc0888>, in queue <normal>, as user <ns179556> in cluster <rcc> at Sun Aug 12 19:45:05 2018
+                            <3*linuxbmc0889>
+                            <3*linuxbmc0890>
+                            <3*linuxbmc0891>
+                            <3*linuxbmc0897>
+                            <1*linuxbmc0899>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Sun Aug 12 19:45:05 2018
+Terminated at Sun Aug 12 21:08:55 2018
+Results reported at Sun Aug 12 21:08:55 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2D_advection_gaussian
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2D_advection_gaussian
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 16 5
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9977.43 sec.
+    Max Memory :                                 618 MB
+    Average Memory :                             594.99 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95382.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   5052 sec.
+    Turnaround time :                            5036 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534095899.43990688.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0888.rz.RWTH-Aachen.DE:23495] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+ADAPTIVE REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 100
+total dofs: 100
+Steps taken: 100
+solving adjoint: 
+cycle: 0
+total cells: 100
+total dofs: 100
+Steps taken: 100
+compute error grid
+finished computing error
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 193
+total dofs: 193
+Steps taken: 100
+solving adjoint: 
+cycle: 1
+total cells: 193
+total dofs: 193
+Steps taken: 100
+compute error grid
+finished computing error
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 367
+total dofs: 367
+Steps taken: 100
+solving adjoint: 
+cycle: 2
+total cells: 367
+total dofs: 367
+Steps taken: 154
+compute error grid
+finished computing error
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 700
+total dofs: 700
+Steps taken: 100
+solving adjoint: 
+cycle: 3
+total cells: 700
+total dofs: 700
+Steps taken: 311
+compute error grid
+finished computing error
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 1333
+total dofs: 1333
+Steps taken: 130
+solving adjoint: 
+cycle: 4
+total cells: 1333
+total dofs: 1333
+residual: 8.93521e-06time: 22.7125
+Steps taken: 612
+compute error grid
+finished computing error
+refinement cycle: 5
+solving primal: 
+cycle: 5
+total cells: 2536
+total dofs: 2536
+Steps taken: 492
+solving adjoint: 
+cycle: 5
+total cells: 2536
+total dofs: 2536
+residual: 0.00736216time: 24.6125
+residual: 1.06339e-05time: 25.3937
+Steps taken: 1229
+compute error grid
+finished computing error
+refinement cycle: 6
+solving primal: 
+cycle: 6
+total cells: 4825
+total dofs: 4825
+Steps taken: 408
+solving adjoint: 
+cycle: 6
+total cells: 4825
+total dofs: 4825
+residual: 0.00437509time: 27.1703
+residual: 6.91109e-06time: 27.9516
+Steps taken: 1209
+compute error grid
+finished computing error
+refinement cycle: 7
+solving primal: 
+cycle: 7
+total cells: 9178
+total dofs: 9178
+residual: 0.00117477time: 28.6687
+residual: 1.20257e-07time: 29.0594
+Steps taken: 1009
+solving adjoint: 
+cycle: 7
+total cells: 9178
+total dofs: 9178
+residual: 0.0714201time: 29.457
+residual: 0.0073413time: 29.8477
+residual: 0.000454641time: 30.2383
+residual: 5.88845e-06time: 30.6289
+Steps taken: 2391
+compute error grid
+finished computing error
+refinement cycle: 8
+solving primal: 
+cycle: 8
+total cells: 17446
+total dofs: 17446
+residual: 0.000647176time: 31.325
+Steps taken: 856
+solving adjoint: 
+cycle: 8
+total cells: 17446
+total dofs: 17446
+residual: 0.0211341time: 31.9937
+residual: 0.00235406time: 32.3844
+residual: 0.000180984time: 32.775
+residual: 2.46363e-06time: 33.1656
+Steps taken: 2311
+compute error grid
+finished computing error
+refinement cycle: 9
+solving primal: 
+cycle: 9
+total cells: 33157
+total dofs: 33157
+residual: 0.0109107time: 33.7992
+Steps taken: 869
+solving adjoint: 
+cycle: 9
+total cells: 33157
+total dofs: 33157
+residual: 0.0449485time: 34.4781
+residual: 0.00381818time: 34.8688
+residual: 0.000219166time: 35.2594
+residual: 2.58753e-06time: 35.65
+Steps taken: 2311
+compute error grid
+finished computing error
+refinement cycle: 10
+solving primal: 
+cycle: 10
+total cells: 63025
+total dofs: 63025
+residual: 1.09837time: 36.0883
+residual: 0.00254747time: 36.2836
+residual: 4.12033e-06time: 36.4789
+Steps taken: 1903
+solving adjoint: 
+cycle: 10
+total cells: 63025
+total dofs: 63025
+residual: 0.470412time: 36.8316
+residual: 0.0210665time: 37.027
+residual: 0.00620557time: 37.2223
+residual: 0.00243509time: 37.4176
+residual: 0.00068174time: 37.6129
+residual: 0.00012086time: 37.8082
+residual: 1.45839e-05time: 38.0035
+residual: 1.31363e-06time: 38.1988
+Steps taken: 4491
+compute error grid
+finished computing error
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |  5.02e+03s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |        11 |      3.77s |         0% |
+| perform adaptivity              |        11 |     0.709s |         0% |
+| solve adjoint                   |        11 |   3.4e+03s |        68% |
+| solve primal                    |        11 |  1.42e+03s |        28% |
++---------------------------------+-----------+------------+------------+
+
