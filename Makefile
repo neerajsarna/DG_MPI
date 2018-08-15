@@ -150,7 +150,6 @@ release/fast:
 .PHONY : release/fast
 
 2x1v_moments_wall_Adp.o: 2x1v_moments_wall_Adp.cc.o
-
 .PHONY : 2x1v_moments_wall_Adp.o
 
 # target to build an object file
@@ -159,7 +158,6 @@ release/fast:
 .PHONY : 2x1v_moments_wall_Adp.cc.o
 
 2x1v_moments_wall_Adp.i: 2x1v_moments_wall_Adp.cc.i
-
 .PHONY : 2x1v_moments_wall_Adp.i
 
 # target to preprocess a source file
@@ -168,7 +166,6 @@ release/fast:
 .PHONY : 2x1v_moments_wall_Adp.cc.i
 
 2x1v_moments_wall_Adp.s: 2x1v_moments_wall_Adp.cc.s
-
 .PHONY : 2x1v_moments_wall_Adp.s
 
 # target to generate assembly for a file
@@ -263,8 +260,11 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+<<<<<<< HEAD
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+=======
+>>>>>>> origin/master
 	@echo "... 2x1v_moments_wall_Adp.out"
 	@echo "... debug"
 	@echo "... release"

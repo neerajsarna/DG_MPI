@@ -97,6 +97,7 @@ dim_problem(dim_problem)
 
 
 
+
      while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
 

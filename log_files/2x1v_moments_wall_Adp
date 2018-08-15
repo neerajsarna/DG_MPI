@@ -1,0 +1,2864 @@
+Sender: LSF System <lsfadmin@linuxbmc1214>
+Subject: Job 44009141: <2x1v_moments_wall_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_wall_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Aug 14 14:26:59 2018
+Job was executed on host(s) <3*linuxbmc1214>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Aug 14 14:27:03 2018
+                            <3*linuxbmc1215>
+                            <3*linuxbmc1216>
+                            <3*linuxbmc1217>
+                            <3*linuxbmc1218>
+                            <1*linuxbmc1219>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Tue Aug 14 14:27:03 2018
+Terminated at Tue Aug 14 14:45:50 2018
+Results reported at Tue Aug 14 14:45:50 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_wall_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_wall_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 10
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   2218.80 sec.
+    Max Memory :                                 554 MB
+    Average Memory :                             532.78 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95446.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   1136 sec.
+    Turnaround time :                            1131 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534249619.44009141.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc1214.rz.RWTH-Aachen.DE:06362] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+UNIFORM GRID REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 20
+total dofs: 160
+residual: 0.00113483time: 3.76024
+residual: 4.5017e-06time: 7.52048
+Steps taken: 1345
+solving adjoint: 
+cycle: 0
+total cells: 20
+total dofs: 160
+residual: 0.0621099time: 13.1311
+residual: 0.000867045time: 16.1471
+residual: 1.21037e-05time: 19.1631
+residual: 1.68964e-07time: 22.1791
+Steps taken: 2062
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0158564
+Predicted error in target from grid...0.00171012
+Predicted error in target from velocity...0.000609913
+Total predicted error...0.00232004
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 40
+total dofs: 320
+residual: 0.000794836time: 24.4332
+residual: 5.68744e-05time: 26.3133
+residual: 4.09005e-06time: 28.1934
+residual: 2.94135e-07time: 30.0735
+Steps taken: 2205
+solving adjoint: 
+cycle: 1
+total cells: 40
+total dofs: 320
+residual: 0.0343937time: 32.3524
+residual: 0.0045211time: 33.8604
+residual: 0.00059161time: 35.3684
+residual: 7.74305e-05time: 36.8764
+residual: 1.01341e-05time: 38.3844
+residual: 1.32636e-06time: 39.8924
+residual: 1.73594e-07time: 41.4004
+Steps taken: 3636
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.015027
+Predicted error in target from grid...0.00133954
+Predicted error in target from velocity...0.000600808
+Total predicted error...0.00194034
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 80
+total dofs: 640
+residual: 0.0026267time: 42.7507
+residual: 0.000710423time: 43.6907
+residual: 0.000195588time: 44.6308
+residual: 5.4429e-05time: 45.5709
+residual: 1.51376e-05time: 46.5109
+residual: 4.21003e-06time: 47.451
+residual: 1.17089e-06time: 48.391
+residual: 3.25646e-07time: 49.3311
+Steps taken: 4462
+solving adjoint: 
+cycle: 2
+total cells: 80
+total dofs: 640
+residual: 0.0809106time: 50.9537
+residual: 0.0297211time: 51.7077
+residual: 0.0111time: 52.4617
+residual: 0.00412312time: 53.2157
+residual: 0.0015335time: 53.9697
+residual: 0.000570551time: 54.7237
+residual: 0.000212273time: 55.4777
+residual: 7.89747e-05time: 56.2317
+residual: 2.93819e-05time: 56.9857
+residual: 1.09313e-05time: 57.7397
+residual: 4.06691e-06time: 58.4937
+residual: 1.51306e-06time: 59.2477
+residual: 5.62924e-07time: 60.0017
+residual: 2.09432e-07time: 60.7557
+Steps taken: 7374
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0145022
+Predicted error in target from grid...0.00103172
+Predicted error in target from velocity...0.000600472
+Total predicted error...0.00163219
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 160
+total dofs: 1280
+residual: 0.00751208time: 61.7898
+residual: 0.00212837time: 62.2598
+residual: 0.0010626time: 62.7298
+residual: 0.000569904time: 63.1999
+residual: 0.0002994time: 63.6699
+residual: 0.000159181time: 64.1399
+residual: 8.47941e-05time: 64.6099
+residual: 4.5165e-05time: 65.08
+residual: 2.40494e-05time: 65.55
+residual: 1.28039e-05time: 66.02
+residual: 6.81707e-06time: 66.4901
+residual: 3.62963e-06time: 66.9601
+residual: 1.93254e-06time: 67.4301
+residual: 1.02895e-06time: 67.9002
+residual: 5.47845e-07time: 68.3702
+residual: 2.9169e-07time: 68.8402
+residual: 1.55305e-07time: 69.3102
+Steps taken: 8850
+solving adjoint: 
+cycle: 3
+total cells: 160
+total dofs: 1280
+residual: 0.152894time: 70.0163
+residual: 0.0631419time: 70.3933
+residual: 0.0389386time: 70.7703
+residual: 0.0233773time: 71.1473
+residual: 0.0143086time: 71.5243
+residual: 0.00884807time: 71.9013
+residual: 0.00541664time: 72.2783
+residual: 0.0033323time: 72.6553
+residual: 0.00204727time: 73.0323
+residual: 0.0012576time: 73.4093
+residual: 0.000772886time: 73.7863
+residual: 0.000474836time: 74.1633
+residual: 0.000291766time: 74.5403
+residual: 0.000179272time: 74.9173
+residual: 0.00011015time: 75.2943
+residual: 6.76804e-05time: 75.6713
+residual: 4.15851e-05time: 76.0483
+residual: 2.55514e-05time: 76.4253
+residual: 1.56997e-05time: 76.8023
+residual: 9.64644e-06time: 77.1793
+residual: 5.92712e-06time: 77.5563
+residual: 3.64183e-06time: 77.9333
+residual: 2.23767e-06time: 78.3103
+residual: 1.3749e-06time: 78.6873
+residual: 8.4479e-07time: 79.0643
+residual: 5.19069e-07time: 79.4413
+residual: 3.18935e-07time: 79.8183
+residual: 1.95965e-07time: 80.1953
+residual: 1.20408e-07time: 80.5723
+Steps taken: 14691
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0142054
+Predicted error in target from grid...0.000835493
+Predicted error in target from velocity...0.000602022
+Total predicted error...0.00143752
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 320
+total dofs: 2560
+residual: 0.0178883time: 80.9513
+residual: 0.00659913time: 81.1863
+residual: 0.00344378time: 81.4214
+residual: 0.00167502time: 81.6564
+residual: 0.00117767time: 81.8914
+residual: 0.000803376time: 82.1264
+residual: 0.000568044time: 82.3614
+residual: 0.000430492time: 82.5964
+residual: 0.000309147time: 82.8315
+residual: 0.000226468time: 83.0665
+residual: 0.000165962time: 83.3015
+residual: 0.000120991time: 83.5365
+residual: 8.86645e-05time: 83.7715
+residual: 6.47749e-05time: 84.0065
+residual: 4.74241e-05time: 84.2415
+residual: 3.46773e-05time: 84.4766
+residual: 2.53631e-05time: 84.7116
+residual: 1.85568e-05time: 84.9466
+residual: 1.35706e-05time: 85.1816
+residual: 9.92776e-06time: 85.4166
+residual: 7.2615e-06time: 85.6516
+residual: 5.31156e-06time: 85.8866
+residual: 3.8853e-06time: 86.1217
+residual: 2.84191e-06time: 86.3567
+residual: 2.0788e-06time: 86.5917
+residual: 1.52056e-06time: 86.8267
+residual: 1.11224e-06time: 87.0617
+residual: 8.13571e-07time: 87.2967
+residual: 5.951e-07time: 87.5317
+residual: 4.35297e-07time: 87.7668
+residual: 3.18405e-07time: 88.0018
+residual: 2.32903e-07time: 88.2368
+residual: 1.70361e-07time: 88.4718
+residual: 1.24614e-07time: 88.7068
+Steps taken: 17352
+solving adjoint: 
+cycle: 4
+total cells: 320
+total dofs: 2560
+residual: 0.228104time: 89.0608
+residual: 0.118084time: 89.2493
+residual: 0.0686315time: 89.4378
+residual: 0.0472916time: 89.6263
+residual: 0.0377549time: 89.8148
+residual: 0.0289472time: 90.0033
+residual: 0.0220095time: 90.1918
+residual: 0.0174663time: 90.3803
+residual: 0.0137628time: 90.5688
+residual: 0.0107062time: 90.7573
+residual: 0.00843976time: 90.9458
+residual: 0.00665458time: 91.1343
+residual: 0.00520516time: 91.3228
+residual: 0.00408641time: 91.5113
+residual: 0.00321619time: 91.6998
+residual: 0.00252354time: 91.8883
+residual: 0.00198033time: 92.0768
+residual: 0.00155643time: 92.2653
+residual: 0.00122232time: 92.4538
+residual: 0.000959525time: 92.6423
+residual: 0.000753688time: 92.8308
+residual: 0.000591966time: 93.0193
+residual: 0.000464814time: 93.2078
+residual: 0.000365036time: 93.3963
+residual: 0.000286696time: 93.5848
+residual: 0.000225141time: 93.7733
+residual: 0.000176806time: 93.9618
+residual: 0.000138855time: 94.1503
+residual: 0.000109047time: 94.3388
+residual: 8.56361e-05time: 94.5273
+residual: 6.72531e-05time: 94.7158
+residual: 5.2816e-05time: 94.9043
+residual: 4.14777e-05time: 95.0928
+residual: 3.25737e-05time: 95.2813
+residual: 2.55811e-05time: 95.4698
+residual: 2.00895e-05time: 95.6583
+residual: 1.57769e-05time: 95.8468
+residual: 1.23901e-05time: 96.0353
+residual: 9.73027e-06time: 96.2238
+residual: 7.64146e-06time: 96.4123
+residual: 6.00106e-06time: 96.6008
+residual: 4.7128e-06time: 96.7893
+residual: 3.7011e-06time: 96.9778
+residual: 2.90658e-06time: 97.1663
+residual: 2.28262e-06time: 97.3548
+residual: 1.79261e-06time: 97.5433
+residual: 1.40779e-06time: 97.7318
+residual: 1.10558e-06time: 97.9203
+residual: 8.68241e-07time: 98.1088
+residual: 6.81855e-07time: 98.2973
+residual: 5.3548e-07time: 98.4858
+residual: 4.20528e-07time: 98.6743
+residual: 3.30253e-07time: 98.8628
+residual: 2.59357e-07time: 99.0513
+residual: 2.03681e-07time: 99.2398
+residual: 1.59956e-07time: 99.4283
+residual: 1.25618e-07time: 99.6168
+Steps taken: 28972
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0140473
+Predicted error in target from grid...0.000724889
+Predicted error in target from velocity...0.00060335
+Total predicted error...0.00132824
+refinement cycle: 5
+solving primal: 
+cycle: 5
+total cells: 640
+total dofs: 5120
+residual: 0.0286765time: 99.9123
+residual: 0.0155732time: 100.03
+residual: 0.00909331time: 100.147
+residual: 0.00573087time: 100.265
+residual: 0.00391338time: 100.382
+residual: 0.00278089time: 100.5
+residual: 0.00175815time: 100.617
+residual: 0.00130714time: 100.735
+residual: 0.00105574time: 100.852
+residual: 0.000878183time: 100.97
+residual: 0.000724797time: 101.087
+residual: 0.000591541time: 101.205
+residual: 0.000479283time: 101.322
+residual: 0.000414686time: 101.44
+residual: 0.000363587time: 101.557
+residual: 0.000314954time: 101.675
+residual: 0.00026757time: 101.792
+residual: 0.000226119time: 101.91
+residual: 0.000192581time: 102.027
+residual: 0.000165718time: 102.145
+residual: 0.000142425time: 102.262
+residual: 0.000121669time: 102.38
+residual: 0.000103761time: 102.497
+residual: 8.87426e-05time: 102.615
+residual: 7.60656e-05time: 102.732
+residual: 6.51411e-05time: 102.85
+residual: 5.56986e-05time: 102.967
+residual: 4.76328e-05time: 103.085
+residual: 4.07792e-05time: 103.202
+residual: 3.49244e-05time: 103.32
+residual: 2.98907e-05time: 103.437
+residual: 2.55669e-05time: 103.555
+residual: 2.18729e-05time: 103.673
+residual: 1.87222e-05time: 103.79
+residual: 1.60273e-05time: 103.908
+residual: 1.37162e-05time: 104.025
+residual: 1.17358e-05time: 104.143
+residual: 1.00423e-05time: 104.26
+residual: 8.59473e-06time: 104.378
+residual: 7.35604e-06time: 104.495
+residual: 6.29521e-06time: 104.613
+residual: 5.38701e-06time: 104.73
+residual: 4.61002e-06time: 104.848
+residual: 3.94532e-06time: 104.965
+residual: 3.37647e-06time: 105.083
+residual: 2.88952e-06time: 105.2
+residual: 2.47276e-06time: 105.318
+residual: 2.11615e-06time: 105.435
+residual: 1.811e-06time: 105.553
+residual: 1.54985e-06time: 105.67
+residual: 1.32634e-06time: 105.788
+residual: 1.13505e-06time: 105.905
+residual: 9.71365e-07time: 106.023
+residual: 8.31288e-07time: 106.14
+residual: 7.11409e-07time: 106.258
+residual: 6.08814e-07time: 106.375
+residual: 5.21014e-07time: 106.493
+residual: 4.45878e-07time: 106.61
+residual: 3.81578e-07time: 106.728
+residual: 3.26551e-07time: 106.845
+residual: 2.79458e-07time: 106.963
+residual: 2.39157e-07time: 107.08
+residual: 2.04668e-07time: 107.198
+residual: 1.75152e-07time: 107.315
+residual: 1.49893e-07time: 107.433
+residual: 1.28277e-07time: 107.55
+residual: 1.09778e-07time: 107.668
+Steps taken: 33800
+solving adjoint: 
+cycle: 5
+total cells: 640
+total dofs: 5120
+residual: 0.316427time: 107.833
+residual: 0.187245time: 107.927
+residual: 0.124299time: 108.021
+residual: 0.0912472time: 108.115
+residual: 0.0677349time: 108.21
+residual: 0.0512745time: 108.304
+residual: 0.0409507time: 108.398
+residual: 0.034729time: 108.492
+residual: 0.0306637time: 108.587
+residual: 0.0274869time: 108.681
+residual: 0.0242618time: 108.775
+residual: 0.02101time: 108.869
+residual: 0.0181986time: 108.964
+residual: 0.0159806time: 109.058
+residual: 0.0142117time: 109.152
+residual: 0.0127021time: 109.246
+residual: 0.0113174time: 109.341
+residual: 0.0100108time: 109.435
+residual: 0.00882063time: 109.529
+residual: 0.00779056time: 109.623
+residual: 0.00691188time: 109.718
+residual: 0.00615116time: 109.812
+residual: 0.00547291time: 109.906
+residual: 0.00485528time: 110
+residual: 0.00429582time: 110.095
+residual: 0.00379917time: 110.189
+residual: 0.0033651time: 110.283
+residual: 0.00298596time: 110.377
+residual: 0.00265139time: 110.472
+residual: 0.00235289time: 110.566
+residual: 0.00208563time: 110.66
+residual: 0.00184751time: 110.754
+residual: 0.00163684time: 110.849
+residual: 0.00145113time: 110.943
+residual: 0.00128715time: 111.037
+residual: 0.00114175time: 111.131
+residual: 0.00101245time: 111.226
+residual: 0.000897466time: 111.32
+residual: 0.000795452time: 111.414
+residual: 0.000705139time: 111.508
+residual: 0.000625222time: 111.603
+residual: 0.000554428time: 111.697
+residual: 0.000491626time: 111.791
+residual: 0.000435879time: 111.885
+residual: 0.000386415time: 111.98
+residual: 0.000342566time: 112.074
+residual: 0.000303714time: 112.168
+residual: 0.000269288time: 112.262
+residual: 0.000238768time: 112.357
+residual: 0.0002117time: 112.451
+residual: 0.000187691time: 112.545
+residual: 0.000166402time: 112.639
+residual: 0.000147529time: 112.734
+residual: 0.000130801time: 112.828
+residual: 0.000115972time: 112.922
+residual: 0.000102823time: 113.016
+residual: 9.11644e-05time: 113.111
+residual: 8.08261e-05time: 113.205
+residual: 7.16602e-05time: 113.299
+residual: 6.35341e-05time: 113.393
+residual: 5.63301e-05time: 113.488
+residual: 4.99431e-05time: 113.582
+residual: 4.42801e-05time: 113.676
+residual: 3.92591e-05time: 113.77
+residual: 3.48072e-05time: 113.865
+residual: 3.08602e-05time: 113.959
+residual: 2.73609e-05time: 114.053
+residual: 2.42585e-05time: 114.147
+residual: 2.15078e-05time: 114.242
+residual: 1.9069e-05time: 114.336
+residual: 1.69067e-05time: 114.43
+residual: 1.49896e-05time: 114.524
+residual: 1.32899e-05time: 114.619
+residual: 1.17829e-05time: 114.713
+residual: 1.04468e-05time: 114.807
+residual: 9.26223e-06time: 114.901
+residual: 8.21196e-06time: 114.996
+residual: 7.28079e-06time: 115.09
+residual: 6.4552e-06time: 115.184
+residual: 5.72323e-06time: 115.278
+residual: 5.07426e-06time: 115.373
+residual: 4.49888e-06time: 115.467
+residual: 3.98874e-06time: 115.561
+residual: 3.53645e-06time: 115.655
+residual: 3.13544e-06time: 115.75
+residual: 2.7799e-06time: 115.844
+residual: 2.46468e-06time: 115.938
+residual: 2.18521e-06time: 116.032
+residual: 1.93742e-06time: 116.127
+residual: 1.71773e-06time: 116.221
+residual: 1.52296e-06time: 116.315
+residual: 1.35026e-06time: 116.409
+residual: 1.19715e-06time: 116.504
+residual: 1.06141e-06time: 116.598
+residual: 9.41051e-07time: 116.692
+residual: 8.34343e-07time: 116.786
+residual: 7.39735e-07time: 116.881
+residual: 6.55854e-07time: 116.975
+residual: 5.81485e-07time: 117.069
+residual: 5.15549e-07time: 117.163
+residual: 4.5709e-07time: 117.258
+residual: 4.0526e-07time: 117.352
+residual: 3.59306e-07time: 117.446
+residual: 3.18564e-07time: 117.54
+residual: 2.82441e-07time: 117.635
+residual: 2.50414e-07time: 117.729
+residual: 2.22019e-07time: 117.823
+residual: 1.96844e-07time: 117.917
+residual: 1.74523e-07time: 118.012
+residual: 1.54734e-07time: 118.106
+residual: 1.37188e-07time: 118.2
+residual: 1.21632e-07time: 118.294
+residual: 1.0784e-07time: 118.389
+Steps taken: 56814
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0139657
+Predicted error in target from grid...0.000666187
+Predicted error in target from velocity...0.000604171
+Total predicted error...0.00127036
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |  1.11e+03s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |         6 |    0.0771s |         0% |
+| compute velocity error          |         6 |    0.0518s |         0% |
+| perform adaptivity              |         6 |    0.0217s |         0% |
+| solve adjoint                   |         6 |       745s |        67% |
+| solve primal                    |         6 |       368s |        33% |
++---------------------------------+-----------+------------+------------+
+
+Sender: LSF System <lsfadmin@linuxbmc1214>
+Subject: Job 44009413: <2x1v_moments_wall_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_wall_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Aug 14 15:14:13 2018
+Job was executed on host(s) <3*linuxbmc1214>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Aug 14 15:14:16 2018
+                            <3*linuxbmc1215>
+                            <3*linuxbmc1216>
+                            <3*linuxbmc1217>
+                            <3*linuxbmc1218>
+                            <1*linuxbmc1219>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Tue Aug 14 15:14:16 2018
+Terminated at Tue Aug 14 16:32:15 2018
+Results reported at Tue Aug 14 16:32:15 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_wall_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_wall_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 640
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9319.38 sec.
+    Max Memory :                                 553 MB
+    Average Memory :                             549.08 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95447.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   4678 sec.
+    Turnaround time :                            4682 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534252453.44009413.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc1214.rz.RWTH-Aachen.DE:02382] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+UNIFORM GRID REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 1280
+total dofs: 10240
+residual: 3.14979time: 0.0587537
+residual: 2.66188time: 0.117507
+residual: 2.44991time: 0.176261
+residual: 2.30832time: 0.235015
+residual: 2.14231time: 0.293769
+residual: 1.98175time: 0.352522
+residual: 1.78171time: 0.411276
+residual: 1.52272time: 0.47003
+residual: 1.24383time: 0.528784
+residual: 1.08418time: 0.587537
+residual: 0.99203time: 0.646291
+residual: 0.940922time: 0.705045
+residual: 0.893373time: 0.763798
+residual: 0.827563time: 0.822552
+residual: 0.7493time: 0.881306
+residual: 0.672022time: 0.94006
+residual: 0.603788time: 0.998813
+residual: 0.545815time: 1.05757
+residual: 0.502357time: 1.11632
+residual: 0.468454time: 1.17507
+residual: 0.43965time: 1.23383
+residual: 0.412275time: 1.29258
+residual: 0.38404time: 1.35134
+residual: 0.354517time: 1.41009
+residual: 0.324749time: 1.46884
+residual: 0.296418time: 1.5276
+residual: 0.27076time: 1.58635
+residual: 0.248527time: 1.6451
+residual: 0.229274time: 1.70386
+residual: 0.212289time: 1.76261
+residual: 0.197034time: 1.82137
+residual: 0.183026time: 1.88012
+residual: 0.16985time: 1.93887
+residual: 0.157282time: 1.99763
+residual: 0.145345time: 2.05638
+residual: 0.134184time: 2.11513
+residual: 0.123913time: 2.17389
+residual: 0.114534time: 2.23264
+residual: 0.105992time: 2.2914
+residual: 0.098183time: 2.35015
+residual: 0.0909863time: 2.4089
+residual: 0.0842955time: 2.46766
+residual: 0.0780382time: 2.52641
+residual: 0.072182time: 2.58516
+residual: 0.066725time: 2.64392
+residual: 0.0616728time: 2.70267
+residual: 0.0570189time: 2.76142
+residual: 0.0527431time: 2.82018
+residual: 0.0488129time: 2.87893
+residual: 0.0451903time: 2.93769
+residual: 0.0418386time: 2.99644
+residual: 0.038727time: 3.05519
+residual: 0.035834time: 3.11395
+residual: 0.0331458time: 3.1727
+residual: 0.0306538time: 3.23145
+residual: 0.0283494time: 3.29021
+residual: 0.0262224time: 3.34896
+residual: 0.0242606time: 3.40772
+residual: 0.0224502time: 3.46647
+residual: 0.0207773time: 3.52522
+residual: 0.019229time: 3.58398
+residual: 0.0177943time: 3.64273
+residual: 0.0164642time: 3.70148
+residual: 0.0152317time: 3.76024
+residual: 0.0140906time: 3.81899
+residual: 0.0130351time: 3.87775
+residual: 0.0120594time: 3.9365
+residual: 0.0111578time: 3.99525
+residual: 0.0103242time: 4.05401
+residual: 0.00955326time: 4.11276
+residual: 0.00883977time: 4.17151
+residual: 0.00817921time: 4.23027
+residual: 0.00756762time: 4.28902
+residual: 0.00700149time: 4.34778
+residual: 0.00647762time: 4.40653
+residual: 0.005993time: 4.46528
+residual: 0.0055448time: 4.52404
+residual: 0.00513027time: 4.58279
+residual: 0.00474684time: 4.64154
+residual: 0.00439209time: 4.7003
+residual: 0.00406382time: 4.75905
+residual: 0.00376001time: 4.81781
+residual: 0.00347886time: 4.87656
+residual: 0.00321868time: 4.93531
+residual: 0.00297796time: 4.99407
+residual: 0.00275527time: 5.05282
+residual: 0.00254925time: 5.11157
+residual: 0.00235867time: 5.17033
+residual: 0.00218235time: 5.22908
+residual: 0.0020192time: 5.28784
+residual: 0.00186825time: 5.34659
+residual: 0.00172857time: 5.40534
+residual: 0.00159932time: 5.4641
+residual: 0.00147973time: 5.52285
+residual: 0.00136908time: 5.5816
+residual: 0.00126671time: 5.64036
+residual: 0.001172time: 5.69911
+residual: 0.00108438time: 5.75786
+residual: 0.00100331time: 5.81662
+residual: 0.000928299time: 5.87537
+residual: 0.000858895time: 5.93413
+residual: 0.000794678time: 5.99288
+residual: 0.00073526time: 6.05163
+residual: 0.000680284time: 6.11039
+residual: 0.000629419time: 6.16914
+residual: 0.000582358time: 6.22789
+residual: 0.000538817time: 6.28665
+residual: 0.000498532time: 6.3454
+residual: 0.000461259time: 6.40416
+residual: 0.000426772time: 6.46291
+residual: 0.000394864time: 6.52166
+residual: 0.000365341time: 6.58042
+residual: 0.000338025time: 6.63917
+residual: 0.000312751time: 6.69792
+residual: 0.000289367time: 6.75668
+residual: 0.000267732time: 6.81543
+residual: 0.000247714time: 6.87419
+residual: 0.000229194time: 6.93294
+residual: 0.000212057time: 6.99169
+residual: 0.000196203time: 7.05045
+residual: 0.000181533time: 7.1092
+residual: 0.00016796time: 7.16795
+residual: 0.000155402time: 7.22671
+residual: 0.000143783time: 7.28546
+residual: 0.000133033time: 7.34422
+residual: 0.000123086time: 7.40297
+residual: 0.000113883time: 7.46172
+residual: 0.000105369time: 7.52048
+residual: 9.74905e-05time: 7.57923
+residual: 9.02014e-05time: 7.63798
+residual: 8.34573e-05time: 7.69674
+residual: 7.72174e-05time: 7.75549
+residual: 7.1444e-05time: 7.81425
+residual: 6.61023e-05time: 7.873
+residual: 6.116e-05time: 7.93175
+residual: 5.65872e-05time: 7.99051
+residual: 5.23564e-05time: 8.04926
+residual: 4.84418e-05time: 8.10801
+residual: 4.482e-05time: 8.16677
+residual: 4.14689e-05time: 8.22552
+residual: 3.83684e-05time: 8.28427
+residual: 3.54996e-05time: 8.34303
+residual: 3.28454e-05time: 8.40178
+residual: 3.03897e-05time: 8.46054
+residual: 2.81175e-05time: 8.51929
+residual: 2.60152e-05time: 8.57804
+residual: 2.40701e-05time: 8.6368
+residual: 2.22705e-05time: 8.69555
+residual: 2.06054e-05time: 8.7543
+residual: 1.90648e-05time: 8.81306
+residual: 1.76393e-05time: 8.87181
+residual: 1.63205e-05time: 8.93057
+residual: 1.51002e-05time: 8.98932
+residual: 1.39712e-05time: 9.04807
+residual: 1.29266e-05time: 9.10683
+residual: 1.19601e-05time: 9.16558
+residual: 1.10659e-05time: 9.22433
+residual: 1.02385e-05time: 9.28309
+residual: 9.47304e-06time: 9.34184
+residual: 8.76476e-06time: 9.4006
+residual: 8.10944e-06time: 9.45935
+residual: 7.50312e-06time: 9.5181
+residual: 6.94213e-06time: 9.57686
+residual: 6.42309e-06time: 9.63561
+residual: 5.94285e-06time: 9.69436
+residual: 5.49852e-06time: 9.75312
+residual: 5.08741e-06time: 9.81187
+residual: 4.70703e-06time: 9.87063
+residual: 4.3551e-06time: 9.92938
+residual: 4.02948e-06time: 9.98813
+residual: 3.72821e-06time: 10.0469
+residual: 3.44946e-06time: 10.1056
+residual: 3.19155e-06time: 10.1644
+residual: 2.95293e-06time: 10.2231
+residual: 2.73214e-06time: 10.2819
+residual: 2.52787e-06time: 10.3407
+residual: 2.33887e-06time: 10.3994
+residual: 2.164e-06time: 10.4582
+residual: 2.0022e-06time: 10.5169
+residual: 1.8525e-06time: 10.5757
+residual: 1.71399e-06time: 10.6344
+residual: 1.58584e-06time: 10.6932
+residual: 1.46727e-06time: 10.7519
+residual: 1.35757e-06time: 10.8107
+residual: 1.25607e-06time: 10.8694
+residual: 1.16215e-06time: 10.9282
+residual: 1.07526e-06time: 10.9869
+residual: 9.94867e-07time: 11.0457
+residual: 9.20484e-07time: 11.1045
+residual: 8.51662e-07time: 11.1632
+residual: 7.87985e-07time: 11.222
+residual: 7.29069e-07time: 11.2807
+residual: 6.74559e-07time: 11.3395
+residual: 6.24124e-07time: 11.3982
+residual: 5.77459e-07time: 11.457
+residual: 5.34284e-07time: 11.5157
+residual: 4.94337e-07time: 11.5745
+residual: 4.57377e-07time: 11.6332
+residual: 4.2318e-07time: 11.692
+residual: 3.9154e-07time: 11.7507
+residual: 3.62265e-07time: 11.8095
+residual: 3.3518e-07time: 11.8683
+residual: 3.10119e-07time: 11.927
+residual: 2.86932e-07time: 11.9858
+residual: 2.65479e-07time: 12.0445
+residual: 2.4563e-07time: 12.1033
+residual: 2.27265e-07time: 12.162
+residual: 2.10273e-07time: 12.2208
+residual: 1.94551e-07time: 12.2795
+residual: 1.80005e-07time: 12.3383
+residual: 1.66547e-07time: 12.397
+residual: 1.54094e-07time: 12.4558
+residual: 1.42573e-07time: 12.5145
+residual: 1.31913e-07time: 12.5733
+residual: 1.2205e-07time: 12.6321
+residual: 1.12925e-07time: 12.6908
+residual: 1.04482e-07time: 12.7496
+Steps taken: 108783
+solving adjoint: 
+cycle: 0
+total cells: 1280
+total dofs: 10240
+residual: 34.1239time: 12.8299
+residual: 32.3144time: 12.8771
+residual: 30.4309time: 12.9242
+residual: 28.5178time: 12.9713
+residual: 26.6292time: 13.0184
+residual: 24.8126time: 13.0656
+residual: 23.0401time: 13.1127
+residual: 21.4348time: 13.1598
+residual: 20.1088time: 13.2069
+residual: 18.9971time: 13.2541
+residual: 18.0538time: 13.3012
+residual: 17.1965time: 13.3483
+residual: 16.3503time: 13.3954
+residual: 15.4765time: 13.4426
+residual: 14.5798time: 13.4897
+residual: 13.6863time: 13.5368
+residual: 12.8223time: 13.5839
+residual: 12.0086time: 13.6311
+residual: 11.2574time: 13.6782
+residual: 10.5729time: 13.7253
+residual: 9.95307time: 13.7724
+residual: 9.39067time: 13.8196
+residual: 8.87481time: 13.8667
+residual: 8.39397time: 13.9138
+residual: 7.93747time: 13.9609
+residual: 7.4975time: 14.0081
+residual: 7.0703time: 14.0552
+residual: 6.65623time: 14.1023
+residual: 6.25808time: 14.1494
+residual: 5.87915time: 14.1966
+residual: 5.52217time: 14.2437
+residual: 5.18864time: 14.2908
+residual: 4.87872time: 14.3379
+residual: 4.59138time: 14.3851
+residual: 4.32463time: 14.4322
+residual: 4.07601time: 14.4793
+residual: 3.84298time: 14.5264
+residual: 3.62327time: 14.5736
+residual: 3.41516time: 14.6207
+residual: 3.21753time: 14.6678
+residual: 3.02983time: 14.7149
+residual: 2.85186time: 14.7621
+residual: 2.68363time: 14.8092
+residual: 2.52513time: 14.8563
+residual: 2.37624time: 14.9034
+residual: 2.23668time: 14.9506
+residual: 2.10596time: 14.9977
+residual: 1.98348time: 15.0448
+residual: 1.86854time: 15.0919
+residual: 1.76048time: 15.1391
+residual: 1.65866time: 15.1862
+residual: 1.56257time: 15.2333
+residual: 1.47179time: 15.2804
+residual: 1.38603time: 15.3276
+residual: 1.30505time: 15.3747
+residual: 1.22867time: 15.4218
+residual: 1.15671time: 15.4689
+residual: 1.08899time: 15.5161
+residual: 1.02533time: 15.5632
+residual: 0.965485time: 15.6103
+residual: 0.909235time: 15.6574
+residual: 0.856338time: 15.7046
+residual: 0.806559time: 15.7517
+residual: 0.759679time: 15.7988
+residual: 0.715501time: 15.8459
+residual: 0.673854time: 15.8931
+residual: 0.634589time: 15.9402
+residual: 0.597574time: 15.9873
+residual: 0.562694time: 16.0344
+residual: 0.529839time: 16.0816
+residual: 0.498906time: 16.1287
+residual: 0.46979time: 16.1758
+residual: 0.44239time: 16.223
+residual: 0.416604time: 16.2701
+residual: 0.392335time: 16.3172
+residual: 0.369487time: 16.3643
+residual: 0.347972time: 16.4115
+residual: 0.327707time: 16.4586
+residual: 0.308616time: 16.5057
+residual: 0.29063time: 16.5528
+residual: 0.273686time: 16.6
+residual: 0.257726time: 16.6471
+residual: 0.242695time: 16.6942
+residual: 0.22854time: 16.7413
+residual: 0.215212time: 16.7885
+residual: 0.202664time: 16.8356
+residual: 0.190851time: 16.8827
+residual: 0.179728time: 16.9298
+residual: 0.169255time: 16.977
+residual: 0.159393time: 17.0241
+residual: 0.150105time: 17.0712
+residual: 0.141358time: 17.1183
+residual: 0.133119time: 17.1655
+residual: 0.125359time: 17.2126
+residual: 0.118051time: 17.2597
+residual: 0.111168time: 17.3068
+residual: 0.104687time: 17.354
+residual: 0.0985839time: 17.4011
+residual: 0.0928369time: 17.4482
+residual: 0.0874253time: 17.4953
+residual: 0.0823296time: 17.5425
+residual: 0.0775312time: 17.5896
+residual: 0.0730125time: 17.6367
+residual: 0.0687572time: 17.6838
+residual: 0.0647497time: 17.731
+residual: 0.0609757time: 17.7781
+residual: 0.0574214time: 17.8252
+residual: 0.0540742time: 17.8723
+residual: 0.050922time: 17.9195
+residual: 0.0479536time: 17.9666
+residual: 0.0451582time: 18.0137
+residual: 0.0425258time: 18.0608
+residual: 0.040047time: 18.108
+residual: 0.0377127time: 18.1551
+residual: 0.0355145time: 18.2022
+residual: 0.0334445time: 18.2493
+residual: 0.0314951time: 18.2965
+residual: 0.0296594time: 18.3436
+residual: 0.0279306time: 18.3907
+residual: 0.0263025time: 18.4378
+residual: 0.0247693time: 18.485
+residual: 0.0233255time: 18.5321
+residual: 0.0219658time: 18.5792
+residual: 0.0206854time: 18.6263
+residual: 0.0194797time: 18.6735
+residual: 0.0183442time: 18.7206
+residual: 0.0172749time: 18.7677
+residual: 0.016268time: 18.8148
+residual: 0.0153198time: 18.862
+residual: 0.0144268time: 18.9091
+residual: 0.0135859time: 18.9562
+residual: 0.012794time: 19.0033
+residual: 0.0120482time: 19.0505
+residual: 0.0113459time: 19.0976
+residual: 0.0106846time: 19.1447
+residual: 0.0100618time: 19.1918
+residual: 0.00947528time: 19.239
+residual: 0.00892296time: 19.2861
+residual: 0.00840285time: 19.3332
+residual: 0.00791305time: 19.3803
+residual: 0.00745181time: 19.4275
+residual: 0.00701745time: 19.4746
+residual: 0.00660841time: 19.5217
+residual: 0.00622321time: 19.5688
+residual: 0.00586046time: 19.616
+residual: 0.00551886time: 19.6631
+residual: 0.00519717time: 19.7102
+residual: 0.00489423time: 19.7573
+residual: 0.00460894time: 19.8045
+residual: 0.00434029time: 19.8516
+residual: 0.0040873time: 19.8987
+residual: 0.00384905time: 19.9458
+residual: 0.00362469time: 19.993
+residual: 0.00341341time: 20.0401
+residual: 0.00321445time: 20.0872
+residual: 0.00302708time: 20.1343
+residual: 0.00285063time: 20.1815
+residual: 0.00268447time: 20.2286
+residual: 0.00252799time: 20.2757
+residual: 0.00238064time: 20.3228
+residual: 0.00224187time: 20.37
+residual: 0.00211119time: 20.4171
+residual: 0.00198813time: 20.4642
+residual: 0.00187225time: 20.5113
+residual: 0.00176311time: 20.5585
+residual: 0.00166034time: 20.6056
+residual: 0.00156356time: 20.6527
+residual: 0.00147242time: 20.6998
+residual: 0.0013866time: 20.747
+residual: 0.00130577time: 20.7941
+residual: 0.00122966time: 20.8412
+residual: 0.00115798time: 20.8883
+residual: 0.00109049time: 20.9355
+residual: 0.00102692time: 20.9826
+residual: 0.000967064time: 21.0297
+residual: 0.000910694time: 21.0768
+residual: 0.00085761time: 21.124
+residual: 0.000807621time: 21.1711
+residual: 0.000760545time: 21.2182
+residual: 0.000716213time: 21.2653
+residual: 0.000674466time: 21.3125
+residual: 0.000635151time: 21.3596
+residual: 0.000598129time: 21.4067
+residual: 0.000563264time: 21.4538
+residual: 0.000530432time: 21.501
+residual: 0.000499513time: 21.5481
+residual: 0.000470397time: 21.5952
+residual: 0.000442978time: 21.6423
+residual: 0.000417157time: 21.6895
+residual: 0.000392841time: 21.7366
+residual: 0.000369943time: 21.7837
+residual: 0.000348379time: 21.8308
+residual: 0.000328072time: 21.878
+residual: 0.000308949time: 21.9251
+residual: 0.00029094time: 21.9722
+residual: 0.000273982time: 22.0193
+residual: 0.000258011time: 22.0665
+residual: 0.000242972time: 22.1136
+residual: 0.000228809time: 22.1607
+residual: 0.000215472time: 22.2078
+residual: 0.000202912time: 22.255
+residual: 0.000191085time: 22.3021
+residual: 0.000179947time: 22.3492
+residual: 0.000169458time: 22.3963
+residual: 0.00015958time: 22.4435
+residual: 0.000150278time: 22.4906
+residual: 0.000141519time: 22.5377
+residual: 0.00013327time: 22.5848
+residual: 0.000125501time: 22.632
+residual: 0.000118186time: 22.6791
+residual: 0.000111297time: 22.7262
+residual: 0.00010481time: 22.7733
+residual: 9.87002e-05time: 22.8205
+residual: 9.29471e-05time: 22.8676
+residual: 8.75292e-05time: 22.9147
+residual: 8.24272e-05time: 22.9618
+residual: 7.76226e-05time: 23.009
+residual: 7.3098e-05time: 23.0561
+residual: 6.88371e-05time: 23.1032
+residual: 6.48247e-05time: 23.1504
+residual: 6.10461e-05time: 23.1975
+residual: 5.74877e-05time: 23.2446
+residual: 5.41368e-05time: 23.2917
+residual: 5.09812e-05time: 23.3389
+residual: 4.80095e-05time: 23.386
+residual: 4.52111e-05time: 23.4331
+residual: 4.25758e-05time: 23.4802
+residual: 4.0094e-05time: 23.5274
+residual: 3.7757e-05time: 23.5745
+residual: 3.55562e-05time: 23.6216
+residual: 3.34836e-05time: 23.6687
+residual: 3.15319e-05time: 23.7159
+residual: 2.96939e-05time: 23.763
+residual: 2.79631e-05time: 23.8101
+residual: 2.63331e-05time: 23.8572
+residual: 2.47982e-05time: 23.9044
+residual: 2.33527e-05time: 23.9515
+residual: 2.19915e-05time: 23.9986
+residual: 2.07096e-05time: 24.0457
+residual: 1.95025e-05time: 24.0929
+residual: 1.83657e-05time: 24.14
+residual: 1.72951e-05time: 24.1871
+residual: 1.6287e-05time: 24.2342
+residual: 1.53377e-05time: 24.2814
+residual: 1.44436e-05time: 24.3285
+residual: 1.36017e-05time: 24.3756
+residual: 1.28089e-05time: 24.4227
+residual: 1.20623e-05time: 24.4699
+residual: 1.13592e-05time: 24.517
+residual: 1.0697e-05time: 24.5641
+residual: 1.00735e-05time: 24.6112
+residual: 9.48634e-06time: 24.6584
+residual: 8.93339e-06time: 24.7055
+residual: 8.41266e-06time: 24.7526
+residual: 7.9223e-06time: 24.7997
+residual: 7.46051e-06time: 24.8469
+residual: 7.02564e-06time: 24.894
+residual: 6.61612e-06time: 24.9411
+residual: 6.23047e-06time: 24.9882
+residual: 5.8673e-06time: 25.0354
+residual: 5.5253e-06time: 25.0825
+residual: 5.20323e-06time: 25.1296
+residual: 4.89994e-06time: 25.1767
+residual: 4.61432e-06time: 25.2239
+residual: 4.34536e-06time: 25.271
+residual: 4.09207e-06time: 25.3181
+residual: 3.85355e-06time: 25.3652
+residual: 3.62892e-06time: 25.4124
+residual: 3.4174e-06time: 25.4595
+residual: 3.2182e-06time: 25.5066
+residual: 3.03061e-06time: 25.5537
+residual: 2.85396e-06time: 25.6009
+residual: 2.6876e-06time: 25.648
+residual: 2.53094e-06time: 25.6951
+residual: 2.38342e-06time: 25.7422
+residual: 2.24449e-06time: 25.7894
+residual: 2.11366e-06time: 25.8365
+residual: 1.99046e-06time: 25.8836
+residual: 1.87443e-06time: 25.9307
+residual: 1.76517e-06time: 25.9779
+residual: 1.66228e-06time: 26.025
+residual: 1.56539e-06time: 26.0721
+residual: 1.47414e-06time: 26.1192
+residual: 1.38822e-06time: 26.1664
+residual: 1.3073e-06time: 26.2135
+residual: 1.2311e-06time: 26.2606
+residual: 1.15934e-06time: 26.3077
+residual: 1.09176e-06time: 26.3549
+residual: 1.02812e-06time: 26.402
+residual: 9.68193e-07time: 26.4491
+residual: 9.11757e-07time: 26.4962
+residual: 8.58611e-07time: 26.5434
+residual: 8.08563e-07time: 26.5905
+residual: 7.61433e-07time: 26.6376
+residual: 7.17049e-07time: 26.6847
+residual: 6.75253e-07time: 26.7319
+residual: 6.35893e-07time: 26.779
+residual: 5.98827e-07time: 26.8261
+residual: 5.63922e-07time: 26.8732
+residual: 5.31051e-07time: 26.9204
+residual: 5.00096e-07time: 26.9675
+residual: 4.70946e-07time: 27.0146
+residual: 4.43495e-07time: 27.0617
+residual: 4.17644e-07time: 27.1089
+residual: 3.933e-07time: 27.156
+residual: 3.70374e-07time: 27.2031
+residual: 3.48786e-07time: 27.2502
+residual: 3.28455e-07time: 27.2974
+residual: 3.0931e-07time: 27.3445
+residual: 2.9128e-07time: 27.3916
+residual: 2.74301e-07time: 27.4387
+residual: 2.58312e-07time: 27.4859
+residual: 2.43256e-07time: 27.533
+residual: 2.29077e-07time: 27.5801
+residual: 2.15724e-07time: 27.6272
+residual: 2.03149e-07time: 27.6744
+residual: 1.91308e-07time: 27.7215
+residual: 1.80157e-07time: 27.7686
+residual: 1.69655e-07time: 27.8157
+residual: 1.59766e-07time: 27.8629
+residual: 1.50454e-07time: 27.91
+residual: 1.41684e-07time: 27.9571
+residual: 1.33425e-07time: 28.0042
+residual: 1.25648e-07time: 28.0514
+residual: 1.18324e-07time: 28.0985
+residual: 1.11427e-07time: 28.1456
+residual: 1.04932e-07time: 28.1927
+Steps taken: 163901
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0139242
+Predicted error in target from grid...0.000635949
+Predicted error in target from velocity...0.000604623
+Total predicted error...0.00124057
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |  4.67e+03s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |         1 |    0.0696s |         0% |
+| compute velocity error          |         1 |    0.0468s |         0% |
+| perform adaptivity              |         1 |    0.0179s |         0% |
+| solve adjoint                   |         1 |  3.02e+03s |        65% |
+| solve primal                    |         1 |  1.64e+03s |        35% |
++---------------------------------+-----------+------------+------------+
+
+Sender: LSF System <lsfadmin@linuxbmc0973>
+Subject: Job 44010104: <2x1v_moments_wall_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_wall_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Aug 14 16:48:10 2018
+Job was executed on host(s) <3*linuxbmc0973>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Aug 14 16:48:14 2018
+                            <3*linuxbmc0979>
+                            <3*linuxbmc0980>
+                            <3*linuxbmc0981>
+                            <3*linuxbmc0982>
+                            <1*linuxbmc0983>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Tue Aug 14 16:48:14 2018
+Terminated at Tue Aug 14 16:54:51 2018
+Results reported at Tue Aug 14 16:54:51 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_wall_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_wall_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 10
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   766.88 sec.
+    Max Memory :                                 555 MB
+    Average Memory :                             502.67 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95445.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   396 sec.
+    Turnaround time :                            401 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534258090.44010104.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0973.rz.RWTH-Aachen.DE:07435] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+UNIFORM GRID REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 20
+total dofs: 200
+residual: 0.00113483time: 3.76024
+residual: 4.5017e-06time: 7.52048
+Steps taken: 1345
+solving adjoint: 
+cycle: 0
+total cells: 20
+total dofs: 200
+residual: 0.121099time: 12.6873
+residual: 0.00333312time: 15.2596
+residual: 9.17411e-05time: 17.8319
+residual: 2.52509e-06time: 20.4042
+Steps taken: 2450
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0158564
+Predicted error in target from grid...0.001958
+Predicted error in target from velocity...0.000878223
+Total predicted error...0.00283622
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 40
+total dofs: 400
+residual: 0.000794836time: 24.5994
+residual: 5.68744e-05time: 26.4796
+residual: 4.09005e-06time: 28.3597
+residual: 2.94135e-07time: 30.2398
+Steps taken: 2205
+solving adjoint: 
+cycle: 1
+total cells: 40
+total dofs: 400
+residual: 0.0460217time: 32.2968
+residual: 0.00831328time: 33.5829
+residual: 0.0014996time: 34.8691
+residual: 0.000270445time: 36.1552
+residual: 4.87728e-05time: 37.4414
+residual: 8.79583e-06time: 38.7275
+residual: 1.58626e-06time: 40.0137
+residual: 2.86071e-07time: 41.2998
+Steps taken: 4307
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.015027
+Predicted error in target from grid...0.00158548
+Predicted error in target from velocity...0.000860609
+Total predicted error...0.00244609
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 80
+total dofs: 800
+residual: 0.0026267time: 43.0296
+residual: 0.000710423time: 43.9697
+residual: 0.000195588time: 44.9097
+residual: 5.4429e-05time: 45.8498
+residual: 1.51376e-05time: 46.7898
+residual: 4.21003e-06time: 47.7299
+residual: 1.17089e-06time: 48.67
+residual: 3.25646e-07time: 49.61
+Steps taken: 4462
+solving adjoint: 
+cycle: 2
+total cells: 80
+total dofs: 800
+residual: 0.0928692time: 51.1217
+residual: 0.0389122time: 51.7648
+residual: 0.0169568time: 52.4079
+residual: 0.0073841time: 53.0509
+residual: 0.00321004time: 53.694
+residual: 0.00139482time: 54.3371
+residual: 0.000605994time: 54.9802
+residual: 0.000263271time: 55.6232
+residual: 0.000114375time: 56.2663
+residual: 4.96891e-05time: 56.9094
+residual: 2.15869e-05time: 57.5525
+residual: 9.37816e-06time: 58.1955
+residual: 4.07423e-06time: 58.8386
+residual: 1.77e-06time: 59.4817
+residual: 7.68957e-07time: 60.1248
+residual: 3.34064e-07time: 60.7678
+residual: 1.4513e-07time: 61.4109
+Steps taken: 8724
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0145022
+Predicted error in target from grid...0.00128126
+Predicted error in target from velocity...0.000857916
+Total predicted error...0.00213918
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 160
+total dofs: 1600
+residual: 0.00751208time: 62.169
+residual: 0.00212837time: 62.6391
+residual: 0.0010626time: 63.1091
+residual: 0.000569904time: 63.5791
+residual: 0.0002994time: 64.0492
+residual: 0.000159181time: 64.5192
+residual: 8.47941e-05time: 64.9892
+residual: 4.5165e-05time: 65.4592
+residual: 2.40494e-05time: 65.9293
+residual: 1.28039e-05time: 66.3993
+residual: 6.81707e-06time: 66.8693
+residual: 3.62963e-06time: 67.3394
+residual: 1.93254e-06time: 67.8094
+residual: 1.02895e-06time: 68.2794
+residual: 5.47845e-07time: 68.7495
+residual: 2.9169e-07time: 69.2195
+residual: 1.55305e-07time: 69.6895
+Steps taken: 8850
+solving adjoint: 
+cycle: 3
+total cells: 160
+total dofs: 1600
+residual: 0.161402time: 70.3401
+residual: 0.0714253time: 70.6616
+residual: 0.0483512time: 70.9831
+residual: 0.0302247time: 71.3047
+residual: 0.0204079time: 71.6262
+residual: 0.0133432time: 71.9478
+residual: 0.00891176time: 72.2693
+residual: 0.00588467time: 72.5908
+residual: 0.00391053time: 72.9124
+residual: 0.00258962time: 73.2339
+residual: 0.00171822time: 73.5554
+residual: 0.00113882time: 73.877
+residual: 0.000755248time: 74.1985
+residual: 0.000500705time: 74.5201
+residual: 0.000332012time: 74.8416
+residual: 0.000220131time: 75.1631
+residual: 0.00014596time: 75.4847
+residual: 9.6777e-05time: 75.8062
+residual: 6.4168e-05time: 76.1277
+residual: 4.25461e-05time: 76.4493
+residual: 2.82101e-05time: 76.7708
+residual: 1.87046e-05time: 77.0924
+residual: 1.2402e-05time: 77.4139
+residual: 8.22307e-06time: 77.7354
+residual: 5.45227e-06time: 78.057
+residual: 3.61511e-06time: 78.3785
+residual: 2.39698e-06time: 78.7
+residual: 1.58931e-06time: 79.0216
+residual: 1.05378e-06time: 79.3431
+residual: 6.98706e-07time: 79.6647
+residual: 4.63274e-07time: 79.9862
+residual: 3.07172e-07time: 80.3077
+residual: 2.03669e-07time: 80.6293
+residual: 1.35042e-07time: 80.9508
+Steps taken: 17366
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0142054
+Predicted error in target from grid...0.00108846
+Predicted error in target from velocity...0.000859181
+Total predicted error...0.00194764
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 320
+total dofs: 3200
+residual: 0.0178883time: 81.4212
+residual: 0.00659913time: 81.6562
+residual: 0.00344378time: 81.8912
+residual: 0.00167502time: 82.1262
+residual: 0.00117767time: 82.3613
+residual: 0.000803376time: 82.5963
+residual: 0.000568044time: 82.8313
+residual: 0.000430492time: 83.0663
+residual: 0.000309147time: 83.3013
+residual: 0.000226468time: 83.5363
+residual: 0.000165962time: 83.7713
+residual: 0.000120991time: 84.0064
+residual: 8.86645e-05time: 84.2414
+residual: 6.47749e-05time: 84.4764
+residual: 4.74241e-05time: 84.7114
+residual: 3.46773e-05time: 84.9464
+residual: 2.53631e-05time: 85.1814
+residual: 1.85568e-05time: 85.4164
+residual: 1.35706e-05time: 85.6515
+residual: 9.92776e-06time: 85.8865
+residual: 7.2615e-06time: 86.1215
+residual: 5.31156e-06time: 86.3565
+residual: 3.8853e-06time: 86.5915
+residual: 2.84191e-06time: 86.8265
+residual: 2.0788e-06time: 87.0616
+residual: 1.52056e-06time: 87.2966
+residual: 1.11224e-06time: 87.5316
+residual: 8.13571e-07time: 87.7666
+residual: 5.951e-07time: 88.0016
+residual: 4.35297e-07time: 88.2366
+residual: 3.18405e-07time: 88.4716
+residual: 2.32903e-07time: 88.7067
+residual: 1.70361e-07time: 88.9417
+residual: 1.24614e-07time: 89.1767
+Steps taken: 17352
+solving adjoint: 
+cycle: 4
+total cells: 320
+total dofs: 3200
+residual: 0.238467time: 89.5029
+residual: 0.124887time: 89.6637
+residual: 0.0793212time: 89.8244
+residual: 0.0530916time: 89.9852
+residual: 0.0425373time: 90.146
+residual: 0.0359243time: 90.3067
+residual: 0.028496time: 90.4675
+residual: 0.0224308time: 90.6283
+residual: 0.0184036time: 90.7891
+residual: 0.0152296time: 90.9498
+residual: 0.0123384time: 91.1106
+residual: 0.00996717time: 91.2714
+residual: 0.0081552time: 91.4321
+residual: 0.00668553time: 91.5929
+residual: 0.0054413time: 91.7537
+residual: 0.00442443time: 91.9144
+residual: 0.00361221time: 92.0752
+residual: 0.00295055time: 92.236
+residual: 0.0024046time: 92.3967
+residual: 0.00195923time: 92.5575
+residual: 0.0015984time: 92.7183
+residual: 0.00130415time: 92.879
+residual: 0.00106331time: 93.0398
+residual: 0.000866906time: 93.2006
+residual: 0.000707067time: 93.3614
+residual: 0.000576708time: 93.5221
+residual: 0.000470277time: 93.6829
+residual: 0.000383485time: 93.8437
+residual: 0.000312751time: 94.0044
+residual: 0.000255064time: 94.1652
+residual: 0.000208002time: 94.326
+residual: 0.000169624time: 94.4867
+residual: 0.000138333time: 94.6475
+residual: 0.000112814time: 94.8083
+residual: 9.20002e-05time: 94.969
+residual: 7.50268e-05time: 95.1298
+residual: 6.11856e-05time: 95.2906
+residual: 4.98978e-05time: 95.4513
+residual: 4.06922e-05time: 95.6121
+residual: 3.31849e-05time: 95.7729
+residual: 2.70628e-05time: 95.9337
+residual: 2.20701e-05time: 96.0944
+residual: 1.79984e-05time: 96.2552
+residual: 1.46779e-05time: 96.416
+residual: 1.197e-05time: 96.5767
+residual: 9.76172e-06time: 96.7375
+residual: 7.9608e-06time: 96.8983
+residual: 6.49213e-06time: 97.059
+residual: 5.29442e-06time: 97.2198
+residual: 4.31767e-06time: 97.3806
+residual: 3.52111e-06time: 97.5413
+residual: 2.87151e-06time: 97.7021
+residual: 2.34175e-06time: 97.8629
+residual: 1.90973e-06time: 98.0236
+residual: 1.55741e-06time: 98.1844
+residual: 1.27009e-06time: 98.3452
+residual: 1.03577e-06time: 98.506
+residual: 8.44685e-07time: 98.6667
+residual: 6.88851e-07time: 98.8275
+residual: 5.61767e-07time: 98.9883
+residual: 4.58128e-07time: 99.149
+residual: 3.73609e-07time: 99.3098
+residual: 3.04683e-07time: 99.4706
+residual: 2.48473e-07time: 99.6313
+residual: 2.02633e-07time: 99.7921
+residual: 1.6525e-07time: 99.9529
+residual: 1.34763e-07time: 100.114
+residual: 1.09901e-07time: 100.274
+Steps taken: 34232
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0140473
+Predicted error in target from grid...0.000980059
+Predicted error in target from velocity...0.000860673
+Total predicted error...0.00184073
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       383s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |         5 |    0.0612s |         0% |
+| compute velocity error          |         5 |    0.0395s |         0% |
+| perform adaptivity              |         5 |    0.0136s |         0% |
+| solve adjoint                   |         5 |       283s |        74% |
+| solve primal                    |         5 |       100s |        26% |
++---------------------------------+-----------+------------+------------+
+
+Sender: LSF System <lsfadmin@linuxbmc0237>
+Subject: Job 44016034: <2x1v_moments_wall_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_wall_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Aug 14 21:56:03 2018
+Job was executed on host(s) <12*linuxbmc0237>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Aug 14 21:56:09 2018
+                            <4*linuxbmc0241>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Tue Aug 14 21:56:09 2018
+Terminated at Tue Aug 14 22:04:19 2018
+Results reported at Tue Aug 14 22:04:19 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_wall_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_wall_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 10
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   952.53 sec.
+    Max Memory :                                 453 MB
+    Average Memory :                             425.00 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95547.00 MB
+    Max Swap :                                   -
+    Max Processes :                              7
+    Max Threads :                                20
+    Run time :                                   496 sec.
+    Turnaround time :                            496 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534276563.44016034.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc0237.rz.RWTH-Aachen.DE:25117] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+UNIFORM GRID REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 20
+total dofs: 240
+residual: 0.00113483time: 3.76024
+residual: 4.5017e-06time: 7.52048
+Steps taken: 1345
+solving adjoint: 
+cycle: 0
+total cells: 20
+total dofs: 240
+residual: 0.187106time: 12.3874
+residual: 0.00800097time: 14.6598
+residual: 0.00034213time: 16.9321
+residual: 1.46299e-05time: 19.2045
+residual: 6.2559e-07time: 21.4768
+Steps taken: 2791
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0158564
+Predicted error in target from grid...0.00210312
+Predicted error in target from velocity...0.00104067
+Total predicted error...0.0031438
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 40
+total dofs: 480
+residual: 0.000794836time: 24.6794
+residual: 5.68744e-05time: 26.5596
+residual: 4.09005e-06time: 28.4397
+residual: 2.94135e-07time: 30.3198
+Steps taken: 2205
+solving adjoint: 
+cycle: 1
+total cells: 40
+total dofs: 480
+residual: 0.056957time: 32.2268
+residual: 0.0123176time: 33.363
+residual: 0.00273284time: 34.4992
+residual: 0.000606815time: 35.6354
+residual: 0.000134728time: 36.7715
+residual: 2.99129e-05time: 37.9077
+residual: 6.6414e-06time: 39.0439
+residual: 1.47456e-06time: 40.1801
+residual: 3.27388e-07time: 41.3162
+Steps taken: 4895
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.015027
+Predicted error in target from grid...0.00173007
+Predicted error in target from velocity...0.0010176
+Total predicted error...0.00274767
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 80
+total dofs: 960
+residual: 0.0026267time: 43.1539
+residual: 0.000710423time: 44.0939
+residual: 0.000195588time: 45.034
+residual: 5.4429e-05time: 45.9741
+residual: 1.51376e-05time: 46.9141
+residual: 4.21003e-06time: 47.8542
+residual: 1.17089e-06time: 48.7942
+residual: 3.25646e-07time: 49.7343
+Steps taken: 4462
+solving adjoint: 
+cycle: 2
+total cells: 80
+total dofs: 960
+residual: 0.105443time: 51.171
+residual: 0.0478625time: 51.7391
+residual: 0.0225904time: 52.3072
+residual: 0.0107819time: 52.8753
+residual: 0.00517064time: 53.4434
+residual: 0.00248346time: 54.0115
+residual: 0.00119313time: 54.5795
+residual: 0.000573201time: 55.1476
+residual: 0.000275367time: 55.7157
+residual: 0.000132285time: 56.2838
+residual: 6.35489e-05time: 56.8519
+residual: 3.05285e-05time: 57.42
+residual: 1.46657e-05time: 57.9881
+residual: 7.04533e-06time: 58.5562
+residual: 3.38454e-06time: 59.1242
+residual: 1.62591e-06time: 59.6923
+residual: 7.8108e-07time: 60.2604
+residual: 3.75226e-07time: 60.8285
+residual: 1.80257e-07time: 61.3966
+Steps taken: 9902
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0145022
+Predicted error in target from grid...0.0014291
+Predicted error in target from velocity...0.00101306
+Total predicted error...0.00244216
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 160
+total dofs: 1920
+residual: 0.00751208time: 62.3234
+residual: 0.00212837time: 62.7934
+residual: 0.0010626time: 63.2634
+residual: 0.000569904time: 63.7335
+residual: 0.0002994time: 64.2035
+residual: 0.000159181time: 64.6735
+residual: 8.47941e-05time: 65.1436
+residual: 4.5165e-05time: 65.6136
+residual: 2.40494e-05time: 66.0836
+residual: 1.28039e-05time: 66.5536
+residual: 6.81707e-06time: 67.0237
+residual: 3.62963e-06time: 67.4937
+residual: 1.93254e-06time: 67.9637
+residual: 1.02895e-06time: 68.4338
+residual: 5.47845e-07time: 68.9038
+residual: 2.9169e-07time: 69.3738
+residual: 1.55305e-07time: 69.8439
+Steps taken: 8850
+solving adjoint: 
+cycle: 3
+total cells: 160
+total dofs: 1920
+residual: 0.169612time: 70.4569
+residual: 0.0802138time: 70.741
+residual: 0.0530049time: 71.025
+residual: 0.0370155time: 71.3091
+residual: 0.0249489time: 71.5931
+residual: 0.0176983time: 71.8771
+residual: 0.0121564time: 72.1612
+residual: 0.0085301time: 72.4452
+residual: 0.00592079time: 72.7293
+residual: 0.00412995time: 73.0133
+residual: 0.00287619time: 73.2974
+residual: 0.00200325time: 73.5814
+residual: 0.00139585time: 73.8655
+residual: 0.000972137time: 74.1495
+residual: 0.000677305time: 74.4335
+residual: 0.000471773time: 74.7176
+residual: 0.000328657time: 75.0016
+residual: 0.00022894time: 75.2857
+residual: 0.000159483time: 75.5697
+residual: 0.000111097time: 75.8538
+residual: 7.73911e-05time: 76.1378
+residual: 5.39114e-05time: 76.4218
+residual: 3.75551e-05time: 76.7059
+residual: 2.61612e-05time: 76.9899
+residual: 1.82241e-05time: 77.274
+residual: 1.26951e-05time: 77.558
+residual: 8.84351e-06time: 77.8421
+residual: 6.16046e-06time: 78.1261
+residual: 4.29143e-06time: 78.4102
+residual: 2.98945e-06time: 78.6942
+residual: 2.08248e-06time: 78.9782
+residual: 1.45067e-06time: 79.2623
+residual: 1.01055e-06time: 79.5463
+residual: 7.03957e-07time: 79.8304
+residual: 4.90383e-07time: 80.1144
+residual: 3.41605e-07time: 80.3985
+residual: 2.37965e-07time: 80.6825
+residual: 1.65768e-07time: 80.9666
+residual: 1.15476e-07time: 81.2506
+Steps taken: 19699
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0142054
+Predicted error in target from grid...0.00123922
+Predicted error in target from velocity...0.00101389
+Total predicted error...0.0022531
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 320
+total dofs: 3840
+residual: 0.0178883time: 81.5987
+residual: 0.00659913time: 81.8337
+residual: 0.00344378time: 82.0687
+residual: 0.00167502time: 82.3037
+residual: 0.00117767time: 82.5387
+residual: 0.000803376time: 82.7737
+residual: 0.000568044time: 83.0088
+residual: 0.000430492time: 83.2438
+residual: 0.000309147time: 83.4788
+residual: 0.000226468time: 83.7138
+residual: 0.000165962time: 83.9488
+residual: 0.000120991time: 84.1838
+residual: 8.86645e-05time: 84.4188
+residual: 6.47749e-05time: 84.6539
+residual: 4.74241e-05time: 84.8889
+residual: 3.46773e-05time: 85.1239
+residual: 2.53631e-05time: 85.3589
+residual: 1.85568e-05time: 85.5939
+residual: 1.35706e-05time: 85.8289
+residual: 9.92776e-06time: 86.064
+residual: 7.2615e-06time: 86.299
+residual: 5.31156e-06time: 86.534
+residual: 3.8853e-06time: 86.769
+residual: 2.84191e-06time: 87.004
+residual: 2.0788e-06time: 87.239
+residual: 1.52056e-06time: 87.474
+residual: 1.11224e-06time: 87.7091
+residual: 8.13571e-07time: 87.9441
+residual: 5.951e-07time: 88.1791
+residual: 4.35297e-07time: 88.4141
+residual: 3.18405e-07time: 88.6491
+residual: 2.32903e-07time: 88.8841
+residual: 1.70361e-07time: 89.1191
+residual: 1.24614e-07time: 89.3542
+Steps taken: 17352
+solving adjoint: 
+cycle: 4
+total cells: 320
+total dofs: 3840
+residual: 0.246925time: 89.6616
+residual: 0.131525time: 89.8037
+residual: 0.0892372time: 89.9457
+residual: 0.0592903time: 90.0877
+residual: 0.0456087time: 90.2297
+residual: 0.0393511time: 90.3717
+residual: 0.033802time: 90.5138
+residual: 0.0273994time: 90.6558
+residual: 0.0221604time: 90.7978
+residual: 0.0185461time: 90.9398
+residual: 0.0157575time: 91.0819
+residual: 0.0131899time: 91.2239
+residual: 0.0109089time: 91.3659
+residual: 0.00907516time: 91.5079
+residual: 0.0076174time: 91.6499
+residual: 0.00639002time: 91.792
+residual: 0.00533148time: 91.934
+residual: 0.00444362time: 92.076
+residual: 0.00371419time: 92.218
+residual: 0.00310897time: 92.3601
+residual: 0.00259906time: 92.5021
+residual: 0.00217019time: 92.6441
+residual: 0.00181285time: 92.7861
+residual: 0.00151558time: 92.9281
+residual: 0.00126704time: 93.0702
+residual: 0.00105874time: 93.2122
+residual: 0.00088458time: 93.3542
+residual: 0.000739251time: 93.4962
+residual: 0.000617887time: 93.6383
+residual: 0.000516392time: 93.7803
+residual: 0.000431519time: 93.9223
+residual: 0.000360608time: 94.0643
+residual: 0.000301372time: 94.2063
+residual: 0.000251867time: 94.3484
+residual: 0.000210485time: 94.4904
+residual: 0.000175899time: 94.6324
+residual: 0.000147time: 94.7744
+residual: 0.00012285time: 94.9165
+residual: 0.000102667time: 95.0585
+residual: 8.57991e-05time: 95.2005
+residual: 7.17025e-05time: 95.3425
+residual: 5.99224e-05time: 95.4845
+residual: 5.00777e-05time: 95.6266
+residual: 4.18502e-05time: 95.7686
+residual: 3.49744e-05time: 95.9106
+residual: 2.92283e-05time: 96.0526
+residual: 2.44263e-05time: 96.1947
+residual: 2.04132e-05time: 96.3367
+residual: 1.70594e-05time: 96.4787
+residual: 1.42567e-05time: 96.6207
+residual: 1.19144e-05time: 96.7627
+residual: 9.95694e-06time: 96.9048
+residual: 8.32107e-06time: 97.0468
+residual: 6.95397e-06time: 97.1888
+residual: 5.81148e-06time: 97.3308
+residual: 4.85669e-06time: 97.4729
+residual: 4.05876e-06time: 97.6149
+residual: 3.39193e-06time: 97.7569
+residual: 2.83466e-06time: 97.8989
+residual: 2.36894e-06time: 98.0409
+residual: 1.97974e-06time: 98.183
+residual: 1.65448e-06time: 98.325
+residual: 1.38266e-06time: 98.467
+residual: 1.1555e-06time: 98.609
+residual: 9.65656e-07time: 98.7511
+residual: 8.07004e-07time: 98.8931
+residual: 6.74418e-07time: 99.0351
+residual: 5.63616e-07time: 99.1771
+residual: 4.71017e-07time: 99.3191
+residual: 3.93632e-07time: 99.4612
+residual: 3.28961e-07time: 99.6032
+residual: 2.74914e-07time: 99.7452
+residual: 2.29748e-07time: 99.8872
+residual: 1.92002e-07time: 100.029
+residual: 1.60457e-07time: 100.171
+residual: 1.34095e-07time: 100.313
+residual: 1.12064e-07time: 100.455
+Steps taken: 38818
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0140473
+Predicted error in target from grid...0.00113267
+Predicted error in target from velocity...0.00101533
+Total predicted error...0.002148
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       476s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |         5 |    0.0965s |         0% |
+| compute velocity error          |         5 |    0.0432s |         0% |
+| perform adaptivity              |         5 |    0.0147s |         0% |
+| solve adjoint                   |         5 |       374s |        79% |
+| solve primal                    |         5 |       102s |        21% |
++---------------------------------+-----------+------------+------------+
+
+Sender: LSF System <lsfadmin@linuxbmc1063>
+Subject: Job 44017034: <2x1v_moments_wall_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_wall_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Tue Aug 14 23:49:12 2018
+Job was executed on host(s) <3*linuxbmc1063>, in queue <normal>, as user <ns179556> in cluster <rcc> at Tue Aug 14 23:49:17 2018
+                            <3*linuxbmc1065>
+                            <3*linuxbmc1066>
+                            <3*linuxbmc1067>
+                            <3*linuxbmc1068>
+                            <1*linuxbmc1070>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Tue Aug 14 23:49:17 2018
+Terminated at Tue Aug 14 23:59:21 2018
+Results reported at Tue Aug 14 23:59:21 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_wall_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_wall_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 10
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1178.18 sec.
+    Max Memory :                                 561 MB
+    Average Memory :                             524.79 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95439.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   603 sec.
+    Turnaround time :                            609 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534283352.44017034.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc1063.rz.RWTH-Aachen.DE:06252] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+UNIFORM GRID REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 20
+total dofs: 280
+residual: 0.00113483time: 3.76024
+residual: 4.5017e-06time: 7.52048
+Steps taken: 1345
+solving adjoint: 
+cycle: 0
+total cells: 20
+total dofs: 280
+residual: 0.255653time: 12.1685
+residual: 0.014979time: 14.2219
+residual: 0.000877735time: 16.2753
+residual: 5.14334e-05time: 18.3287
+residual: 3.01389e-06time: 20.3821
+residual: 1.76607e-07time: 22.4356
+Steps taken: 3101
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0158564
+Predicted error in target from grid...0.00219973
+Predicted error in target from velocity...0.00115112
+Total predicted error...0.00335085
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 40
+total dofs: 560
+residual: 0.000794836time: 24.7305
+residual: 5.68744e-05time: 26.6106
+residual: 4.09005e-06time: 28.4907
+residual: 2.94135e-07time: 30.3708
+Steps taken: 2205
+solving adjoint: 
+cycle: 1
+total cells: 40
+total dofs: 560
+residual: 0.0658418time: 32.1684
+residual: 0.0162664time: 33.1951
+residual: 0.00420146time: 34.2218
+residual: 0.00108239time: 35.2485
+residual: 0.000278911time: 36.2752
+residual: 7.1869e-05time: 37.3019
+residual: 1.8519e-05time: 38.3286
+residual: 4.77191e-06time: 39.3553
+residual: 1.22961e-06time: 40.3821
+residual: 3.16842e-07time: 41.4088
+Steps taken: 5426
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.015027
+Predicted error in target from grid...0.00182588
+Predicted error in target from velocity...0.00112357
+Total predicted error...0.00294945
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 80
+total dofs: 1120
+residual: 0.0026267time: 43.2236
+residual: 0.000710423time: 44.1636
+residual: 0.000195588time: 45.1037
+residual: 5.4429e-05time: 46.0438
+residual: 1.51376e-05time: 46.9838
+residual: 4.21003e-06time: 47.9239
+residual: 1.17089e-06time: 48.8639
+residual: 3.25646e-07time: 49.804
+Steps taken: 4462
+solving adjoint: 
+cycle: 2
+total cells: 80
+total dofs: 1120
+residual: 0.11952time: 51.186
+residual: 0.0553859time: 51.6993
+residual: 0.0273447time: 52.2127
+residual: 0.0140493time: 52.726
+residual: 0.00727321time: 53.2394
+residual: 0.00375829time: 53.7527
+residual: 0.00194008time: 54.2661
+residual: 0.00100155time: 54.7794
+residual: 0.000517108time: 55.2928
+residual: 0.00026699time: 55.8062
+residual: 0.000137849time: 56.3195
+residual: 7.11723e-05time: 56.8329
+residual: 3.67467e-05time: 57.3462
+residual: 1.89726e-05time: 57.8596
+residual: 9.79568e-06time: 58.3729
+residual: 5.05758e-06time: 58.8863
+residual: 2.61126e-06time: 59.3996
+residual: 1.34821e-06time: 59.913
+residual: 6.96091e-07time: 60.4263
+residual: 3.59396e-07time: 60.9397
+residual: 1.85559e-07time: 61.4531
+Steps taken: 10968
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0145022
+Predicted error in target from grid...0.00152698
+Predicted error in target from velocity...0.00111703
+Total predicted error...0.00264401
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 160
+total dofs: 2240
+residual: 0.00751208time: 62.4036
+residual: 0.00212837time: 62.8736
+residual: 0.0010626time: 63.3436
+residual: 0.000569904time: 63.8137
+residual: 0.0002994time: 64.2837
+residual: 0.000159181time: 64.7537
+residual: 8.47941e-05time: 65.2238
+residual: 4.5165e-05time: 65.6938
+residual: 2.40494e-05time: 66.1638
+residual: 1.28039e-05time: 66.6339
+residual: 6.81707e-06time: 67.1039
+residual: 3.62963e-06time: 67.5739
+residual: 1.93254e-06time: 68.0439
+residual: 1.02895e-06time: 68.514
+residual: 5.47845e-07time: 68.984
+residual: 2.9169e-07time: 69.454
+residual: 1.55305e-07time: 69.9241
+Steps taken: 8850
+solving adjoint: 
+cycle: 3
+total cells: 160
+total dofs: 2240
+residual: 0.177058time: 70.5098
+residual: 0.0904357time: 70.7664
+residual: 0.0560251time: 71.0231
+residual: 0.0428531time: 71.2798
+residual: 0.0292081time: 71.5365
+residual: 0.0213515time: 71.7931
+residual: 0.0154073time: 72.0498
+residual: 0.0110385time: 72.3065
+residual: 0.00801509time: 72.5632
+residual: 0.00576464time: 72.8199
+residual: 0.00416491time: 73.0765
+residual: 0.00300654time: 73.3332
+residual: 0.00216865time: 73.5899
+residual: 0.00156593time: 73.8466
+residual: 0.00112989time: 74.1032
+residual: 0.000815533time: 74.3599
+residual: 0.000588609time: 74.6166
+residual: 0.000424796time: 74.8733
+residual: 0.000306599time: 75.13
+residual: 0.000221278time: 75.3866
+residual: 0.000159703time: 75.6433
+residual: 0.000115263time: 75.9
+residual: 8.31884e-05time: 76.1567
+residual: 6.00397e-05time: 76.4133
+residual: 4.33324e-05time: 76.67
+residual: 3.12743e-05time: 76.9267
+residual: 2.25716e-05time: 77.1834
+residual: 1.62906e-05time: 77.44
+residual: 1.17574e-05time: 77.6967
+residual: 8.48567e-06time: 77.9534
+residual: 6.12436e-06time: 78.2101
+residual: 4.42013e-06time: 78.4668
+residual: 3.19014e-06time: 78.7234
+residual: 2.30242e-06time: 78.9801
+residual: 1.66172e-06time: 79.2368
+residual: 1.19932e-06time: 79.4935
+residual: 8.65582e-07time: 79.7501
+residual: 6.24716e-07time: 80.0068
+residual: 4.50876e-07time: 80.2635
+residual: 3.25411e-07time: 80.5202
+residual: 2.34859e-07time: 80.7769
+residual: 1.69504e-07time: 81.0335
+residual: 1.22336e-07time: 81.2902
+Steps taken: 21810
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0142054
+Predicted error in target from grid...0.00133907
+Predicted error in target from velocity...0.00111706
+Total predicted error...0.00245613
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 320
+total dofs: 4480
+residual: 0.0178883time: 81.6844
+residual: 0.00659913time: 81.9194
+residual: 0.00344378time: 82.1544
+residual: 0.00167502time: 82.3894
+residual: 0.00117767time: 82.6244
+residual: 0.000803376time: 82.8594
+residual: 0.000568044time: 83.0945
+residual: 0.000430492time: 83.3295
+residual: 0.000309147time: 83.5645
+residual: 0.000226468time: 83.7995
+residual: 0.000165962time: 84.0345
+residual: 0.000120991time: 84.2695
+residual: 8.86645e-05time: 84.5045
+residual: 6.47749e-05time: 84.7396
+residual: 4.74241e-05time: 84.9746
+residual: 3.46773e-05time: 85.2096
+residual: 2.53631e-05time: 85.4446
+residual: 1.85568e-05time: 85.6796
+residual: 1.35706e-05time: 85.9146
+residual: 9.92776e-06time: 86.1496
+residual: 7.2615e-06time: 86.3847
+residual: 5.31156e-06time: 86.6197
+residual: 3.8853e-06time: 86.8547
+residual: 2.84191e-06time: 87.0897
+residual: 2.0788e-06time: 87.3247
+residual: 1.52056e-06time: 87.5597
+residual: 1.11224e-06time: 87.7948
+residual: 8.13571e-07time: 88.0298
+residual: 5.951e-07time: 88.2648
+residual: 4.35297e-07time: 88.4998
+residual: 3.18405e-07time: 88.7348
+residual: 2.32903e-07time: 88.9698
+residual: 1.70361e-07time: 89.2048
+residual: 1.24614e-07time: 89.4399
+Steps taken: 17352
+solving adjoint: 
+cycle: 4
+total cells: 320
+total dofs: 4480
+residual: 0.254381time: 89.7336
+residual: 0.137248time: 89.862
+residual: 0.095452time: 89.9903
+residual: 0.0666804time: 90.1187
+residual: 0.0494181time: 90.247
+residual: 0.0414462time: 90.3753
+residual: 0.0368591time: 90.5037
+residual: 0.0317237time: 90.632
+residual: 0.0261345time: 90.7604
+residual: 0.0216293time: 90.8887
+residual: 0.0184052time: 91.017
+residual: 0.0158905time: 91.1454
+residual: 0.01359time: 91.2737
+residual: 0.0114721time: 91.402
+residual: 0.00968511time: 91.5304
+residual: 0.00824078time: 91.6587
+residual: 0.00704086time: 91.7871
+residual: 0.00599936time: 91.9154
+residual: 0.00509251time: 92.0437
+residual: 0.00432215time: 92.1721
+residual: 0.00367653time: 92.3004
+residual: 0.00313109time: 92.4288
+residual: 0.0026645time: 92.5571
+residual: 0.00226494time: 92.6854
+residual: 0.00192517time: 92.8138
+residual: 0.00163742time: 92.9421
+residual: 0.00139318time: 93.0704
+residual: 0.00118511time: 93.1988
+residual: 0.00100779time: 93.3271
+residual: 0.000856976time: 93.4555
+residual: 0.000728868time: 93.5838
+residual: 0.000619976time: 93.7121
+residual: 0.00052732time: 93.8405
+residual: 0.00044847time: 93.9688
+residual: 0.000381407time: 94.0972
+residual: 0.000324389time: 94.2255
+residual: 0.000275904time: 94.3538
+residual: 0.000234662time: 94.4822
+residual: 0.000199579time: 94.6105
+residual: 0.00016974time: 94.7389
+residual: 0.000144365time: 94.8672
+residual: 0.000122785time: 94.9955
+residual: 0.00010443time: 95.1239
+residual: 8.88178e-05time: 95.2522
+residual: 7.55398e-05time: 95.3805
+residual: 6.42471e-05time: 95.5089
+residual: 5.46427e-05time: 95.6372
+residual: 4.6474e-05time: 95.7656
+residual: 3.95264e-05time: 95.8939
+residual: 3.36174e-05time: 96.0222
+residual: 2.85918e-05time: 96.1506
+residual: 2.43176e-05time: 96.2789
+residual: 2.06822e-05time: 96.4073
+residual: 1.75904e-05time: 96.5356
+residual: 1.49607e-05time: 96.6639
+residual: 1.27242e-05time: 96.7923
+residual: 1.0822e-05time: 96.9206
+residual: 9.20418e-06time: 97.0489
+residual: 7.82822e-06time: 97.1773
+residual: 6.65795e-06time: 97.3056
+residual: 5.66263e-06time: 97.434
+residual: 4.8161e-06time: 97.5623
+residual: 4.09612e-06time: 97.6906
+residual: 3.48378e-06time: 97.819
+residual: 2.96298e-06time: 97.9473
+residual: 2.52003e-06time: 98.0757
+residual: 2.1433e-06time: 98.204
+residual: 1.82289e-06time: 98.3323
+residual: 1.55038e-06time: 98.4607
+residual: 1.31861e-06time: 98.589
+residual: 1.12149e-06time: 98.7174
+residual: 9.53831e-07time: 98.8457
+residual: 8.11239e-07time: 98.974
+residual: 6.89964e-07time: 99.1024
+residual: 5.86819e-07time: 99.2307
+residual: 4.99093e-07time: 99.359
+residual: 4.24482e-07time: 99.4874
+residual: 3.61025e-07time: 99.6157
+residual: 3.07054e-07time: 99.7441
+residual: 2.61151e-07time: 99.8724
+residual: 2.22111e-07time: 100.001
+residual: 1.88907e-07time: 100.129
+residual: 1.60666e-07time: 100.257
+residual: 1.36648e-07time: 100.386
+residual: 1.1622e-07time: 100.514
+Steps taken: 42965
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0140473
+Predicted error in target from grid...0.0012338
+Predicted error in target from velocity...0.0011182
+Total predicted error...0.002352
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       590s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |         5 |     0.127s |         0% |
+| compute velocity error          |         5 |    0.0465s |         0% |
+| perform adaptivity              |         5 |    0.0149s |         0% |
+| solve adjoint                   |         5 |       485s |        82% |
+| solve primal                    |         5 |       105s |        18% |
++---------------------------------+-----------+------------+------------+
+
+Sender: LSF System <lsfadmin@linuxbmc1063>
+Subject: Job 44017247: <2x1v_moments_wall_Adp> in cluster <rcc> Done
+
+Job <2x1v_moments_wall_Adp> was submitted from host <cluster-linux> by user <ns179556> in cluster <rcc> at Wed Aug 15 00:54:42 2018
+Job was executed on host(s) <3*linuxbmc1063>, in queue <normal>, as user <ns179556> in cluster <rcc> at Wed Aug 15 00:54:46 2018
+                            <3*linuxbmc1065>
+                            <3*linuxbmc1066>
+                            <3*linuxbmc1067>
+                            <3*linuxbmc1068>
+                            <1*linuxbmc1070>
+</home/ns179556> was used as the home directory.
+</home/ns179556/DG_MPI> was used as the working directory.
+Started at Wed Aug 15 00:54:46 2018
+Terminated at Wed Aug 15 01:06:58 2018
+Results reported at Wed Aug 15 01:06:58 2018
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/usr/bin/env zsh
+ 
+### Job name
+#BSUB -J 2x1v_moments_wall_Adp
+ 
+### File / path where STDOUT & STDERR will be written
+###    %J is the job ID, %I is the array ID
+#BSUB -o log_files/2x1v_moments_wall_Adp
+ 
+### Request the time you need for execution in minutes
+### The format for the parameter is: [hour:]minute,
+### that means for 80 minutes you could also use this: 1:20
+#BSUB -W 5:00
+ 
+### Request memory you need for your job per PROCESS in MB
+#BSUB -M 6000
+ 
+### Request the number of compute slots you want to use
+#BSUB -n 16
+ 
+### Use esub for Open MPI
+#BSUB -a openmpi
+ 
+
+switch intel/16.0 gcc/system-default
+module load openmpi/1.10.2
+
+cd /home/ns179556/DG_MPI
+ 
+export FLAGS_MPI_BATCH="-np 1"
+### Execute your application
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 10
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1436.88 sec.
+    Max Memory :                                 561 MB
+    Average Memory :                             536.37 MB
+    Total Requested Memory :                     96000.00 MB
+    Delta Memory :                               95439.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                23
+    Run time :                                   752 sec.
+    Turnaround time :                            736 sec.
+
+The output (if any) follows:
+
+/home/ns179556/.lsbatch/1534287282.44017247.shell:25: command not found: switch
++(0):ERROR:0: Unable to locate a modulefile for 'openmpi/1.10.2'
+[linuxbmc1063.rz.RWTH-Aachen.DE:13469] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/../../../../..][../../../../../..]
+developing systems: 
+developing systems: 
+developing systems: 
+UNIFORM GRID REFINEMENT....
+preparing primal: 
+preparing adjoint: 
+refinement cycle: 0
+solving primal: 
+cycle: 0
+total cells: 20
+total dofs: 320
+residual: 0.00113483time: 3.76024
+residual: 4.5017e-06time: 7.52048
+Steps taken: 1345
+solving adjoint: 
+cycle: 0
+total cells: 20
+total dofs: 320
+residual: 0.324066time: 12.0002
+residual: 0.0241305time: 13.8853
+residual: 0.00179638time: 15.7704
+residual: 0.000133731time: 17.6555
+residual: 9.95557e-06time: 19.5406
+residual: 7.41138e-07time: 21.4258
+Steps taken: 3386
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0158564
+Predicted error in target from grid...0.00226852
+Predicted error in target from velocity...0.00123096
+Total predicted error...0.00349948
+refinement cycle: 1
+solving primal: 
+cycle: 1
+total cells: 40
+total dofs: 640
+residual: 0.000794836time: 24.7612
+residual: 5.68744e-05time: 26.6413
+residual: 4.09005e-06time: 28.5214
+residual: 2.94135e-07time: 30.4015
+Steps taken: 2205
+solving adjoint: 
+cycle: 1
+total cells: 40
+total dofs: 640
+residual: 0.0719438time: 32.115
+residual: 0.0202176time: 33.0575
+residual: 0.00582723time: 34.0001
+residual: 0.00168214time: 34.9426
+residual: 0.00048545time: 35.8852
+residual: 0.000140102time: 36.8278
+residual: 4.04334e-05time: 37.7703
+residual: 1.16691e-05time: 38.7129
+residual: 3.36771e-06time: 39.6554
+residual: 9.71923e-07time: 40.598
+residual: 2.80497e-07time: 41.5406
+Steps taken: 5915
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.015027
+Predicted error in target from grid...0.00189339
+Predicted error in target from velocity...0.00119935
+Total predicted error...0.00309274
+refinement cycle: 2
+solving primal: 
+cycle: 2
+total cells: 80
+total dofs: 1280
+residual: 0.0026267time: 43.2629
+residual: 0.000710423time: 44.203
+residual: 0.000195588time: 45.1431
+residual: 5.4429e-05time: 46.0831
+residual: 1.51376e-05time: 47.0232
+residual: 4.21003e-06time: 47.9632
+residual: 1.17089e-06time: 48.9033
+residual: 3.25646e-07time: 49.8434
+Steps taken: 4462
+solving adjoint: 
+cycle: 2
+total cells: 80
+total dofs: 1280
+residual: 0.132579time: 51.1833
+residual: 0.0604703time: 51.6545
+residual: 0.0314453time: 52.1258
+residual: 0.0173132time: 52.5971
+residual: 0.00946439time: 53.0684
+residual: 0.00515291time: 53.5397
+residual: 0.00281036time: 54.0109
+residual: 0.00153333time: 54.4822
+residual: 0.000836366time: 54.9535
+residual: 0.000456193time: 55.4248
+residual: 0.000248838time: 55.8961
+residual: 0.000135732time: 56.3673
+residual: 7.40371e-05time: 56.8386
+residual: 4.03845e-05time: 57.3099
+residual: 2.20283e-05time: 57.7812
+residual: 1.20156e-05time: 58.2525
+residual: 6.55409e-06time: 58.7237
+residual: 3.57502e-06time: 59.195
+residual: 1.95004e-06time: 59.6663
+residual: 1.06368e-06time: 60.1376
+residual: 5.80198e-07time: 60.6089
+residual: 3.16477e-07time: 61.0801
+residual: 1.72627e-07time: 61.5514
+Steps taken: 11951
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0145022
+Predicted error in target from grid...0.00159559
+Predicted error in target from velocity...0.00119063
+Total predicted error...0.00278622
+refinement cycle: 3
+solving primal: 
+cycle: 3
+total cells: 160
+total dofs: 2560
+residual: 0.00751208time: 62.4465
+residual: 0.00212837time: 62.9166
+residual: 0.0010626time: 63.3866
+residual: 0.000569904time: 63.8566
+residual: 0.0002994time: 64.3267
+residual: 0.000159181time: 64.7967
+residual: 8.47941e-05time: 65.2667
+residual: 4.5165e-05time: 65.7367
+residual: 2.40494e-05time: 66.2068
+residual: 1.28039e-05time: 66.6768
+residual: 6.81707e-06time: 67.1468
+residual: 3.62963e-06time: 67.6169
+residual: 1.93254e-06time: 68.0869
+residual: 1.02895e-06time: 68.5569
+residual: 5.47845e-07time: 69.027
+residual: 2.9169e-07time: 69.497
+residual: 1.55305e-07time: 69.967
+Steps taken: 8850
+solving adjoint: 
+cycle: 3
+total cells: 160
+total dofs: 2560
+residual: 0.184364time: 70.5317
+residual: 0.0997409time: 70.7673
+residual: 0.0595032time: 71.003
+residual: 0.0468119time: 71.2386
+residual: 0.0336516time: 71.4742
+residual: 0.0244181time: 71.7099
+residual: 0.0184624time: 71.9455
+residual: 0.0135347time: 72.1812
+residual: 0.010038time: 72.4168
+residual: 0.00746928time: 72.6524
+residual: 0.00552076time: 72.8881
+residual: 0.00409848time: 73.1237
+residual: 0.00303965time: 73.3594
+residual: 0.00225242time: 73.595
+residual: 0.00167089time: 73.8306
+residual: 0.00123881time: 74.0663
+residual: 0.0009185time: 74.3019
+residual: 0.000681133time: 74.5376
+residual: 0.000505026time: 74.7732
+residual: 0.000374475time: 75.0088
+residual: 0.000277675time: 75.2445
+residual: 0.000205891time: 75.4801
+residual: 0.000152668time: 75.7158
+residual: 0.000113202time: 75.9514
+residual: 8.39382e-05time: 76.187
+residual: 6.22397e-05time: 76.4227
+residual: 4.61502e-05time: 76.6583
+residual: 3.42201e-05time: 76.894
+residual: 2.53739e-05time: 77.1296
+residual: 1.88146e-05time: 77.3652
+residual: 1.39509e-05time: 77.6009
+residual: 1.03445e-05time: 77.8365
+residual: 7.67035e-06time: 78.0722
+residual: 5.68751e-06time: 78.3078
+residual: 4.21725e-06time: 78.5434
+residual: 3.12706e-06time: 78.7791
+residual: 2.31869e-06time: 79.0147
+residual: 1.71929e-06time: 79.2504
+residual: 1.27484e-06time: 79.486
+residual: 9.45286e-07time: 79.7216
+residual: 7.00923e-07time: 79.9573
+residual: 5.19729e-07time: 80.1929
+residual: 3.85375e-07time: 80.4286
+residual: 2.85753e-07time: 80.6642
+residual: 2.11884e-07time: 80.8998
+residual: 1.5711e-07time: 81.1355
+residual: 1.16496e-07time: 81.3711
+Steps taken: 23756
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0142054
+Predicted error in target from grid...0.00140891
+Predicted error in target from velocity...0.00118962
+Total predicted error...0.00259854
+refinement cycle: 4
+solving primal: 
+cycle: 4
+total cells: 320
+total dofs: 5120
+residual: 0.0178883time: 81.7268
+residual: 0.00659913time: 81.9618
+residual: 0.00344378time: 82.1968
+residual: 0.00167502time: 82.4318
+residual: 0.00117767time: 82.6668
+residual: 0.000803376time: 82.9018
+residual: 0.000568044time: 83.1369
+residual: 0.000430492time: 83.3719
+residual: 0.000309147time: 83.6069
+residual: 0.000226468time: 83.8419
+residual: 0.000165962time: 84.0769
+residual: 0.000120991time: 84.3119
+residual: 8.86645e-05time: 84.547
+residual: 6.47749e-05time: 84.782
+residual: 4.74241e-05time: 85.017
+residual: 3.46773e-05time: 85.252
+residual: 2.53631e-05time: 85.487
+residual: 1.85568e-05time: 85.722
+residual: 1.35706e-05time: 85.957
+residual: 9.92776e-06time: 86.1921
+residual: 7.2615e-06time: 86.4271
+residual: 5.31156e-06time: 86.6621
+residual: 3.8853e-06time: 86.8971
+residual: 2.84191e-06time: 87.1321
+residual: 2.0788e-06time: 87.3671
+residual: 1.52056e-06time: 87.6021
+residual: 1.11224e-06time: 87.8372
+residual: 8.13571e-07time: 88.0722
+residual: 5.951e-07time: 88.3072
+residual: 4.35297e-07time: 88.5422
+residual: 3.18405e-07time: 88.7772
+residual: 2.32903e-07time: 89.0122
+residual: 1.70361e-07time: 89.2473
+residual: 1.24614e-07time: 89.4823
+Steps taken: 17352
+solving adjoint: 
+cycle: 4
+total cells: 320
+total dofs: 5120
+residual: 0.260726time: 89.7655
+residual: 0.142686time: 89.8834
+residual: 0.100281time: 90.0012
+residual: 0.0732946time: 90.119
+residual: 0.0538173time: 90.2368
+residual: 0.0439153time: 90.3546
+residual: 0.0387158time: 90.4725
+residual: 0.0346732time: 90.5903
+residual: 0.0297762time: 90.7081
+residual: 0.0248717time: 90.8259
+residual: 0.0209891time: 90.9437
+residual: 0.0181242time: 91.0616
+residual: 0.0158351time: 91.1794
+residual: 0.0137379time: 91.2972
+residual: 0.0117802time: 91.415
+residual: 0.0100765time: 91.5328
+residual: 0.00866769time: 91.6507
+residual: 0.00749584time: 91.7685
+residual: 0.0064829time: 91.8863
+residual: 0.00558807time: 92.0041
+residual: 0.00480643time: 92.1219
+residual: 0.0041372time: 92.2398
+residual: 0.00356764time: 92.3576
+residual: 0.00307875time: 92.4754
+residual: 0.00265506time: 92.5932
+residual: 0.00228761time: 92.711
+residual: 0.00197073time: 92.8289
+residual: 0.00169854time: 92.9467
+residual: 0.00146452time: 93.0645
+residual: 0.0012627time: 93.1823
+residual: 0.00108839time: 93.3001
+residual: 0.000937998time: 93.418
+residual: 0.000808448time: 93.5358
+residual: 0.000696891time: 93.6536
+residual: 0.000600756time: 93.7714
+residual: 0.000517851time: 93.8892
+residual: 0.000446357time: 94.0071
+residual: 0.00038473time: 94.1249
+residual: 0.000331625time: 94.2427
+residual: 0.000285859time: 94.3605
+residual: 0.000246407time: 94.4783
+residual: 0.000212396time: 94.5962
+residual: 0.000183077time: 94.714
+residual: 0.000157806time: 94.8318
+residual: 0.000136025time: 94.9496
+residual: 0.000117251time: 95.0674
+residual: 0.000101067time: 95.1853
+residual: 8.71167e-05time: 95.3031
+residual: 7.50919e-05time: 95.4209
+residual: 6.47272e-05time: 95.5387
+residual: 5.57931e-05time: 95.6565
+residual: 4.80922e-05time: 95.7744
+residual: 4.14542e-05time: 95.8922
+residual: 3.57323e-05time: 96.01
+residual: 3.08002e-05time: 96.1278
+residual: 2.6549e-05time: 96.2456
+residual: 2.28845e-05time: 96.3635
+residual: 1.97258e-05time: 96.4813
+residual: 1.70031e-05time: 96.5991
+residual: 1.46562e-05time: 96.7169
+residual: 1.26332e-05time: 96.8347
+residual: 1.08895e-05time: 96.9526
+residual: 9.38646e-06time: 97.0704
+residual: 8.09087e-06time: 97.1882
+residual: 6.97411e-06time: 97.306
+residual: 6.01149e-06time: 97.4238
+residual: 5.18174e-06time: 97.5417
+residual: 4.46652e-06time: 97.6595
+residual: 3.85001e-06time: 97.7773
+residual: 3.31861e-06time: 97.8951
+residual: 2.86055e-06time: 98.0129
+residual: 2.46571e-06time: 98.1308
+residual: 2.12538e-06time: 98.2486
+residual: 1.83202e-06time: 98.3664
+residual: 1.57915e-06time: 98.4842
+residual: 1.36118e-06time: 98.602
+residual: 1.1733e-06time: 98.7199
+residual: 1.01135e-06time: 98.8377
+residual: 8.71759e-07time: 98.9555
+residual: 7.51432e-07time: 99.0733
+residual: 6.47714e-07time: 99.1911
+residual: 5.58311e-07time: 99.309
+residual: 4.81249e-07time: 99.4268
+residual: 4.14824e-07time: 99.5446
+residual: 3.57566e-07time: 99.6624
+residual: 3.08212e-07time: 99.7802
+residual: 2.65671e-07time: 99.8981
+residual: 2.29001e-07time: 100.016
+residual: 1.97392e-07time: 100.134
+residual: 1.70147e-07time: 100.252
+residual: 1.46662e-07time: 100.369
+residual: 1.26419e-07time: 100.487
+residual: 1.08969e-07time: 100.605
+Steps taken: 46790
+compute error velocity
+computed error velocity
+compute error grid
+finished computing error
+Error in target...0.0140473
+Predicted error in target from grid...0.00130447
+Predicted error in target from velocity...0.00119028
+Total predicted error...0.00249475
+
+
++---------------------------------------------+------------+------------+
+| Total wallclock time elapsed since start    |       721s |            |
+|                                             |            |            |
+| Section                         | no. calls |  wall time | % of total |
++---------------------------------+-----------+------------+------------+
+| compute discretization error    |         5 |     0.115s |         0% |
+| compute velocity error          |         5 |    0.0552s |         0% |
+| perform adaptivity              |         5 |    0.0152s |         0% |
+| solve adjoint                   |         5 |       613s |        85% |
+| solve primal                    |         5 |       107s |        15% |
++---------------------------------+-----------+------------+------------+
+
