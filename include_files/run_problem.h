@@ -40,7 +40,8 @@ run_problem
     void develop_convergence_table(const double &error_primal,
                                    const double &error_adjoint,
                                    const double &min_h,
-                                   const unsigned int &num_dofs);
+                                   const Triangulation<dim> &triangulation,
+                                   const std::vector<unsigned int> &n_eqn);
     void print_convergence_table(const std::string &foldername);
 
     struct PerCellErrorScratch
@@ -170,4 +171,6 @@ run_problem
 
     bool compare_greater(int i,int j,const Vector<double> &error);
     bool compare_lesser(int i,int j,const Vector<double> &error);
+
+    unsigned int compute_active_dofs(const Triangulation<dim> &triangulation,const std::vector<unsigned int> &n_eqn);
 };

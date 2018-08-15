@@ -59,7 +59,6 @@ Solve_System_SS_adaptive<dim>::solve_steady_state(Triangulation<dim> &triangulat
         dt = CFL * min_length/(dim * current_max_speed);
 
         pout << "total cells: " << triangulation.n_global_active_cells() << std::endl;
-        pout << "total dofs: " << dof_handler.n_dofs() << std::endl;
 
         Vector<double> component = return_component();
         std::vector<Vector<double>> component_to_system = return_component_to_system();
@@ -253,7 +252,7 @@ Solve_System_SS_adaptive<dim>::assemble_per_cell(const typename DoFHandler<dim>:
                 Vector<double> temp(1);
 
                 Assert(temp.size() != 0 ,ExcNotInitialized());
-                
+
                 initial_boundary->force(force_value,temp,
                                         cell->center(),t);
 

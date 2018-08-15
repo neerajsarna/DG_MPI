@@ -42,8 +42,6 @@ dim_problem(dim_problem)
       }
      }
 
-    std::string filename;
-
      dummy_dof_handler_grid.distribute_dofs(dummy_fe_grid);
      dummy_dof_handler_velocity.distribute_dofs(dummy_fe_velocity);
      store_user_index.reinit(dummy_dof_handler_velocity.n_dofs());
@@ -95,12 +93,11 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = solve_primal.dof_handler.n_dofs();
+     const unsigned int max_dofs = 6 * 320;
 
 
 
-     while(solve_primal.dof_handler.n_dofs() <= max_dofs)
-	   //for(unsigned int cycle = 0 ; cycle < refine_cycles ; cycle++)
+     while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
 
         std::cout << "refinement cycle: " << cycle <<  std::endl;
@@ -132,15 +129,15 @@ dim_problem(dim_problem)
             
             timer.leave_subsection();
 
-            // filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
-            //           + std::string(".txt");
+            filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
+                      + std::string(".txt");
           
-            // solve_adjoint.create_output(filename);
+            solve_adjoint.create_output(filename);
 
-            // filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
-            //           + std::string(".txt");
+            filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
+                      + std::string(".txt");
           
-            // solve_primal.create_output(filename);
+            solve_primal.create_output(filename);
           }
 
           //solve_primal.compute_error(); 
@@ -157,31 +154,25 @@ dim_problem(dim_problem)
           {
 
           timer.enter_subsection("compute velocity error");
-          std::cout << "compute error velocity" << std::endl;
-          fflush(stdout);
           compute_error_velocity(solve_primal.locally_owned_solution,
                         solve_primal.dof_handler,
                         solve_adjoint.locally_owned_solution,
                         solve_adjoint.dof_handler,
                         system_mat_error_comp,
                         ic_bc_primal);
-          std::cout << "computed error velocity" << std::endl;
-          fflush(stdout);
           timer.leave_subsection();
           }
 
           if(refinement_type_grid == 0)
           {
           timer.enter_subsection("compute discretization error");
-          std::cout << "compute error grid" << std::endl;
           compute_error_grid(solve_primal.locally_owned_solution,
                         solve_primal.dof_handler,
                         solve_adjoint.locally_owned_solution,
                         solve_adjoint.dof_handler,
-                        system_mat_error_comp,
+                        system_mat_primal,
                         ic_bc_primal,
                         triangulation);
-          std::cout << "finished computing error" << std::endl;
           timer.leave_subsection();
           }
 
@@ -194,27 +185,33 @@ dim_problem(dim_problem)
           std::cout << "Total predicted error..." << 
                       error_per_cell_velocity.mean_value() * error_per_cell_velocity.size()
                       + error_per_cell_grid.mean_value() * error_per_cell_grid.size() << std::endl;
+          std::cout << "efficiency index grid: " << 
+                    error_per_cell_grid_target.mean_value() * error_per_cell_grid_target.size()/(error_per_cell_grid.mean_value() * error_per_cell_grid.size()) << std::endl;
           
-          // print_fe_index(solve_primal.dof_handler,solve_primal.n_eqn);
+          print_fe_index(solve_primal.dof_handler,solve_primal.n_eqn);
 
-          // filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
-          //            + std::string(".txt");
-          // write_error(filename,triangulation,error_per_cell_grid_target);
-          // filename = foldername + std::string("/error_grid_cycle") + std::to_string(cycle)
-          //            + std::string(".txt");
-          // write_error(filename,triangulation,error_per_cell_grid);
-          // filename = foldername + std::string("/error_velocity_cycle") + std::to_string(cycle)
-          //            + std::string(".txt");
-          // write_error(filename,triangulation,error_per_cell_velocity);
+          filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
+                     + std::string(".txt");
+          write_error(filename,triangulation,error_per_cell_grid_target);
+          filename = foldername + std::string("/error_grid_cycle") + std::to_string(cycle)
+                     + std::string(".txt");
+          write_error(filename,triangulation,error_per_cell_grid);
+          filename = foldername + std::string("/error_velocity_cycle") + std::to_string(cycle)
+                     + std::string(".txt");
+          write_error(filename,triangulation,error_per_cell_velocity);
+                    filename = foldername + std::string("/fe_index_cycle") + std::to_string(cycle)
+                     + std::string(".txt");
+          write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
 
           develop_convergence_table(solve_primal.discretization_error,
                                     solve_adjoint.discretization_error,
                                     solve_primal.min_h(triangulation),
-                                    solve_primal.dof_handler.n_dofs());
+                                    triangulation,
+                                    solve_primal.n_eqn);
 
           timer.enter_subsection("perform adaptivity");
           
-          //update_index_vector(triangulation,refinement_type_velocity,system_mat_primal.size());  // update the user indices based upon the error
+          update_index_vector(triangulation,refinement_type_velocity,system_mat_primal.size());  // update the user indices based upon the error
           update_grid_refine_flags(triangulation,refinement_type_grid);  
           perform_grid_refinement_and_sol_transfer(triangulation,solve_primal,solve_adjoint); // perform grid refinement and solution transfer
           fill_user_index_from_index_vector();  // update the user indices 
@@ -273,8 +270,8 @@ run_problem<dim>::write_grid(const std::string &filename,const Triangulation<dim
 template<int dim>
 void
 run_problem<dim>::write_fe_index(const std::string &filename,
-                                const DoFHandler<dim> &dof_handler,
-                                const std::vector<unsigned int> &n_eqn)
+                                 const DoFHandler<dim> &dof_handler,
+                                 const std::vector<unsigned int> &n_eqn)
 {
   FILE *fp;
   fp = fopen(filename.c_str(),"w+");
@@ -318,12 +315,28 @@ run_problem<dim>::print_fe_index(const DoFHandler<dim> &dof_handler,
 }
 
 template<int dim>
+unsigned int 
+run_problem<dim>::compute_active_dofs(const Triangulation<dim> &triangulation,
+                                           const std::vector<unsigned int> &n_eqn)
+{
+  typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(), endc = triangulation.end();
+  unsigned int active_dofs = 0;
+
+  for(; cell != endc ; cell++)
+    active_dofs += n_eqn[cell->user_index()];
+
+  return(active_dofs);
+}
+template<int dim>
 void
 run_problem<dim>::develop_convergence_table(const double &error_primal,
                                            const double &error_adjoint,
                                            const double &min_h,
-                                           const unsigned int &num_dofs)
+                                           const Triangulation<dim> &triangulation,
+                                           const std::vector<unsigned int> &n_eqn)
 {
+  const unsigned int num_dofs = compute_active_dofs(triangulation,n_eqn);
+
   std::string col1 = "primal_error";
   std::string col2 = "adjoint_error";
   std::string col3 = "min_h";
@@ -366,7 +379,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
-       std::ofstream output_convergence(foldername + std::string("/validate_Merror/convergence_table_uniformM8.txt"));
+       std::ofstream output_convergence(foldername + std::string("/validate_grid_error/convergence_table_uniformM8.txt"));
 
       convergence_table.evaluate_convergence_rates("primal_error",
                                                   "dofs_primal",
