@@ -1,0 +1,2 @@
+primal_error adjoint_error   min_h    dofs_primal target_error predicted_error_grid predicted_error_velocity corrected_error 
+0.0000e+00 - 0.0000e+00  - 7.8125e-04       10240 1.3924e-02 - 6.3595e-04         - 6.0462e-04             - 1.2684e-02    - 

@@ -59,52 +59,27 @@ CMAKE_BINARY_DIR = /home/ns179556/DG_MPI
 # Target rules for target CMakeFiles/2x1v_moments_wall_Adp.out.dir
 
 # All Build rule for target.
-<<<<<<< HEAD
 CMakeFiles/2x1v_moments_wall_Adp.out.dir/all:
 	$(MAKE) -f CMakeFiles/2x1v_moments_wall_Adp.out.dir/build.make CMakeFiles/2x1v_moments_wall_Adp.out.dir/depend
 	$(MAKE) -f CMakeFiles/2x1v_moments_wall_Adp.out.dir/build.make CMakeFiles/2x1v_moments_wall_Adp.out.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/neerajsarna/sciebo/DG_MPI/CMakeFiles --progress-num=1,2,3,4,5 "Built target 2x1v_moments_wall_Adp.out"
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/ns179556/DG_MPI/CMakeFiles  1 2 3 4
+	@echo "Built target 2x1v_moments_wall_Adp.out"
 .PHONY : CMakeFiles/2x1v_moments_wall_Adp.out.dir/all
 
 # Include target in all.
 all: CMakeFiles/2x1v_moments_wall_Adp.out.dir/all
-
 .PHONY : all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/2x1v_moments_wall_Adp.out.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ns179556/DG_MPI/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/2x1v_moments_wall_Adp.out.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ns179556/DG_MPI/CMakeFiles 0
 .PHONY : CMakeFiles/2x1v_moments_wall_Adp.out.dir/rule
 
 # Convenience name for target.
 2x1v_moments_wall_Adp.out: CMakeFiles/2x1v_moments_wall_Adp.out.dir/rule
-
 .PHONY : 2x1v_moments_wall_Adp.out
-=======
-CMakeFiles/2D_advection_gaussian.out.dir/all:
-	$(MAKE) -f CMakeFiles/2D_advection_gaussian.out.dir/build.make CMakeFiles/2D_advection_gaussian.out.dir/depend
-	$(MAKE) -f CMakeFiles/2D_advection_gaussian.out.dir/build.make CMakeFiles/2D_advection_gaussian.out.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ns179556/DG_MPI/CMakeFiles  1 2 3 4
-	@echo "Built target 2D_advection_gaussian.out"
-.PHONY : CMakeFiles/2D_advection_gaussian.out.dir/all
-
-# Include target in all.
-all: CMakeFiles/2D_advection_gaussian.out.dir/all
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/2D_advection_gaussian.out.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ns179556/DG_MPI/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/2D_advection_gaussian.out.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ns179556/DG_MPI/CMakeFiles 0
-.PHONY : CMakeFiles/2D_advection_gaussian.out.dir/rule
-
-# Convenience name for target.
-2D_advection_gaussian.out: CMakeFiles/2D_advection_gaussian.out.dir/rule
-.PHONY : 2D_advection_gaussian.out
->>>>>>> origin/master
 
 # clean rule for target.
 CMakeFiles/2x1v_moments_wall_Adp.out.dir/clean:
@@ -112,12 +87,7 @@ CMakeFiles/2x1v_moments_wall_Adp.out.dir/clean:
 .PHONY : CMakeFiles/2x1v_moments_wall_Adp.out.dir/clean
 
 # clean rule for target.
-<<<<<<< HEAD
 clean: CMakeFiles/2x1v_moments_wall_Adp.out.dir/clean
-
-=======
-clean: CMakeFiles/2D_advection_gaussian.out.dir/clean
->>>>>>> origin/master
 .PHONY : clean
 
 #=============================================================================

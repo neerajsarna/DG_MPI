@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
      M[2] = 16;
      M[3] = 40;*/
 
-     M_adjoint[0] = 8;
+     M_adjoint[0] = 16;
 /*     M_adjoint[1] = 8;
      M_adjoint[2] = 10;
      M_adjoint[3] = 11;

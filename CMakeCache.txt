@@ -15,25 +15,12 @@
 ########################
 
 //Value Computed by CMake
-2D_advection_gaussian_BINARY_DIR:STATIC=/home/ns179556/DG_MPI
+2x1v_moments_wall_Adp_BINARY_DIR:STATIC=/home/ns179556/DG_MPI
 
 //Value Computed by CMake
-2D_advection_gaussian_SOURCE_DIR:STATIC=/home/ns179556/DG_MPI
+2x1v_moments_wall_Adp_SOURCE_DIR:STATIC=/home/ns179556/DG_MPI
 
-<<<<<<< HEAD
-//Value Computed by CMake
-2x1v_moments_wall_Adp_BINARY_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
-
-//Value Computed by CMake
-2x1v_moments_wall_Adp_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
-
-//Path to a program.
-CMAKE_AR:FILEPATH=/usr/bin/ar
-
-//Choose the type of build, options are: Debug, Release, DebugRelease
-=======
 //Choose the type of build, options are: Debug, Release
->>>>>>> origin/master
 CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.

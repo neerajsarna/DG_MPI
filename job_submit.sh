@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
  
 ### Job name
-#BSUB -J 2D_advection_gaussian
+#BSUB -J 2x1v_moments_wall_Adp
  
 ### File / path where STDOUT & STDERR will be written
 ###    %J is the job ID, %I is the array ID
-#BSUB -o log_files/2D_advection_gaussian
+#BSUB -o log_files/2x1v_moments_wall_Adp
  
 ### Request the time you need for execution in minutes
 ### The format for the parameter is: [hour:]minute,
@@ -29,4 +29,4 @@ cd /home/ns179556/DG_MPI
  
 export FLAGS_MPI_BATCH="-np 1"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2D_advection_gaussian.out 16 5
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 10

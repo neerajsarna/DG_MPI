@@ -140,42 +140,24 @@ release/fast:
 	$(MAKE) -f CMakeFiles/release.dir/build.make CMakeFiles/release.dir/build
 .PHONY : release/fast
 
-<<<<<<< HEAD
 2x1v_moments_wall_Adp.o: 2x1v_moments_wall_Adp.cc.o
-
 .PHONY : 2x1v_moments_wall_Adp.o
-=======
-2D_advection_gaussian.o: 2D_advection_gaussian.cc.o
-.PHONY : 2D_advection_gaussian.o
->>>>>>> origin/master
 
 # target to build an object file
 2x1v_moments_wall_Adp.cc.o:
 	$(MAKE) -f CMakeFiles/2x1v_moments_wall_Adp.out.dir/build.make CMakeFiles/2x1v_moments_wall_Adp.out.dir/2x1v_moments_wall_Adp.cc.o
 .PHONY : 2x1v_moments_wall_Adp.cc.o
 
-<<<<<<< HEAD
 2x1v_moments_wall_Adp.i: 2x1v_moments_wall_Adp.cc.i
-
 .PHONY : 2x1v_moments_wall_Adp.i
-=======
-2D_advection_gaussian.i: 2D_advection_gaussian.cc.i
-.PHONY : 2D_advection_gaussian.i
->>>>>>> origin/master
 
 # target to preprocess a source file
 2x1v_moments_wall_Adp.cc.i:
 	$(MAKE) -f CMakeFiles/2x1v_moments_wall_Adp.out.dir/build.make CMakeFiles/2x1v_moments_wall_Adp.out.dir/2x1v_moments_wall_Adp.cc.i
 .PHONY : 2x1v_moments_wall_Adp.cc.i
 
-<<<<<<< HEAD
 2x1v_moments_wall_Adp.s: 2x1v_moments_wall_Adp.cc.s
-
 .PHONY : 2x1v_moments_wall_Adp.s
-=======
-2D_advection_gaussian.s: 2D_advection_gaussian.cc.s
-.PHONY : 2D_advection_gaussian.s
->>>>>>> origin/master
 
 # target to generate assembly for a file
 2x1v_moments_wall_Adp.cc.s:
@@ -260,13 +242,7 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-<<<<<<< HEAD
-	@echo "... edit_cache"
-	@echo "... rebuild_cache"
 	@echo "... 2x1v_moments_wall_Adp.out"
-=======
-	@echo "... 2D_advection_gaussian.out"
->>>>>>> origin/master
 	@echo "... debug"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"

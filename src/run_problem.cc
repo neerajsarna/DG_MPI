@@ -42,7 +42,6 @@ dim_problem(dim_problem)
       }
      }
 
-    std::string filename;
 
      dummy_dof_handler_grid.distribute_dofs(dummy_fe_grid);
      dummy_dof_handler_velocity.distribute_dofs(dummy_fe_velocity);
@@ -95,7 +94,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = solve_primal.dof_handler.n_dofs();
+     const unsigned int max_dofs = 320 * 16;
 
 
 
@@ -366,7 +365,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
-       std::ofstream output_convergence(foldername + std::string("/validate_Merror/convergence_table_uniformM8.txt"));
+       std::ofstream output_convergence(foldername + std::string("/validate_Merror/convergence_table_uniformM16.txt"));
 
       convergence_table.evaluate_convergence_rates("primal_error",
                                                   "dofs_primal",
