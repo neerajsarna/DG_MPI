@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/edit_cache.dir
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/rebuild_cache.dir
-/Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/2x1v_moments_wall_Adp.out.dir
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/debug.dir
+/Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/1D_wave.out.dir
 /Users/neerajsarna/sciebo/DG_MPI/CMakeFiles/release.dir
-=======
-/home/ns179556/DG_MPI/CMakeFiles/2x1v_moments_wall_Adp.out.dir
-/home/ns179556/DG_MPI/CMakeFiles/debug.dir
-/home/ns179556/DG_MPI/CMakeFiles/release.dir
->>>>>>> origin/master

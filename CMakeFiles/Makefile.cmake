@@ -54,12 +54,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
   )
 
 # Dependency information for all targets:
-<<<<<<< HEAD
 set(CMAKE_DEPEND_INFO_FILES
-=======
-SET(CMAKE_DEPEND_INFO_FILES
->>>>>>> origin/master
-  "CMakeFiles/2x1v_moments_wall_Adp.out.dir/DependInfo.cmake"
   "CMakeFiles/debug.dir/DependInfo.cmake"
+  "CMakeFiles/1D_wave.out.dir/DependInfo.cmake"
   "CMakeFiles/release.dir/DependInfo.cmake"
   )

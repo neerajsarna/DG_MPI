@@ -15,21 +15,18 @@
 ########################
 
 //Value Computed by CMake
-<<<<<<< HEAD
+1D_wave_BINARY_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
+
+//Value Computed by CMake
+1D_wave_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
+
+//Value Computed by CMake
 2x1v_moments_wall_Adp_BINARY_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
 
 //Value Computed by CMake
 2x1v_moments_wall_Adp_SOURCE_DIR:STATIC=/Users/neerajsarna/sciebo/DG_MPI
 
 //Choose the type of build, options are: Debug, Release, DebugRelease
-=======
-2x1v_moments_wall_Adp_BINARY_DIR:STATIC=/home/ns179556/DG_MPI
-
-//Value Computed by CMake
-2x1v_moments_wall_Adp_SOURCE_DIR:STATIC=/home/ns179556/DG_MPI
-
-//Choose the type of build, options are: Debug, Release
->>>>>>> origin/master
 CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
@@ -127,7 +124,7 @@ CMAKE_OSX_DEPLOYMENT_TARGET:STRING=
 CMAKE_OSX_SYSROOT:STRING=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=2x1v_moments_wall_Adp
+CMAKE_PROJECT_NAME:STATIC=1D_wave
 
 //Flags used by the linker during the creation of dll's.
 CMAKE_SHARED_LINKER_FLAGS:STRING=

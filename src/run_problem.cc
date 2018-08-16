@@ -93,7 +93,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 6 * 320;
+     const unsigned int max_dofs = 2 * 160;
 
 
 
@@ -141,7 +141,8 @@ dim_problem(dim_problem)
             solve_primal.create_output(filename);
           }
 
-          //solve_primal.compute_error(); 
+          solve_primal.compute_error(); 
+          
           compute_error_in_target(triangulation,
                                   ic_bc_primal,
                                   ic_bc_adjoint,
@@ -151,7 +152,7 @@ dim_problem(dim_problem)
                                   t);
 
 
-          if(refinement_type_velocity == 1)
+          if(refinement_type_velocity == 0)
           {
 
           timer.enter_subsection("compute velocity error");
@@ -197,12 +198,12 @@ dim_problem(dim_problem)
           filename = foldername + std::string("/error_grid_cycle") + std::to_string(cycle)
                      + std::string(".txt");
           write_error(filename,triangulation,error_per_cell_grid);
-          filename = foldername + std::string("/error_velocity_cycle") + std::to_string(cycle)
-                     + std::string(".txt");
-          write_error(filename,triangulation,error_per_cell_velocity);
-                    filename = foldername + std::string("/fe_index_cycle") + std::to_string(cycle)
-                     + std::string(".txt");
-          write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
+          // filename = foldername + std::string("/error_velocity_cycle") + std::to_string(cycle)
+          //            + std::string(".txt");
+          // write_error(filename,triangulation,error_per_cell_velocity);
+          //           filename = foldername + std::string("/fe_index_cycle") + std::to_string(cycle)
+          //            + std::string(".txt");
+          // write_fe_index(filename,solve_primal.dof_handler,solve_primal.n_eqn);
 
           develop_convergence_table(solve_primal.discretization_error,
                                     solve_adjoint.discretization_error,
@@ -380,7 +381,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
-       std::ofstream output_convergence(foldername + std::string("/validate_grid_error/convergence_table_uniformM8.txt"));
+       std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform.txt"));
 
       convergence_table.evaluate_convergence_rates("primal_error",
                                                   "dofs_primal",
@@ -530,14 +531,17 @@ run_problem<dim>::compute_error_grid(const Vector<double> &primal_solution,
                              dummy_dof_handler_grid,
                              temp_adjoint);
 
-        // for(unsigned int i = 0 ; i < temp_adjoint.size() ; i++)
-        //   temp_adjoint(i) = 1;
+
+        typename DoFHandler<dim>::active_cell_iterator cell = dummy_dof_handler_grid.begin_active(),
+                                                       endc = dummy_dof_handler_grid.end();
+
 
         compute_error(temp_primal,
                       temp_adjoint,
                       dummy_dof_handler_grid,
                       system_matrices,
-                      ic_bc_primal,error_per_cell_grid,
+                      ic_bc_primal,
+                      error_per_cell_grid,
                       2);
 }
 
@@ -607,6 +611,8 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                     q);
 
 
+
+
                   data.local_contri += xAy(adjoint_value,system_matrices[this_fe_index].P,primal_value)
                                         * Jacobians_interior[q];
 
@@ -617,9 +623,8 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                       Vector<double> temp(1);
 
                       ic_bc_primal->force(force_value,temp,
-                                              scratch.fe_v.quadrature_point(q),t);
+                                          scratch.fe_v.quadrature_point(q),t);
 
-                      
                       data.local_contri += force_value * adjoint_value * Jacobians_interior[q];                
                   }
                   
