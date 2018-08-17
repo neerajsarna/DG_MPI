@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
      const unsigned int num_systems = 1;
      std::vector<int> M(num_systems);
      std::vector<int> M_adjoint(num_systems);
-     M[0] = 6;
+     M[0] = 4;
      // M[1] = 8;
      // M[2] = 10;
      // M[3] = 12;
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
      M[2] = 16;
      M[3] = 40;*/
 
-     M_adjoint[0] = 6;
+     M_adjoint[0] = 4;
      // M_adjoint[1] = 16;
      // M_adjoint[2] = 18;
      // M_adjoint[3] = 20;
@@ -250,11 +250,11 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 	system_matrices.P = system_matrices.P/Kn;
 	system_matrices.P.makeCompressed();
 
-	filename = "1v_Moments/Bwall/Bwall" + std::to_string(M) + ".txt";
+	filename = "1v_Moments/Binflow/Binflow" + std::to_string(M) + ".txt";
 	build_triplet(Row_Col_Value,filename);
 	build_matrix_from_triplet(system_matrices.B[0],Row_Col_Value);
 
-	filename = "1v_Moments/Bwall/penalty_wall" + std::to_string(M) + ".txt";
+	filename = "1v_Moments/Binflow/penalty_inflow" + std::to_string(M) + ".txt";
 	build_triplet(Row_Col_Value,filename);
 	build_matrix_from_triplet(system_matrices.penalty[0],Row_Col_Value);	
 	
@@ -436,6 +436,8 @@ ic_bc<dim>::force(Vector<double> &value,
 	const double x = p[0];
 	
 	value = 0;
+	value(0) = M_PI * cos(M_PI * x);
+	value(2) = sqrt(2) * M_PI * cos(M_PI * x); 
 	//value(2) = pow(x-0.5,2);
 	//value(2) = x;
 }
@@ -453,49 +455,49 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	value.reinit(num_bc);
 	value = 0;
 
-	if (t <= 1)
-        thetaW = exp(-1/(1-pow((t-1),2))) * exp(1);
-    else
-        thetaW = 1;
+	// if (t <= 1)
+ //        thetaW = exp(-1/(1-pow((t-1),2))) * exp(1);
+ //    else
+ //        thetaW = 1;
 
     
-	switch (bc_id)
-	{
-		case 1:
-		case 3:
-		{
-			value = 0;
-			break;
-		}
-		case 0:
-		{
+	// switch (bc_id)
+	// {
+	// 	case 1:
+	// 	case 3:
+	// 	{
+	// 		value = 0;
+	// 		break;
+	// 	}
+	// 	case 0:
+	// 	{
 
-			double bc_normal = 1.0;
-			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
-                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
-                    	if (n.col() == 2)
-                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
+	// 		double bc_normal = 1.0;
+	// 		for (unsigned int m = 0 ; m < B.outerSize() ; m++)
+ //                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
+ //                    	if (n.col() == 2)
+ //                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
                     	
-			break;
-		}
+	// 		break;
+	// 	}
 
-		case 2:
-		{
-			double bc_normal = -1.0;
-			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
-                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
-                    	if (n.col() == 2)
-                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
+	// 	case 2:
+	// 	{
+	// 		double bc_normal = -1.0;
+	// 		for (unsigned int m = 0 ; m < B.outerSize() ; m++)
+ //                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
+ //                    	if (n.col() == 2)
+ //                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
                     	
-			break;
-		}
+	// 		break;
+	// 	}
 
-		default:
-		{
-			Assert(1 == 0, ExcMessage("should not have reached"));
-			break;
-		}
-	}
+	// 	default:
+	// 	{
+	// 		Assert(1 == 0, ExcMessage("should not have reached"));
+	// 		break;
+	// 	}
+	// }
 
 }
 
@@ -547,8 +549,14 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	const double x = p[0];
 	value = 0;
 
+	// value(0) = -M_PI * cos(M_PI * x);
+	// value(2) = -sqrt(2) * M_PI * cos(M_PI * x); 
+
 	//value(2) = pow(x-0.5,1);
-	value(2) = exp(-pow(x-1,2)*100);
+	//value(0) = exp(-pow(x-1,2)*100);
+	//value(1) = -M_PI * cos(M_PI * x);
+	value(1) = exp(-pow(x-0.6,2)*100);
+	//value(1) = 1;
 	//value(2) = 1;	// the mean value
 	// value(0) = -M_PI * cos(M_PI*x);
 	// value(2) = -sqrt(2) * M_PI * cos(M_PI * x); 
@@ -560,7 +568,7 @@ void
 ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
 {
 	const double shift = 0.5;
-	const double x = p[0] - shift; // we need to shift the x coordinate for the reference solution
+	const double x = p[0]; // we need to shift the x coordinate for the reference solution
 	const double y = p[1];
 
 
@@ -570,7 +578,8 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 	// value(2) = 0.05593013555027514 - 0.00949275700536624*cosh(4.47213595499958*x) + 
  //   			   0.13333333333333333*pow(x,2) - 0.2777777777777778*pow(x,4);
 
-   	value(2) = 0.9950211932019232*x + 0.009745323921348737*sinh(4.47213595499958*x);
+	value(1) = sin(M_PI * x);
+   	//value(2) = 0.9950211932019232*x + 0.009745323921348737*sinh(4.47213595499958*x);
 
 	// M = 14 solution
 	// value(2) = 0.05653013082799942 - 0.00003792694823015286*cosh(1.64277980395364*x) - 0.0014402108667994624*cosh(2.0483113377580193*x) - 

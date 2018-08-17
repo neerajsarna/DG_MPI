@@ -261,9 +261,9 @@ void develop_system(system_data &system_matrices)
 	// loop over all the boundaries
 	for (unsigned int i = 0 ; i < 4 ; i ++)
 	{
-	system_matrices.B[i].makeCompressed();
-	system_matrices.penalty[i].makeCompressed();
-	system_matrices.penalty_B[i].makeCompressed();		
+		system_matrices.B[i].makeCompressed();
+		system_matrices.penalty[i].makeCompressed();
+		system_matrices.penalty_B[i].makeCompressed();		
 	}
 }
 
@@ -373,9 +373,8 @@ ic_bc<dim>::force(Vector<double> &value,
 	Assert(value.size() != 0,ExcNotImplemented());
 	const double x = p[0];
 	
-	value(0) = M_PI * cos(M_PI * x);//+ exp(-pow((x-0.5),2)*100) * 10;
-	value(1) = -200 * exp(-100*pow((x-0.5),2)) * (x-0.5);// + sin(M_PI * x) * 10;
-
+	//value(0) = M_PI * cos(M_PI * x);//+ exp(-pow((x-0.5),2)*100) * 10;
+	value(1) = M_PI * cos(M_PI * x);// + sin(M_PI * x) * 10;
 }
 
 
@@ -444,7 +443,8 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 
 	// for(unsigned int i = 0 ; i < value.size() ; i++)
 	// 	value(i) = 1;
-	value(0) = exp(-pow((x-1),2)*100);
+	value(0) = exp(-pow((x-0.8),2)*100);
+	//value(0) = 1;
 }
 
 
@@ -459,7 +459,9 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 	value = 0;
 
    	
-   	value(0) = exp(-pow((x-0.5),2)*100);
+   	//value(0) = exp(-pow((x-0.5),2)*100);
+	value(0) = sin(M_PI * x);
 	value(1) = sin(M_PI * x);
+
 
 }

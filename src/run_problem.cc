@@ -93,7 +93,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 2 * 160;
+     const unsigned int max_dofs = 2 * 320;
 
 
 
@@ -142,7 +142,7 @@ dim_problem(dim_problem)
           }
 
           solve_primal.compute_error(); 
-          
+
           compute_error_in_target(triangulation,
                                   ic_bc_primal,
                                   ic_bc_adjoint,
