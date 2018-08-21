@@ -443,8 +443,9 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 
 	// for(unsigned int i = 0 ; i < value.size() ; i++)
 	// 	value(i) = 1;
-	value(0) = exp(-pow((x-0.8),2)*100);
-	//value(0) = 1;
+	//value(0) = exp(-pow((x-0.8),2)*100);
+	value(0) = 1;
+	//value(1) = 1;
 }
 
 
@@ -461,7 +462,7 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
    	
    	//value(0) = exp(-pow((x-0.5),2)*100);
 	value(0) = sin(M_PI * x);
-	value(1) = sin(M_PI * x);
+	//value(1) = sin(M_PI * x);
 
 
 }

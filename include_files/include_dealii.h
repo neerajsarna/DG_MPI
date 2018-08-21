@@ -10,6 +10,7 @@
 #include <deal.II/lac/full_matrix.h>
 #include <deal.II/lac/dynamic_sparsity_pattern.h>
 #include <deal.II/lac/sparse_matrix.h>
+#include <deal.II/lac/constraint_matrix.h>
 
 #include <deal.II/base/work_stream.h>
 #include <deal.II/base/multithread_info.h>

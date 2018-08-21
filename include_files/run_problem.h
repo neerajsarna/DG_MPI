@@ -13,9 +13,9 @@ run_problem
 					ic_bc_base<dim> *ic_bc_primal,
 					ic_bc_base<dim> *ic_bc_adjoint,
 					const std::string &foldername,
-          const unsigned int &max_equations_primal,
-          const unsigned int &max_equations_adjoint,
-          const unsigned int &dim_problem);
+                    const unsigned int &max_equations_primal,
+                    const unsigned int &max_equations_adjoint,
+                    const unsigned int &dim_problem);
 
     DeclException2 (ExcTooManyCycles, unsigned int,unsigned int,
                         << "index: " << arg1 << "components: " << arg2);
@@ -33,8 +33,11 @@ run_problem
 
 		 double t;		// time of the computation
 
-		 void write_error(const std::string &filename,const Triangulation<dim> &triangulation,const Vector<double> &error_per_cell);
+	 void write_error(const std::string &filename,const Triangulation<dim> &triangulation,const Vector<double> &error_per_cell);
      void write_grid(const std::string &filename,const Triangulation<dim> &triangulation);
+     void write_fe_vector(const std::string &filename,
+                          const Vector<double> &vec,
+                          const DoFHandler<dim> &dof_handler);
 
     ConvergenceTable convergence_table;
     void develop_convergence_table(const double &error_primal,
@@ -110,6 +113,16 @@ run_problem
                                     Vector<double> &adjoint_value,  // value to be filled
                                     const unsigned int &dofs_per_component,
                                     const Vector<double> &adjoint_solution,
+                                    const FEValuesBase<dim> &fe_v,
+                                    const unsigned int &q);
+
+
+
+     void get_derivative_value_at_quad(const std::vector<types::global_dof_index> &local_dof_indices,
+                                    const std::vector<Vector<double>> &component_to_system,
+                                    std::vector<Vector<double>> &value,  // value to be filled
+                                    const unsigned int &dofs_per_component,
+                                    const Vector<double> &solution,
                                     const FEValuesBase<dim> &fe_v,
                                     const unsigned int &q);
 

@@ -1,6 +1,27 @@
 #include "run_problem.h"
 
 template<int dim>
+class
+linear_function:public Function<dim>
+{
+  public:
+    linear_function(const unsigned int n_eqn):Function<dim>(n_eqn){};
+    virtual void vector_value(const Point<dim> &p,Vector<double> &value)const;
+};
+
+template<int dim>
+void 
+linear_function<dim>::vector_value(const Point<dim> &p,Vector<double> &value)const
+{
+  double x = p[0];
+  value(0) = 0.5;
+  value(1) = 0.5-x;
+
+  // value(0) = 1-x;
+  // value(1) = 1-x;
+}
+
+template<int dim>
 run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // system data
                               std::vector<system_data> &system_mat_error_comp,    // system data to compute error
 				  			              std::vector<system_data> &system_mat_adjoint, // adjoint data
@@ -94,9 +115,6 @@ dim_problem(dim_problem)
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
      const unsigned int max_dofs = 2 * 320;
-
-
-
 
      while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
@@ -296,6 +314,66 @@ run_problem<dim>::write_fe_index(const std::string &filename,
 }
 
 template<int dim>
+void 
+run_problem<dim>::write_fe_vector(const std::string &filename,
+                          const Vector<double> &vec,
+                          const DoFHandler<dim> &dof_handler)
+{
+  FILE *fp;
+  fp = fopen(filename.c_str(),"w+");
+
+
+  std::vector<Vector<double>> component_to_system(dof_handler.get_fe().n_components());
+
+  QGauss<dim> quadrature(2);
+  FEValues<dim> fe_v(dof_handler.get_fe(),quadrature,update_values|update_quadrature_points);
+
+  const unsigned int num_comp = dof_handler.get_fe().n_components();
+  const unsigned int dofs_per_cell = dof_handler.get_fe().dofs_per_cell;
+  const unsigned int dofs_per_component = dofs_per_cell/num_comp;
+
+  typename DoFHandler<dim>::active_cell_iterator cell = dof_handler.begin_active(),endc = dof_handler.end();
+
+  for (unsigned int k = 0 ; k < component_to_system.size() ;k ++)
+        {
+          component_to_system[k].reinit(dofs_per_component);
+              for (unsigned int j = 0 ; j < dofs_per_component ; j++)
+                component_to_system[k](j) = dof_handler.get_fe().component_to_system_index(k,j);          
+        }
+
+  for(; cell != endc ; cell++)
+  {
+    fe_v.reinit(cell);
+    std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
+    cell->get_dof_indices(local_dof_indices);
+    const std::vector<Point<dim>> &q_points = fe_v.get_quadrature_points();
+     Vector<double> value_quad(num_comp);
+
+
+    for(unsigned int q = 0 ; q < q_points.size() ; q++)
+    {
+      get_value_at_quad(local_dof_indices,
+                        component_to_system,
+                        value_quad,  // value to be filled
+                        dofs_per_component,
+                        vec,
+                        fe_v,
+                        q);
+
+      for(unsigned int space = 0 ; space < dim ; space ++)
+        fprintf(fp, "%f\t",q_points[q][space]);
+
+      for(unsigned int i = 0 ; i < value_quad.size() ; i++)
+        fprintf(fp, "%f\t",value_quad(i));
+
+      fprintf(fp, "\n");
+    }
+
+  }
+  fclose(fp);
+}
+
+template<int dim>
 void
 run_problem<dim>::print_fe_index(const DoFHandler<dim> &dof_handler,
                                  const std::vector<unsigned int> &n_eqn)
@@ -411,6 +489,101 @@ run_problem<dim>::print_convergence_table(const std::string &foldername)
 }
 
 template<int dim>
+void
+run_problem<dim>::compute_error_velocity(const Vector<double> &primal_solution,
+                                const DoFHandler<dim> &dof_handler_primal,
+                                Vector<double> &adjoint_solution,
+                                const DoFHandler<dim> &dof_handler_adjoint,
+                                const std::vector<system_data> &system_matrices,
+                                ic_bc_base<dim> *ic_bc_primal)
+{
+        Vector<double> temp(dof_handler_adjoint.n_dofs());
+
+        // velocity space error computation
+        // first interpolate
+        FETools::interpolate(dof_handler_primal,
+                             primal_solution,
+                             dof_handler_adjoint,
+                             temp);
+
+        compute_error(temp,
+                      adjoint_solution,
+                      dof_handler_adjoint,
+                      system_matrices,
+                      ic_bc_primal,
+                      error_per_cell_velocity,
+                      1);
+}
+
+
+template<int dim>
+void
+run_problem<dim>::compute_error_grid(const Vector<double> &primal_solution,
+                                const DoFHandler<dim> &dof_handler_primal,
+                                Vector<double> &adjoint_solution,
+                                const DoFHandler<dim> &dof_handler_adjoint,
+                                const std::vector<system_data> &system_matrices,
+                                ic_bc_base<dim> *ic_bc_primal,
+                                const Triangulation<dim> &triangulation)
+{
+
+        Assert(dof_handler_primal.get_fe().n_components() == dummy_dof_handler_grid.get_fe().n_components(),ExcInternalError());
+        Assert(dof_handler_primal.get_fe().n_components() == dof_handler_adjoint.get_fe().n_components(),ExcInternalError());
+
+        Vector<double> temp_primal(dummy_dof_handler_grid.n_dofs());
+        Vector<double> temp_adjoint(dummy_dof_handler_grid.n_dofs());
+
+        // interpolate the primal solution onto the higher dimensional space. But only interpolate, not extrapolate
+        // interpolation provides us with a constant function anyhow.
+        FETools::interpolate(dof_handler_primal,
+                            primal_solution,
+                            dummy_dof_handler_grid,
+                            temp_primal);
+
+        // extrapolate the adjiont solution to P1 space
+        FETools::extrapolate(dof_handler_adjoint,
+                             adjoint_solution,
+                             dummy_dof_handler_grid,
+                             temp_adjoint);
+
+
+        typename DoFHandler<dim>::active_cell_iterator cell = dummy_dof_handler_grid.begin_active(),
+                                                       endc = dummy_dof_handler_grid.end();
+
+
+        // std::cout << "*******TAKING EXACT ADJOINT**********" << std::endl;
+        // Vector<double> temp2_adjoint(temp_adjoint.size());
+        // QGauss<dim> quadrature(2);
+        // ConstraintMatrix constraints;
+        // constraints.close();
+        // linear_function<dim> dummy_function(2);
+
+        // VectorTools::project(dummy_dof_handler_grid,
+        //                      constraints,
+        //                      quadrature,
+        //                      dummy_function,
+        //                      temp2_adjoint);
+
+        // std::string filename = "int_adj.txt";
+        // write_fe_vector(filename,temp_adjoint,dummy_dof_handler_grid);
+
+        // filename = "int_adj2.txt";
+        // write_fe_vector(filename,temp2_adjoint,dummy_dof_handler_grid);
+
+        // temp2_adjoint.add(-1,temp_adjoint);
+        // std::cout << "error in adjoint " << temp2_adjoint.l2_norm() << std::endl;
+
+        unsigned int gp = 4;
+        compute_error(temp_primal,
+                      temp_adjoint,
+                      dummy_dof_handler_grid,
+                      system_matrices,
+                      ic_bc_primal,
+                      error_per_cell_grid,
+                      gp);
+}
+
+template<int dim>
 void 
 run_problem<dim>::compute_error(const Vector<double> &primal_solution,
                                 const Vector<double> &adjoint_solution,
@@ -475,79 +648,6 @@ run_problem<dim>::compute_error(const Vector<double> &primal_solution,
 
 template<int dim>
 void
-run_problem<dim>::compute_error_velocity(const Vector<double> &primal_solution,
-                                const DoFHandler<dim> &dof_handler_primal,
-                                Vector<double> &adjoint_solution,
-                                const DoFHandler<dim> &dof_handler_adjoint,
-                                const std::vector<system_data> &system_matrices,
-                                ic_bc_base<dim> *ic_bc_primal)
-{
-        Vector<double> temp(dof_handler_adjoint.n_dofs());
-
-        // velocity space error computation
-        // first interpolate
-        FETools::interpolate(dof_handler_primal,
-                             primal_solution,
-                             dof_handler_adjoint,
-                             temp);
-
-        compute_error(temp,
-                      adjoint_solution,
-                      dof_handler_adjoint,
-                      system_matrices,
-                      ic_bc_primal,
-                      error_per_cell_velocity,
-                      1);
-}
-
-
-template<int dim>
-void
-run_problem<dim>::compute_error_grid(const Vector<double> &primal_solution,
-                                const DoFHandler<dim> &dof_handler_primal,
-                                Vector<double> &adjoint_solution,
-                                const DoFHandler<dim> &dof_handler_adjoint,
-                                const std::vector<system_data> &system_matrices,
-                                ic_bc_base<dim> *ic_bc_primal,
-                                const Triangulation<dim> &triangulation)
-{
-
-        Assert(dof_handler_primal.get_fe().n_components() == dummy_dof_handler_grid.get_fe().n_components(),ExcInternalError());
-        Assert(dof_handler_primal.get_fe().n_components() == dof_handler_adjoint.get_fe().n_components(),ExcInternalError());
-
-        Vector<double> temp_primal(dummy_dof_handler_grid.n_dofs());
-        Vector<double> temp_adjoint(dummy_dof_handler_grid.n_dofs());
-
-        // interpolate the primal solution onto the higher dimensional space. But only interpolate, not extrapolate
-        // interpolation provides us with a constant function anyhow.
-        FETools::interpolate(dof_handler_primal,
-                            primal_solution,
-                            dummy_dof_handler_grid,
-                            temp_primal);
-
-        // extrapolate the adjiont solution to P1 space
-        FETools::extrapolate(dof_handler_adjoint,
-                             adjoint_solution,
-                             dummy_dof_handler_grid,
-                             temp_adjoint);
-
-
-        typename DoFHandler<dim>::active_cell_iterator cell = dummy_dof_handler_grid.begin_active(),
-                                                       endc = dummy_dof_handler_grid.end();
-
-
-        compute_error(temp_primal,
-                      temp_adjoint,
-                      dummy_dof_handler_grid,
-                      system_matrices,
-                      ic_bc_primal,
-                      error_per_cell_grid,
-                      2);
-}
-
-
-template<int dim>
-void
 run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &input)
  {
         input(data.active_index) = data.local_contri;
@@ -602,6 +702,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                     scratch.fe_v,
                                     q);
                   
+
                   get_value_at_quad(local_dof_indices,
                                     component_to_system,
                                     primal_value,
@@ -611,10 +712,9 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                     q);
 
 
-
-
                   data.local_contri += xAy(adjoint_value,system_matrices[this_fe_index].P,primal_value)
                                         * Jacobians_interior[q];
+
 
                   if(system_matrices[this_fe_index].have_force)
                   {
@@ -625,7 +725,8 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                       ic_bc_primal->force(force_value,temp,
                                           scratch.fe_v.quadrature_point(q),t);
 
-                      data.local_contri += force_value * adjoint_value * Jacobians_interior[q];                
+                      data.local_contri += force_value * (adjoint_value) * Jacobians_interior[q];
+                                           //(primal_value(0)) * Jacobians_interior[q];               
                   }
                   
               }
@@ -681,6 +782,7 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                     primal_solution,
                                     scratch.fe_v_face,
                                     q);
+
 
                     // integral for SigmaB
                     data.local_contri += xAy(adjoint_value,system_matrices[this_fe_index].penalty_B[bc_id],
@@ -738,9 +840,6 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                      scratch.fe_v_neighbor,
                                      data.local_contri);
                      } // end of loop over the subfaces                      
-
-                     
-
                   } // 
                 }//end over else of interior edges
               } // end over loops on faces
@@ -793,9 +892,6 @@ run_problem<dim>::assemble_to_global(const PerCellError &data,Vector<double> &in
                                     primal_solution,
                                     fe_v_neighbor,
                                     0);   
-
-                    // VectorTools::point_value(cell->get_dof_handler(),primal_solution,cell->center(),primal_value);
-                    // VectorTools::point_value(cell->get_dof_handler(),primal_solution,neighbor->center(),primal_value_neighbor);
                    
                     Tensor<1,dim> normal_vec = fe_v_face.normal_vector(0);
 
@@ -867,6 +963,33 @@ run_problem<dim>::get_value_at_quad(const std::vector<types::global_dof_index> &
                       dof_test = local_dof_indices[component_to_system[i](j)]; // dof value 
                       adjoint_value(i) += adjoint_solution(dof_test) * fe_v.shape_value(j,q); // value of the adjoint
                     }
+}
+
+ template<int dim>
+void
+run_problem<dim>::get_derivative_value_at_quad(const std::vector<types::global_dof_index> &local_dof_indices,
+                                    const std::vector<Vector<double>> &component_to_system,
+                                    std::vector<Vector<double>> &value,  // value to be filled
+                                    const unsigned int &dofs_per_component,
+                                    const Vector<double> &solution,
+                                    const FEValuesBase<dim> &fe_v,
+                                    const unsigned int &q)
+{
+
+                  
+                  unsigned int dof_test;
+
+                  for(unsigned int space = 0 ; space < dim ; space++)
+                  {
+                    value[space] = 0;
+                  for(unsigned int i = 0 ; i < value[space].size(); i++) // loop over the number of equations
+                    for(unsigned int j =  0 ; j < dofs_per_component; j++)  // loop over the dofs per component
+                    {
+
+                      dof_test = local_dof_indices[component_to_system[i](j)]; // dof value 
+                      value[space](i) += solution(dof_test) * fe_v.shape_grad(j,q)[space]; // value of the adjoint
+                    }
+                 }
 }
 
 // computes x^T A y
@@ -1186,12 +1309,17 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
   Vector<double> temp(1);
 
   std::vector<Vector<double>> jbc_Omega(4);
-
+  // we need a routine to get the quadrature points
+  QGauss<dim> quadrature(2);
+  QGauss<dim-1> quadrature_face(2);
+  FEValues<dim> fe_v(dof_handler_primal.get_fe(),quadrature,update_quadrature_points|update_JxW_values);
+  FEFaceValues<dim> fe_v_face(dof_handler_primal.get_fe(),quadrature_face,update_quadrature_points|update_JxW_values);
 
   for (unsigned int id = 0 ; id < 4 ; id++) // develop the boundary for the biggest inhomogeneity anyhow
             ic_bc_adjoint->bc_inhomo(system_matrices_adjoint[system_matrices_adjoint.size()-1].B[id],
                                      id,jbc_Omega[id],t);
 
+  const unsigned int num_comp = dummy_fe_grid.n_components();
   std::vector<int> bc_id_primal(4); // the id of primal which is the id of adjoint
   // bc_id_primal[0] = 2;  // adjoint boundary at x = 1 is the primal boundary at x = 0 (reversal in advection direction)
   // bc_id_primal[1] = 3;
@@ -1205,33 +1333,48 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
 
   for(; cell != endc ; cell++)
   {
-    const double volume = cell->measure();
-    Vector<double> solution_value(dummy_fe_grid.n_components());
-    Vector<double> exact_solution_value(dummy_fe_grid.n_components());
-    Vector<double> jOmega(dummy_fe_grid.n_components());
+    
+    Vector<double> solution_value(num_comp);
+    Vector<double> exact_solution_value(num_comp);
+    Vector<double> jOmega(num_comp);
+    fe_v.reinit(cell);
+    const std::vector<Point<dim>> &q_points = fe_v.get_quadrature_points(); 
+    const std::vector<double> &Jacobians_interior = fe_v.get_JxW_values();
+    const unsigned int ngp = q_points.size();
 
 
-    VectorTools::point_value(dof_handler_primal,primal_solution,cell->center(),solution_value); // compute exact solution
-    ic_bc_primal->exact_solution(cell->center(),exact_solution_value,t);
-    ic_bc_adjoint->force(jOmega,temp,cell->center(),t);
+    VectorTools::point_value(dof_handler_primal,
+                            primal_solution,cell->center(),
+                            solution_value); // numerical solution is a constant anyhow in every cell
 
-    for(unsigned int i = 0 ; i < jOmega.size(); i++)
-      error_per_cell_grid_target(cell->active_cell_index()) += jOmega(i)
-                                                           *(exact_solution_value(i)-solution_value(i)) * volume;
-
-    for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
-      if(cell->face(face)->at_boundary())
+    for(unsigned int q = 0 ; q < ngp ; q++)
     {
-      ic_bc_primal->exact_solution(cell->face(face)->center(),exact_solution_value,t);
-      const double face_length = cell->face(face)->measure();
-      const unsigned int bc_id = bc_id_primal[cell->face(face)->boundary_id()];
-      for(unsigned int i = 0 ; i < jbc_Omega[bc_id].size(); i++)
-      {
-        error_per_cell_grid_target(cell->active_cell_index()) += jbc_Omega[bc_id](i)
-                                                           *(exact_solution_value(i)-solution_value(i)) * face_length;
-      }
-    }
+      ic_bc_primal->exact_solution(q_points[q],exact_solution_value,t);  
+      ic_bc_adjoint->force(jOmega,temp,q_points[q],t);
 
+      for(unsigned int i = 0 ; i < jOmega.size(); i++)
+            error_per_cell_grid_target(cell->active_cell_index()) += jOmega(i)
+                                                           *(exact_solution_value(i)-solution_value(i)) * Jacobians_interior[q];
+
+
+    // for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
+    //   if(cell->face(face)->at_boundary())
+    // {
+    //   fe_v_face.reinit(cell,face);
+    //   ic_bc_primal->exact_solution(cell->face(face)->center(),exact_solution_value,t);
+    //   const std::vector<Point<dim>> &q_points_face = fe_v_face.get_quadrature_points(); 
+    //   const std::vector<double> &Jacobians_face = fe_v_face.get_JxW_values();
+    //   const unsigned int ngp_face = q_points_face.size();
+    //   const unsigned int bc_id = bc_id_primal[cell->face(face)->boundary_id()];
+
+    //   for(unsigned int q = 0 ; q < ngp_face ; q++)
+    //   for(unsigned int i = 0 ; i < jbc_Omega[bc_id].size(); i++)
+    //     error_per_cell_grid_target(cell->active_cell_index()) += jbc_Omega[bc_id](i)
+    //                                                        *(exact_solution_value(i)-solution_value(i)) * Jacobians_face[q];
+
+    // }
+    }
+    
   }
 }
 
@@ -1255,7 +1398,7 @@ run_problem<dim>::PerCellErrorScratch::PerCellErrorScratch(const FiniteElement<d
                                      const QGauss<dim> &   quadrature_int,
                                     const QGauss<dim-1> &   quadrature_face)
 :
-fe_v(fe,quadrature_int,update_values|update_JxW_values|update_quadrature_points),
+fe_v(fe,quadrature_int,update_values|update_JxW_values|update_quadrature_points|update_gradients),
 fe_v_neighbor(fe,quadrature_int,update_values|update_JxW_values|update_quadrature_points),
 fe_v_face(fe,quadrature_face,update_values|update_normal_vectors|update_JxW_values),
 fe_v_subface(fe,quadrature_face,update_values|update_normal_vectors|update_JxW_values)
@@ -1264,7 +1407,7 @@ fe_v_subface(fe,quadrature_face,update_values|update_normal_vectors|update_JxW_v
 template<int dim>
 run_problem<dim>::PerCellErrorScratch::PerCellErrorScratch(const PerCellErrorScratch &scratch)
 :
-fe_v(scratch.fe_v.get_fe(),scratch.fe_v.get_quadrature(),update_values|update_JxW_values|update_quadrature_points),
+fe_v(scratch.fe_v.get_fe(),scratch.fe_v.get_quadrature(),update_values|update_JxW_values|update_quadrature_points|update_gradients),
 fe_v_neighbor(scratch.fe_v_neighbor.get_fe(),scratch.fe_v_neighbor.get_quadrature(),update_values|update_JxW_values|update_quadrature_points),
 fe_v_face(scratch.fe_v_face.get_fe(),scratch.fe_v_face.get_quadrature(),update_values|update_normal_vectors|update_JxW_values),
 fe_v_subface(scratch.fe_v_subface.get_fe(),scratch.fe_v_subface.get_quadrature(),update_values|update_normal_vectors|update_JxW_values)
