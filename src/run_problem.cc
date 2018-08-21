@@ -42,7 +42,10 @@ dim_problem(dim_problem)
 {
      AssertThrow(max_equations_primal <= max_equations_adjoint,ExcInternalError()); 
      const unsigned int refinement_type_grid = 0;
-     const unsigned int refinement_type_velocity = 1;
+     const unsigned int refinement_type_velocity = 0;
+     const bool to_solve_adjoint = true;
+     const bool to_compute_velocity_error = false;
+     const bool to_compute_grid_error = true;
      std::string filename;
 
      switch (refinement_type_grid)
@@ -114,7 +117,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 2 * 320;
+     const unsigned int max_dofs = 6 * 640;
 
      while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
@@ -131,16 +134,16 @@ dim_problem(dim_problem)
 
         // solve_primal.create_output(filename);
 
-        if(refinement_type_grid == 1)  // write the grid when doing adaptive refinement
-        {
-            filename = foldername + "/grid" + std::to_string(cycle);
-            write_grid(filename,triangulation);
-        }
+        // if(refinement_type_grid == 1)  // write the grid when doing adaptive refinement
+        // {
+        //     filename = foldername + "/grid" + std::to_string(cycle);
+        //     write_grid(filename,triangulation);
+        // }
             
 
 	   		// if(cycle != refine_cycles-1)
 	   		// {
-          if(refinement_type_grid == 1 || refinement_type_velocity == 1)
+          if(refinement_type_grid == 1 || refinement_type_velocity == 1 || to_solve_adjoint)
           {
 	   			  std::cout << "solving adjoint: " << std::endl;
             timer.enter_subsection("solve adjoint");
@@ -148,15 +151,15 @@ dim_problem(dim_problem)
             
             timer.leave_subsection();
 
-            filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
-                      + std::string(".txt");
+            // filename = foldername + std::string("/resultAdj_cycle") + std::to_string(cycle)
+            //           + std::string(".txt");
           
-            solve_adjoint.create_output(filename);
+            // solve_adjoint.create_output(filename);
 
-            filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
-                      + std::string(".txt");
+            // filename = foldername + std::string("/result_cycle") + std::to_string(cycle)
+            //           + std::string(".txt");
           
-            solve_primal.create_output(filename);
+            // solve_primal.create_output(filename);
           }
 
           solve_primal.compute_error(); 
@@ -170,7 +173,7 @@ dim_problem(dim_problem)
                                   t);
 
 
-          if(refinement_type_velocity == 0)
+          if(refinement_type_velocity == 1 || to_compute_velocity_error)
           {
 
           timer.enter_subsection("compute velocity error");
@@ -183,7 +186,7 @@ dim_problem(dim_problem)
           timer.leave_subsection();
           }
 
-          if(refinement_type_grid == 0)
+          if(refinement_type_grid == 1 || to_compute_grid_error)
           {
           timer.enter_subsection("compute discretization error");
           compute_error_grid(solve_primal.locally_owned_solution,
@@ -206,16 +209,18 @@ dim_problem(dim_problem)
                       error_per_cell_velocity.mean_value() * error_per_cell_velocity.size()
                       + error_per_cell_grid.mean_value() * error_per_cell_grid.size() << std::endl;
           std::cout << "efficiency index grid: " << 
-                    error_per_cell_grid_target.mean_value() * error_per_cell_grid_target.size()/(error_per_cell_grid.mean_value() * error_per_cell_grid.size()) << std::endl;
+                    error_per_cell_grid_target.mean_value() * error_per_cell_grid_target.size()/(error_per_cell_grid.mean_value() * error_per_cell_grid.size() + error_per_cell_velocity.mean_value() * error_per_cell_velocity.size()) << std::endl;
+          std::cout << "exact_target_value: " << exact_target_value << std::endl;          
+          std::cout << "numerical_target_value: " << numerical_target_value << std::endl;
           
           print_fe_index(solve_primal.dof_handler,solve_primal.n_eqn);
 
-          filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
-                     + std::string(".txt");
-          write_error(filename,triangulation,error_per_cell_grid_target);
-          filename = foldername + std::string("/error_grid_cycle") + std::to_string(cycle)
-                     + std::string(".txt");
-          write_error(filename,triangulation,error_per_cell_grid);
+          // filename = foldername + std::string("/error_observed_cycle") + std::to_string(cycle)
+          //            + std::string(".txt");
+          // write_error(filename,triangulation,error_per_cell_grid_target);
+          // filename = foldername + std::string("/error_grid_cycle") + std::to_string(cycle)
+          //            + std::string(".txt");
+          // write_error(filename,triangulation,error_per_cell_grid);
           // filename = foldername + std::string("/error_velocity_cycle") + std::to_string(cycle)
           //            + std::string(".txt");
           // write_error(filename,triangulation,error_per_cell_velocity);
@@ -241,6 +246,8 @@ dim_problem(dim_problem)
           error_per_cell_velocity.reinit(triangulation.n_active_cells());
           error_per_cell_grid.reinit(triangulation.n_active_cells());
           error_per_cell_grid_target.reinit(triangulation.n_active_cells());
+          exact_target_value = 0;
+          numerical_target_value = 0;
 
 	   		//} // end of if condition
 
@@ -459,7 +466,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
-       std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform.txt"));
+       std::ofstream output_convergence(foldername + std::string("/convergence_table_adaptive.txt"));
 
       convergence_table.evaluate_convergence_rates("primal_error",
                                                   "dofs_primal",
@@ -1337,6 +1344,8 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
     Vector<double> solution_value(num_comp);
     Vector<double> exact_solution_value(num_comp);
     Vector<double> jOmega(num_comp);
+    const unsigned int this_fe_index = cell->user_index();
+
     fe_v.reinit(cell);
     const std::vector<Point<dim>> &q_points = fe_v.get_quadrature_points(); 
     const std::vector<double> &Jacobians_interior = fe_v.get_JxW_values();
@@ -1349,34 +1358,57 @@ run_problem<dim>::compute_error_in_target(const Triangulation<dim> &triangulatio
 
     for(unsigned int q = 0 ; q < ngp ; q++)
     {
+      Vector<double> error(num_comp);
+      error = 0;
+      
       ic_bc_primal->exact_solution(q_points[q],exact_solution_value,t);  
       ic_bc_adjoint->force(jOmega,temp,q_points[q],t);
+      error.add(1,exact_solution_value,-1,solution_value);
 
-      for(unsigned int i = 0 ; i < jOmega.size(); i++)
-            error_per_cell_grid_target(cell->active_cell_index()) += jOmega(i)
-                                                           *(exact_solution_value(i)-solution_value(i)) * Jacobians_interior[q];
-
-
-    // for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
-    //   if(cell->face(face)->at_boundary())
-    // {
-    //   fe_v_face.reinit(cell,face);
-    //   ic_bc_primal->exact_solution(cell->face(face)->center(),exact_solution_value,t);
-    //   const std::vector<Point<dim>> &q_points_face = fe_v_face.get_quadrature_points(); 
-    //   const std::vector<double> &Jacobians_face = fe_v_face.get_JxW_values();
-    //   const unsigned int ngp_face = q_points_face.size();
-    //   const unsigned int bc_id = bc_id_primal[cell->face(face)->boundary_id()];
-
-    //   for(unsigned int q = 0 ; q < ngp_face ; q++)
-    //   for(unsigned int i = 0 ; i < jbc_Omega[bc_id].size(); i++)
-    //     error_per_cell_grid_target(cell->active_cell_index()) += jbc_Omega[bc_id](i)
-    //                                                        *(exact_solution_value(i)-solution_value(i)) * Jacobians_face[q];
-
-    // }
+      error_per_cell_grid_target(cell->active_cell_index()) += jOmega * error * Jacobians_interior[q];
+        exact_target_value += jOmega * exact_solution_value * Jacobians_interior[q];
+        numerical_target_value += jOmega * solution_value * Jacobians_interior[q];
     }
-    
-  }
+
+    for(unsigned int face = 0 ; face < GeometryInfo<dim>::faces_per_cell ; face++)
+      if(cell->face(face)->at_boundary())
+    {
+      fe_v_face.reinit(cell,face);
+      
+      const std::vector<Point<dim>> &q_points_face = fe_v_face.get_quadrature_points(); 
+      const std::vector<double> &Jacobians_face = fe_v_face.get_JxW_values();
+      const unsigned int ngp_face = q_points_face.size();
+      const unsigned int bc_id = bc_id_primal[cell->face(face)->boundary_id()];
+      const Sparse_Matrix bc_mat = system_matrices_adjoint[this_fe_index].BC_Operator[bc_id];
+
+      for(unsigned int q = 0 ; q < ngp_face ; q++)
+      {
+        ic_bc_primal->exact_solution(q_points_face[q],exact_solution_value,t);
+
+        Vector<double> error(num_comp);
+        error = 0;
+        error.add(1,exact_solution_value,-1,solution_value);
+
+        error_per_cell_grid_target(cell->active_cell_index()) -= xAy(error,
+                                                                    bc_mat,
+                                                                    jbc_Omega[bc_id])
+                                                                 * Jacobians_face[q];
+
+        exact_target_value -= xAy(exact_solution_value,
+                                  bc_mat,
+                                  jbc_Omega[bc_id])
+                                  * Jacobians_face[q];
+
+        numerical_target_value -= xAy(solution_value,
+                                      bc_mat,
+                                      jbc_Omega[bc_id])
+                                      * Jacobians_face[q];
+      } // end of loop over quadratuer of face
+
+    } // end of if over the boundary face
+  } // end of loop over the cells
 }
+
 
 template<int dim>
 bool 

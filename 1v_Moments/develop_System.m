@@ -25,6 +25,8 @@ for i = 1 : 4
 end
 
 for i = 1 : M
+    % odd moments are located at the even indices
+    % id 3 corresponds to the left boundary in the c code
     if mod(i,2) == 0
         rotator{3}(i,i) = -1;
     end
@@ -117,4 +119,18 @@ end
     
 end
 
+function Sigma = dvlp_penalty_odd(Ax)
+
+for i = 1 : M
+    % odd moments are located at the even indices
+    % id 3 corresponds to the left boundary in the c code
+    if mod(i,2) == 0
+        id_odd = [i,id_odd];
+    end
+end
+
+Sigma = Ax(:,id_odd);
+
+
+end
 

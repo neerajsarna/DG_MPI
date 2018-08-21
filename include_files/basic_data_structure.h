@@ -15,6 +15,7 @@
 		std::vector<Sparse_Matrix> B; 
 		std::vector<Sparse_Matrix> penalty;
 		std::vector<Sparse_Matrix> penalty_B;
+		std::vector<Sparse_Matrix> BC_Operator;	// the boundary operator in the target functional
 
 		// by default we have a false
 		bool bc_inhomo_time = false;

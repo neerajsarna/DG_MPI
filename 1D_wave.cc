@@ -270,7 +270,6 @@ void develop_system(system_data &system_matrices)
 
 void develop_system_adjoint(system_data &system_matrices)
 {
-
 	unsigned int n_eqn = 2;
 
 	system_data temp;
@@ -374,7 +373,7 @@ ic_bc<dim>::force(Vector<double> &value,
 	const double x = p[0];
 	
 	//value(0) = M_PI * cos(M_PI * x);//+ exp(-pow((x-0.5),2)*100) * 10;
-	value(1) = M_PI * cos(M_PI * x);// + sin(M_PI * x) * 10;
+	value(1) = -2 * M_PI * sin(2 * M_PI * x);// + sin(M_PI * x) * 10;
 }
 
 
@@ -389,6 +388,16 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	double thetaW = 0;
 	value.reinit(num_bc);
 	value = 0;
+
+	switch(bc_id)
+	{
+		case 0:
+		case 2:
+		{
+			value(0) = 1;
+			break;
+		}
+	}
 
 
 }
@@ -419,6 +428,21 @@ ic_bc_adjoint<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	value.reinit(num_bc);
 	value = 0;
 
+	switch(bc_id)
+	{
+		case 0:
+		{
+			value(0) = 1;
+			break;
+		}
+		case 2:
+		{
+			value(0) = 1;
+
+			break;
+		}
+	}
+
 }
 
 template<int dim>
@@ -444,7 +468,7 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	// for(unsigned int i = 0 ; i < value.size() ; i++)
 	// 	value(i) = 1;
 	//value(0) = exp(-pow((x-0.8),2)*100);
-	value(0) = 1;
+	//value(0) = 1;
 	//value(1) = 1;
 }
 
@@ -459,10 +483,7 @@ ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const doubl
 
 	value = 0;
 
-   	
-   	//value(0) = exp(-pow((x-0.5),2)*100);
-	value(0) = sin(M_PI * x);
-	//value(1) = sin(M_PI * x);
+	value(0) = cos(2 * M_PI * x);
 
 
 }

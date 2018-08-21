@@ -29,6 +29,8 @@ run_problem
 		Vector<double> error_per_cell_velocity;
     Vector<double> error_per_cell_grid;
     Vector<double> error_per_cell_grid_target;
+    double exact_target_value =0;
+    double numerical_target_value=0;
     Vector<double> store_user_index;          // dummy vector to transfer user index during grid refinement
 
 		 double t;		// time of the computation

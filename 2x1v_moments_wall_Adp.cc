@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
      const unsigned int num_systems = 1;
      std::vector<int> M(num_systems);
      std::vector<int> M_adjoint(num_systems);
-     M[0] = 4;
+     M[0] = 6;
      // M[1] = 8;
      // M[2] = 10;
      // M[3] = 12;
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
      M[2] = 16;
      M[3] = 40;*/
 
-     M_adjoint[0] = 4;
+     M_adjoint[0] = 6;
      // M_adjoint[1] = 16;
      // M_adjoint[2] = 18;
      // M_adjoint[3] = 20;
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
       ic_bc<dim> initial_boundary;	
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
-      std::string foldername = "2x1v_moments_wall_Adp/validate_grid_error/M6/";
+      std::string foldername = "2x1v_moments_wall_Adp/validate_grid_error/M" + std::to_string(M_adjoint[0]);
 
       const unsigned int max_neqn_primal = system_matrices[system_matrices.size()-1].Ax.rows();
       const unsigned int max_neqn_adjoint = system_matrices_adjoint[system_matrices_adjoint.size()-1].Ax.rows();
@@ -230,6 +230,7 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 
 	system_matrices.B.resize(4);
 	system_matrices.penalty_B.resize(4);
+	system_matrices.BC_Operator.resize(4);
 	system_matrices.penalty.resize(4);
 
 	for(unsigned int id = 0 ; id < 4 ; id ++)
@@ -237,6 +238,7 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 		system_matrices.B[id].resize(nbc_M,neqn_M);
 		system_matrices.penalty_B[id].resize(neqn_M,neqn_M);
 		system_matrices.penalty[id].resize(neqn_M,nbc_M);
+		system_matrices.BC_Operator[id].resize(neqn_M,nbc_M);
 	}
 
 	std::vector<triplet> Row_Col_Value;
@@ -250,14 +252,18 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 	system_matrices.P = system_matrices.P/Kn;
 	system_matrices.P.makeCompressed();
 
-	filename = "1v_Moments/Binflow/Binflow" + std::to_string(M) + ".txt";
+	filename = "1v_Moments/Bwall/Bwall" + std::to_string(M) + ".txt";
 	build_triplet(Row_Col_Value,filename);
 	build_matrix_from_triplet(system_matrices.B[0],Row_Col_Value);
 
-	filename = "1v_Moments/Binflow/penalty_inflow" + std::to_string(M) + ".txt";
+	filename = "1v_Moments/Bwall/penalty_odd_wall" + std::to_string(M) + ".txt";
 	build_triplet(Row_Col_Value,filename);
 	build_matrix_from_triplet(system_matrices.penalty[0],Row_Col_Value);	
 	
+	filename = "1v_Moments/Bwall/penalty_odd_wall" + std::to_string(M) + ".txt";
+	build_triplet(Row_Col_Value,filename);
+	build_matrix_from_triplet(system_matrices.BC_Operator[0],Row_Col_Value);	
+
 	std::vector<Sparse_Matrix> rotator(4);
 
 	for(unsigned int id = 0 ; id < 4 ; id=id+2)
@@ -276,11 +282,13 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 	{
 		system_matrices.B[i] = system_matrices.B[0] * rotator[i];
 		system_matrices.penalty[i] = rotator[i].transpose() * system_matrices.penalty[0];
+		system_matrices.BC_Operator[i] = rotator[i].transpose() * system_matrices.BC_Operator[0];
 
 		system_matrices.penalty_B[i] = system_matrices.penalty[i] * system_matrices.B[i];
 
 		system_matrices.B[i].makeCompressed();
 		system_matrices.penalty[i].makeCompressed();
+		system_matrices.BC_Operator[i].makeCompressed();
 		system_matrices.penalty_B[i].makeCompressed();
 	}
 
@@ -301,12 +309,14 @@ void develop_system_adjoint(system_data &system_matrices,const int &M,const int 
 	system_matrices.B.resize(4);
 	system_matrices.penalty_B.resize(4);
 	system_matrices.penalty.resize(4);
+	system_matrices.BC_Operator.resize(4);
 
 	for(unsigned int id = 0 ; id < 4 ; id ++)
 	{
 		system_matrices.B[id].resize(nbc_M,neqn_M);
 		system_matrices.penalty_B[id].resize(neqn_M,neqn_M);
 		system_matrices.penalty[id].resize(neqn_M,nbc_M);
+		system_matrices.BC_Operator[id].resize(neqn_M,nbc_M);
 	}
 
 	// reverse the direction of advection
@@ -332,13 +342,13 @@ void develop_system_adjoint(system_data &system_matrices,const int &M,const int 
 		system_matrices.B[i] = temp.B[bc_id_primal[i]];
 		system_matrices.penalty_B[i] = temp.penalty_B[bc_id_primal[i]];
 		system_matrices.penalty[i] = temp.penalty[bc_id_primal[i]];
+		system_matrices.BC_Operator[i] = temp.BC_Operator[bc_id_primal[i]];
 
 		system_matrices.B[i].makeCompressed();
 		system_matrices.penalty_B[i].makeCompressed();
 		system_matrices.penalty[i].makeCompressed();
+		system_matrices.BC_Operator[i].makeCompressed();
 	}
-
-
 }
 
 std::vector<system_data>
@@ -436,9 +446,9 @@ ic_bc<dim>::force(Vector<double> &value,
 	const double x = p[0];
 	
 	value = 0;
-	value(0) = M_PI * cos(M_PI * x);
-	value(2) = sqrt(2) * M_PI * cos(M_PI * x); 
-	//value(2) = pow(x-0.5,2);
+	// value(0) = M_PI * cos(M_PI * x);
+	// value(2) = sqrt(2) * M_PI * cos(M_PI * x); 
+	value(2) = pow(x-0.5,2);
 	//value(2) = x;
 }
 
@@ -515,7 +525,6 @@ ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,con
 	value = 0;
 }
 
-
 template<int dim>
 void 
 ic_bc_adjoint<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
@@ -526,6 +535,20 @@ ic_bc_adjoint<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 	double thetaW;
 	value.reinit(num_bc);
 	value = 0;
+
+	switch(bc_id)
+	{
+		case 2:
+		{
+			value(1) = 1;
+			break;
+		}
+		case 0:
+		{
+			value(1) = 1;
+			break;
+		}
+	}
 
 }
 
@@ -549,17 +572,6 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	const double x = p[0];
 	value = 0;
 
-	// value(0) = -M_PI * cos(M_PI * x);
-	// value(2) = -sqrt(2) * M_PI * cos(M_PI * x); 
-
-	//value(2) = pow(x-0.5,1);
-	//value(0) = exp(-pow(x-1,2)*100);
-	//value(1) = -M_PI * cos(M_PI * x);
-	value(1) = exp(-pow(x-0.6,2)*100);
-	//value(1) = 1;
-	//value(2) = 1;	// the mean value
-	// value(0) = -M_PI * cos(M_PI*x);
-	// value(2) = -sqrt(2) * M_PI * cos(M_PI * x); 
 }
 
 
@@ -568,41 +580,38 @@ void
 ic_bc<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
 {
 	const double shift = 0.5;
-	const double x = p[0]; // we need to shift the x coordinate for the reference solution
+	const double x = p[0]-shift; // we need to shift the x coordinate for the reference solution
 	const double y = p[1];
 
 
 	value = 0;
 
 	// M = 6 solution, poisson heat conduction
-	// value(2) = 0.05593013555027514 - 0.00949275700536624*cosh(4.47213595499958*x) + 
- //   			   0.13333333333333333*pow(x,2) - 0.2777777777777778*pow(x,4);
+	value(2) = 0.05593013555027514 - 0.00949275700536624*cosh(4.47213595499958*x) + 
+    0.13333333333333333*pow(x,2) - 0.2777777777777778*pow(x,4);
 
-	value(1) = sin(M_PI * x);
-   	//value(2) = 0.9950211932019232*x + 0.009745323921348737*sinh(4.47213595499958*x);
+    value(4) =  -0.01154700538379252 + 0.008220968718599857*cosh(4.47213595499958*x) - 
+    			0.11547005383792518*pow(x,2);
 
-	// M = 14 solution
-	// value(2) = 0.05653013082799942 - 0.00003792694823015286*cosh(1.64277980395364*x) - 0.0014402108667994624*cosh(2.0483113377580193*x) - 
- //   0.00530163981896668*cosh(2.6857066212139475*x) - 0.003996181490901356*cosh(4.230009784703013*x) - 
- //   0.00006758700357029971*cosh(12.325411809002668*x) + 0.13333333333333333*pow(x,2) - 0.2777777777777778*pow(x,4);
-   
-	// M = 50 solution
-	// value(2) = 0.05675652938784245 - 1.885785904226701e-10*cos(1.2164242712795965*x) - 
- //   2.7876822809820403e-9*cos(1.300836291991083*x) - 
- //   7.468332872581869e-8*cos(1.3949307476490418*x) - 
- //   1.0090697487505715e-6*cos(1.5008767648286245*x) - 
- //   9.968151997001748e-6*cos(1.6214533765602968*x) - 
- //   0.0000651927833578932*cos(1.760369867221947*x) - 
- //   0.0002886729478932784*cos(1.9230376940277825*x) - 
- //   0.0008371102541164165*cos(2.1185341987559996*x) - 
- //   0.0016251305742381954*cos(2.363144361900141*x) - 
- //   0.002218203071810823*cos(2.6846345639401537*x) - 
- //   0.002300207035646814*cos(3.1292573226008424*x) - 
- //   0.0018637654307691162*cos(3.781063129233608*x) - 
- //   0.0011541895786560002*cos(4.8177192940816855*x) - 
- //   0.0004425560342281727*cos(6.700113944875086*x) - 
- //   0.00004918022799979444*cos(11.118134592435387*x) - 
- //   7.549678748260056e-10*cos(33.28216542054585*x) + 0.13333333333333333*pow(x,2) - 
- //   0.2777777777777778*pow(x,4);
 
+    // M= 20 solution, poisson heat
+    // value(2) = 0.05663822363475 - 1.6266228139820752e-8*cosh(1.312499845273545*x) - 
+    // 4.166657416985956e-6*cosh(1.5359624765465445*x) - 
+    // 0.0001711562719558038*cosh(1.7928504374446674*x) - 
+    // 0.0014913475073612366*cosh(2.1202457820361236*x) - 
+    // 0.003870138255874244*cosh(2.6095498761963127*x) - 
+    // 0.0038859759113745824*cosh(3.5141607592624338*x) - 
+    // 0.001449182122889306*cosh(5.703742588502402*x) - 
+    // 5.09851246652068e-6*cosh(16.88777884716506*x) + 0.13333333333333333*pow(x,2) - 
+    // 0.2777777777777778*pow(x,4);
+
+    // value(4) = -0.01154700538379252 + 
+    // 1.4086966792838063e-8*cosh(1.312499845273545*x) + 
+    // 3.608431171976688e-6*cosh(1.5359624765465445*x) + 
+    // 0.00014822567953076416*cosh(1.7928504374446674*x) + 
+    // 0.001291544827245431*cosh(2.1202457820361236*x) + 
+    // 0.0033516380457450944*cosh(2.6095498761963127*x) + 
+    // 0.0033653538577447743*cosh(3.5141607592624338*x) + 
+    // 0.0012550285331324011*cosh(5.703742588502402*x) + 
+    // 4.415441317518566e-6*cosh(16.88777884716506*x) - 0.11547005383792518*pow(x,2);
 }
