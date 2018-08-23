@@ -1,5 +1,5 @@
 # Set the name of the project and target:
-SET(TARGET "2x1v_moments_wall_Adp")
+SET(TARGET "2x3v_heated_cavity_Adp")
 
 # Declare all source files the target consists of. Here, this is only
 # the one step-X.cc file, but as you expand your project you may wish

@@ -42,14 +42,16 @@ for i = 1 : size(x_indices)
     Rotator{3}(i,i) = (-1)^(x_indices(i)) * (-1)^(y_indices(i));
 end
 
-%% bc_id = 2
+%% bc_id = 2 and bc_id = 4
 xyz_indices = cell2mat(cellfun(@(a) a(:,[1 2 3]),all_idx_x_y(:),'Un',0)); 
 yxz_indices = cell2mat(cellfun(@(a) a(:,[1 2 3]),all_idx_y_x(:),'Un',0)); 
 
 % where does yx indices lie in the xy indices 
 for i = 1:length(yxz_indices)
     Lia = ismember(xyz_indices,yxz_indices(i,:),'rows');
+    % negative in the x direction
     Rotator{2}(i,Lia) = (-1)^(xyz_indices(Lia,1));
+    % negative in the y direction
     Rotator{4}(i,Lia) = (-1)^(xyz_indices(Lia,2));
 end
 

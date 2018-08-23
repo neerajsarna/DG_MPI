@@ -64,7 +64,6 @@ Full_matrix compute_Amod(const Sparse_Matrix &A)
       Full_matrix Amod = vecs*vals.cwiseAbs().asDiagonal()*vecs.inverse();
 
       return(Amod);
-
 }
 
 void 

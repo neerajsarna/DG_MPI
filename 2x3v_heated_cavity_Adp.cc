@@ -31,7 +31,7 @@ ic_bc:public ic_bc_base<dim>
 		ic_bc() {;};
 		virtual double ic(const Point<dim> &p,const int &id);
 		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
-		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
+				virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void force(Vector<double> &value,
 						   const Vector<double> &force_vec,
 						   const Point<dim> &p,const double &t);
@@ -49,7 +49,8 @@ ic_bc_adjoint:public ic_bc_base<dim>
 		virtual void exact_solution(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void force(const Point<dim> &p,Vector<double> &value,const double &t);
 		virtual void force(Vector<double> &value,
-						   const Vector<double> &force_vec);
+						   const Vector<double> &force_vec,
+						   const Point<dim> &p,const double &t);
 		virtual void bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 								Vector<double> &value,const double &t);
 };
@@ -113,60 +114,6 @@ set_square_bid(Triangulation<2> &triangulation)
     	}
 }
 
-void count_bc_id(Triangulation<2> &triangulation)
-{
-	  typename Triangulation<2>::active_cell_iterator cell = triangulation.begin_active(),
-	  													 endc = triangulation.end();
-
-
-	  
-	  int id0 = 0,id1 = 0, id2 = 0, id3 = 0; 
-
-	  for(; cell != endc ; cell++)   
-	  	if (cell->is_locally_owned())
-	  {
-
-	  	for(unsigned int face = 0 ; face < GeometryInfo<2>::faces_per_cell ; face++)
-	  		if (cell->face(face)->at_boundary())
-	  			switch (cell->face(face)->boundary_id())
-	  			{
-	  				case 0:
-	  				{
-	  					id0++;
-	  					break;
-	  				}
-
-	  				case 1:
-	  				{
-	  					id1++;
-	  					break;
-	  				}
-
-	  				case 2:
-	  				{
-	  					id2++;
-	  					break;
-	  				}
-
-	  				case 3:
-	  				{
-	  					id3++;
-	  					break;
-	  				}
-	  			}
-	  		}
-	  		
-	  
-
-	  	  	std::cout << "id0 " << id0 
-	  			<< " id1 " << id1 
-	  			<< " id2 " << id2 
-	  			<< " id3 " << id3 << std::endl;
-
-	  		fflush(stdout);
-
-
-}
 
 
 int main(int argc, char *argv[])
@@ -177,6 +124,7 @@ int main(int argc, char *argv[])
       Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, num_threads);
 
       const int dim = 2;
+      const int dim_problem = 2;
       const int poly_degree = 0;
 
      
@@ -185,13 +133,14 @@ int main(int argc, char *argv[])
      const std::vector<int> nbc_M = {5,8,14,20,30,40,55,70,91,112,140,168,204,240,285,330,385,440};
      const double Kn = 0.1;
 
-     std::vector<int> M(2);
-     std::vector<int> M_adjoint(2);
+     const unsigned int num_systems = 1;
+     std::vector<int> M(num_systems);
+     std::vector<int> M_adjoint(num_systems);
      M[0] = 3;
-     M[1] = 5;
+     //M[1] = 5;
 
-     M_adjoint[0] = 5;
-     M_adjoint[1] = 7;
+     M_adjoint[0] = 3;
+     //M_adjoint[1] = 7;
 
 	 std::vector<system_data> system_matrices = develop_complete_system(M,neqn_M,nbc_M,Kn);
 	 std::vector<system_data> system_matrices_error = develop_complete_system(M_adjoint,neqn_M,nbc_M,Kn);	// required for error computation
@@ -199,35 +148,19 @@ int main(int argc, char *argv[])
      
       // create a rectangular mesh 
       Triangulation<dim> triangulation;
-      Point<dim> p1;
-      Point<dim> p2;
-      std::vector<unsigned int> repetitions(dim);
+      unsigned int repetitions = atoi(argv[2]);
 
-      const double left_edge = 0;
-      const double right_edge = 1;
-
-      // corners of the diagonal
-      p1(0) = left_edge;
-      p1(1) = left_edge;
-
-      p2(0) = right_edge;
-      p2(1) = right_edge;
-
-     
-      repetitions[0] = atoi(argv[2]);
-      repetitions[1] = 1;
-
-      //The diagonal of the rectangle is the line joining p1 and p2
-      GridGenerator::subdivided_hyper_rectangle(triangulation,repetitions,p1,p2);
+      GridGenerator::subdivided_hyper_cube(triangulation,repetitions);
+      triangulation.refine_global(1);
       set_square_bid(triangulation);
-
-     
-      triangulation.signals.post_refinement.connect(std::bind (&set_square_bid,
-                      								std::ref(triangulation)));
 
       ic_bc<dim> initial_boundary;	
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
+      std::string foldername = "2x3v_heated_cavity_Adp/";
+
+      const unsigned int max_neqn_primal = system_matrices[system_matrices.size()-1].Ax.rows();
+      const unsigned int max_neqn_adjoint = system_matrices_adjoint[system_matrices_adjoint.size()-1].Ax.rows();
 
 
        run_problem<dim> Run_Problem(system_matrices,	  // system data
@@ -236,7 +169,11 @@ int main(int argc, char *argv[])
 							  		triangulation, // triangulation
 							  		poly_degree,
 							  		&initial_boundary,
-					          		&initial_boundary_adjoint);
+					          		&initial_boundary_adjoint,
+					          		foldername,
+					          		max_neqn_primal,
+					          		max_neqn_adjoint,
+					          		dim_problem);
 
 }
 
@@ -253,12 +190,14 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 	system_matrices.B.resize(4);
 	system_matrices.penalty_B.resize(4);
 	system_matrices.penalty.resize(4);
+	system_matrices.BC_Operator.resize(4);
 
 	for(unsigned int id = 0 ; id < 4 ; id ++)
 	{
 		system_matrices.B[id].resize(nbc_M,neqn_M);
 		system_matrices.penalty_B[id].resize(neqn_M,neqn_M);
 		system_matrices.penalty[id].resize(neqn_M,nbc_M);
+		system_matrices.BC_Operator[id].resize(neqn_M,nbc_M);
 	}
 
 	std::vector<triplet> Row_Col_Value;
@@ -276,7 +215,7 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 	build_triplet(Row_Col_Value,filename);
 	build_matrix_from_triplet(system_matrices.B[0],Row_Col_Value);
 
-	filename = "3v_Moments/Bwall/penalty_wall" + std::to_string(M) + ".txt";
+	filename = "3v_Moments/Bwall/penalty_odd_wall" + std::to_string(M) + ".txt";
 	build_triplet(Row_Col_Value,filename);
 	build_matrix_from_triplet(system_matrices.penalty[0],Row_Col_Value);	
 	
@@ -293,19 +232,19 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 	}
 
 	system_matrices.Ax.makeCompressed();
+	system_matrices.Ay = rotator[1].transpose() * system_matrices.Ax * rotator[1];
+	system_matrices.Ay.makeCompressed();
 
 	for(unsigned int i = 0 ; i < 4 ; i++)
 	{
 		system_matrices.B[i] = system_matrices.B[0] * rotator[i];
 		system_matrices.penalty[i] = rotator[i].transpose() * system_matrices.penalty[0];
-
-		if (i == 1 || i == 3) // only changes along the x-direction
-			system_matrices.penalty[i] = rotator[i].transpose() * system_matrices.penalty[0] * 0;
-
+		system_matrices.BC_Operator[i] =  system_matrices.penalty[i];
 		system_matrices.penalty_B[i] = system_matrices.penalty[i] * system_matrices.B[i];
 
 		system_matrices.B[i].makeCompressed();
 		system_matrices.penalty[i].makeCompressed();
+		system_matrices.BC_Operator[i].makeCompressed();
 		system_matrices.penalty_B[i].makeCompressed();
 	}
 
@@ -326,12 +265,14 @@ void develop_system_adjoint(system_data &system_matrices,const int &M,const int 
 	system_matrices.B.resize(4);
 	system_matrices.penalty_B.resize(4);
 	system_matrices.penalty.resize(4);
+	system_matrices.BC_Operator.resize(4);
 
 	for(unsigned int id = 0 ; id < 4 ; id ++)
 	{
 		system_matrices.B[id].resize(nbc_M,neqn_M);
 		system_matrices.penalty_B[id].resize(neqn_M,neqn_M);
 		system_matrices.penalty[id].resize(neqn_M,nbc_M);
+		system_matrices.BC_Operator[id].resize(neqn_M,nbc_M); // the boundary operator for computation of adjiont functional
 	}
 
 	// reverse the direction of advection
@@ -357,13 +298,13 @@ void develop_system_adjoint(system_data &system_matrices,const int &M,const int 
 		system_matrices.B[i] = temp.B[bc_id_primal[i]];
 		system_matrices.penalty_B[i] = temp.penalty_B[bc_id_primal[i]];
 		system_matrices.penalty[i] = temp.penalty[bc_id_primal[i]];
+		system_matrices.BC_Operator[i] = temp.BC_Operator[bc_id_primal[i]];
 
 		system_matrices.B[i].makeCompressed();
 		system_matrices.penalty_B[i].makeCompressed();
 		system_matrices.penalty[i].makeCompressed();
+		system_matrices.BC_Operator[i].makeCompressed();
 	}
-
-
 }
 
 std::vector<system_data>
@@ -495,27 +436,17 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
     
 	switch (bc_id)
 	{
+		case 0:
 		case 1:
-		case 3:
+		case 2:
 		{
-			value = 0;
 			break;
 		}
-		case 0:
+
+		case 3:
 		{
 
 			double bc_normal = 1.0;
-			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
-                    for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
-                    	if (n.col() == 3 || n.col() == 5 || n.col() == 6)
-                    		value(n.row()) += bc_normal * thetaW * n.value()/sqrt(2.0);
-                    	
-			break;
-		}
-
-		case 2:
-		{
-			double bc_normal = -1.0;
 			for (unsigned int m = 0 ; m < B.outerSize() ; m++)
                     for (Sparse_Matrix::InnerIterator n(B,m); n ; ++n)
                     	if (n.col() == 3 || n.col() == 5 || n.col() == 6)
@@ -536,27 +467,7 @@ ic_bc<dim>::bc_inhomo(const Sparse_Matrix &B,const unsigned int &bc_id,
 template<int dim>
 double 
 ic_bc_adjoint<dim>::ic(const Point<dim> &p,const int &id)
-{
-	const double x = p[0];
-	const double y = p[1];
-
-	const double density = 0;	
-	// const double density = exp(-pow((x-0.5),2)*100);	
-
-	switch (id)
-	{
-		case 0:
-		{
-			return(density);
-			break;
-		}
-		default:
-		{
-			return(0);
-			break;
-		}
-	}
-	
+{	
 	return 0;
 }
 
@@ -564,10 +475,7 @@ template<int dim>
 void 
 ic_bc_adjoint<dim>::exact_solution(const Point<dim> &p,Vector<double> &value,const double &t)
 {
-	const double x = p[0];
-	const double y = p[1];
-
-	value(0) = 0;
+	value = 0;
 
 }
 
@@ -590,11 +498,8 @@ template<int dim>
 void 
 ic_bc_adjoint<dim>::force(const Point<dim> &p,Vector<double> &value,const double &t)
 {
-	const double x = p[0];
-	const double y = p[1];
-
 	Assert(value.size() != 0,ExcNotImplemented());
-	value(0) = 0;
+	value = 0;
 
 }
 
@@ -603,21 +508,16 @@ template<int dim>
 void 
 ic_bc_adjoint<dim>::force(Vector<double> &value,
 				  		 const Vector<double> &force_vec,
-				  		 const Point<dim> &p,const double &t)
+				  		 const Point<dim> &p,
+				  		 const double &t)
 {
 	Assert(value.size() != 0,ExcNotImplemented());
 	Assert(force_vec.size() != 0,ExcNotImplemented());
 	value = 0;
 
-	// provide a value to the theta variables
-	for(unsigned int i = 0 ; i < force_vec.size(); i++)
-	{
-		//value(i) = force_vec(i);
-		value(3) = 2*(force_vec(3) + force_vec(5) + force_vec(6))/9;
-		value(5) = 2*(force_vec(3) + force_vec(5) + force_vec(6))/9;
-		value(6) = 2*(force_vec(3) + force_vec(5) + force_vec(6))/9;
-		//value(5) = force_vec(5);
-		//value(6) = force_vec(6);
-	}
+	// a mean value for temperature. 
+	value(3) = sqrt(2)/3.0;
+	value(5) = sqrt(2)/3.0;
+	value(6) = sqrt(2)/3.0;
 }
 
