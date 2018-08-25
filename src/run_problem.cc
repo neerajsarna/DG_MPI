@@ -44,7 +44,7 @@ dim_problem(dim_problem)
      const unsigned int refinement_type_grid = 0;
      const unsigned int refinement_type_velocity = 0;
      const bool to_solve_adjoint = true;
-     const bool to_compute_velocity_error = false;
+     const bool to_compute_velocity_error = true;
      const bool to_compute_grid_error = true;
      std::string filename;
 
@@ -117,7 +117,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 6 * 640;
+     const unsigned int max_dofs = 6 * 1280;
 
      while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
