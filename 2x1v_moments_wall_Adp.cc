@@ -131,19 +131,30 @@ int main(int argc, char *argv[])
      std::vector<int> nbc_M;
      const double Kn = 0.1;
 
-     const unsigned int num_systems = 1;
+     const unsigned int num_systems = 6;
      std::vector<int> M(num_systems);
      std::vector<int> M_adjoint(num_systems);
      M[0] = 6;
-     // M[1] = 8;
-     // M[2] = 10;
-     // M[3] = 12;
-     // M[4] = 14;
+     M[1] = 8;
+     M[2] = 10;
+     M[3] = 12;
+     M[4] = 14;
+     M[5] = 16;
 /*     M[1] = 14;
      M[2] = 16;
      M[3] = 40;*/
+     
+     // does not really matters for the unifrm refinement
+     M_adjoint[0] = 6;
+     M_adjoint[1] = 8;
+     M_adjoint[2] = 10;
+     M_adjoint[3] = 12;
+     M_adjoint[4] = 14;
+     M_adjoint[5] = 16;
 
-     M_adjoint[0] = atoi(argv[3]);
+     AssertThrow(M.size() == num_systems,ExcNotInitialized());
+     AssertThrow(M_adjoint.size() == num_systems,ExcNotInitialized());
+
      // M_adjoint[1] = 16;
      // M_adjoint[2] = 18;
      // M_adjoint[3] = 20;
@@ -198,7 +209,7 @@ int main(int argc, char *argv[])
       ic_bc<dim> initial_boundary;	
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
-      std::string foldername = "2x1v_moments_wall_Adp/validate_velocity_error/M" + std::to_string(M_adjoint[0]);
+      std::string foldername = "2x1v_moments_wall_Adp/";
 
       const unsigned int max_neqn_primal = system_matrices[system_matrices.size()-1].Ax.rows();
       const unsigned int max_neqn_adjoint = system_matrices_adjoint[system_matrices_adjoint.size()-1].Ax.rows();

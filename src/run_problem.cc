@@ -1,27 +1,6 @@
 #include "run_problem.h"
 
 template<int dim>
-class
-linear_function:public Function<dim>
-{
-  public:
-    linear_function(const unsigned int n_eqn):Function<dim>(n_eqn){};
-    virtual void vector_value(const Point<dim> &p,Vector<double> &value)const;
-};
-
-template<int dim>
-void 
-linear_function<dim>::vector_value(const Point<dim> &p,Vector<double> &value)const
-{
-  double x = p[0];
-  value(0) = 0.5;
-  value(1) = 0.5-x;
-
-  // value(0) = 1-x;
-  // value(1) = 1-x;
-}
-
-template<int dim>
 run_problem<dim>::run_problem(std::vector<system_data> &system_mat_primal,	  // system data
                               std::vector<system_data> &system_mat_error_comp,    // system data to compute error
 				  			              std::vector<system_data> &system_mat_adjoint, // adjoint data
@@ -41,11 +20,11 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1),
 dim_problem(dim_problem)
 {
      AssertThrow(max_equations_primal <= max_equations_adjoint,ExcInternalError()); 
-     const unsigned int refinement_type_grid = 1;
+     const unsigned int refinement_type_grid = 0;
      const unsigned int refinement_type_velocity = 0;
-     const bool to_solve_adjoint = true;
-     const bool to_compute_velocity_error = true;
-     const bool to_compute_grid_error = true;
+     const bool to_solve_adjoint = false;
+     const bool to_compute_velocity_error = false;
+     const bool to_compute_grid_error = false;
      std::string filename;
 
      switch (refinement_type_grid)
@@ -117,11 +96,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-<<<<<<< HEAD
-     const unsigned int max_dofs = 13 * 30 * 30;
-=======
-     const unsigned int max_dofs = 6 * 1280;
->>>>>>> origin/discrete_adjoint
+     const unsigned int max_dofs = 8 * 40;
 
      while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
@@ -172,8 +147,6 @@ dim_problem(dim_problem)
                                   solve_primal.locally_owned_solution,
                                   system_mat_adjoint,
                                   t);
-
-          std::cout << "finished " << std::endl;
 
           if(refinement_type_velocity == 1 || to_compute_velocity_error)
           {
@@ -255,9 +228,13 @@ dim_problem(dim_problem)
       
 	   } // end of loop over cycles
 
-     print_convergence_table(foldername);
-     dummy_dof_handler_grid.clear();
-     dummy_dof_handler_velocity.clear();
+    filename = foldername + std::string("/result_uniform") + std::string(".txt");
+          
+    solve_primal.create_output(filename);
+
+    print_convergence_table(foldername);
+    dummy_dof_handler_grid.clear();
+    dummy_dof_handler_velocity.clear();
 
 }
 
@@ -466,7 +443,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
-       std::ofstream output_convergence(foldername + std::string("/convergence_table_adaptive.txt"));
+       std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform.txt"));
 
       convergence_table.evaluate_convergence_rates("primal_error",
                                                   "dofs_primal",
