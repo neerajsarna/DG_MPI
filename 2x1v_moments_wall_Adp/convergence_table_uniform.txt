@@ -1,3 +1,7 @@
-  primal_error   adjoint_error    min_h    dofs_primal  target_error   predicted_error_grid predicted_error_velocity corrected_error 
-1.0973e-02     - 0.0000e+00   - 5.0000e-02         120 5.0918e-03    - 0.0000e+00         - 0.0000e+00             - 5.0918e-03    - 
-1.1063e-02 -0.01 0.0000e+00 nan 2.5000e-02         320 3.2441e-03 0.46 0.0000e+00       nan 0.0000e+00           nan 3.2441e-03 0.46 
+  primal_error    adjoint_error     min_h    dofs_primal  target_error   predicted_error_grid predicted_error_velocity corrected_error 
+1.1213e-02     - 2.4954e-317    - 2.5000e-02         240 3.8711e-03    - 0.0000e+00         - 0.0000e+00             - 3.8711e-03    - 
+1.1570e-02 -0.03 2.4954e-317 0.00 1.2500e-02         640 2.4541e-03 0.46 0.0000e+00       nan 0.0000e+00           nan 2.4541e-03 0.46 
+1.1895e-02 -0.03 2.4954e-317 0.00 6.2500e-03        1600 1.6172e-03 0.46 0.0000e+00       nan 0.0000e+00           nan 1.6172e-03 0.46 
+1.2094e-02 -0.02 2.4954e-317 0.00 3.1250e-03        3840 1.1164e-03 0.42 0.0000e+00       nan 0.0000e+00           nan 1.1164e-03 0.42 
+1.2202e-02 -0.01 2.4954e-317 0.00 1.5625e-03        8960 8.0530e-04 0.39 0.0000e+00       nan 0.0000e+00           nan 8.0530e-04 0.39 
+1.2257e-02 -0.01 2.4954e-317 0.00 7.8125e-04       20480 6.0204e-04 0.35 0.0000e+00       nan 0.0000e+00           nan 6.0204e-04 0.35 

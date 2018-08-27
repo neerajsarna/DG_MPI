@@ -96,9 +96,10 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 8 * 40;
+     const unsigned int max_dofs = 16 * 320;
 
-     while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
+    // while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
+    while (cycle < 6)
 	   {
 
         std::cout << "refinement cycle: " << cycle <<  std::endl;
@@ -107,12 +108,12 @@ dim_problem(dim_problem)
 	   		solve_primal.run_time_loop(triangulation,cycle,t,temp);
         timer.leave_subsection();
    
-        std::string filename = foldername + std::string("/result_cycle") 
+/*        std::string filename = foldername + std::string("/result_cycle") 
                               + std::to_string(cycle)
 					                    + std::string(".txt");
 
         solve_primal.create_output(filename);
-
+*/
         if(refinement_type_grid == 1)  // write the grid when doing adaptive refinement
         {
             filename = foldername + "/grid" + std::to_string(cycle);
@@ -212,8 +213,8 @@ dim_problem(dim_problem)
           timer.enter_subsection("perform adaptivity");
           
           update_index_vector(triangulation,refinement_type_velocity,system_mat_primal.size());  // update the user indices based upon the error
-          update_grid_refine_flags(triangulation,refinement_type_grid);  
-          perform_grid_refinement_and_sol_transfer(triangulation,solve_primal,solve_adjoint); // perform grid refinement and solution transfer
+          //update_grid_refine_flags(triangulation,refinement_type_grid);  
+          //perform_grid_refinement_and_sol_transfer(triangulation,solve_primal,solve_adjoint); // perform grid refinement and solution transfer
           fill_user_index_from_index_vector();  // update the user indices 
 
           timer.leave_subsection();
@@ -228,9 +229,9 @@ dim_problem(dim_problem)
       
 	   } // end of loop over cycles
 
-    filename = foldername + std::string("/result_uniform") + std::string(".txt");
+    //filename = foldername + std::string("/result_uniform") + std::string(".txt");
           
-    solve_primal.create_output(filename);
+    //solve_primal.create_output(filename);
 
     print_convergence_table(foldername);
     dummy_dof_handler_grid.clear();
@@ -443,7 +444,7 @@ template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
-       std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform.txt"));
+       std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform_no_grid_refine.txt"));
 
       convergence_table.evaluate_convergence_rates("primal_error",
                                                   "dofs_primal",

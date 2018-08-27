@@ -29,4 +29,4 @@ cd /home/ns179556/DG_MPI
  
 export FLAGS_MPI_BATCH="-np 1"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 10 12
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 160 
