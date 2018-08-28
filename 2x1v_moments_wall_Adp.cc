@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
      std::vector<int> nbc_M;
      const double Kn = 0.1;
 
-     const unsigned int num_systems = 6;
+     const unsigned int num_systems = 12;
      std::vector<int> M(num_systems);
      std::vector<int> M_adjoint(num_systems);
      M[0] = 6;
@@ -140,17 +140,29 @@ int main(int argc, char *argv[])
      M[3] = 12;
      M[4] = 14;
      M[5] = 16;
+     M[6] = 18;
+     M[7] = 20;
+     M[8] = 22;
+     M[9] = 24;
+     M[10] = 26;
+     M[11] = 28;
 /*     M[1] = 14;
      M[2] = 16;
      M[3] = 40;*/
      
      // does not really matters for the unifrm refinement
-     M_adjoint[0] = 6;
-     M_adjoint[1] = 8;
-     M_adjoint[2] = 10;
-     M_adjoint[3] = 12;
-     M_adjoint[4] = 14;
-     M_adjoint[5] = 16;
+     M_adjoint[0] = 8;
+     M_adjoint[1] = 10;
+     M_adjoint[2] = 12;
+     M_adjoint[3] = 14;
+     M_adjoint[4] = 16;
+     M_adjoint[5] = 18;
+     M_adjoint[6] = 20;
+     M_adjoint[7] = 22;
+     M_adjoint[8] = 24;
+     M_adjoint[9] = 26;
+     M_adjoint[10] = 28;
+     M_adjoint[11] = 30;
 
      AssertThrow(M.size() == num_systems,ExcNotInitialized());
      AssertThrow(M_adjoint.size() == num_systems,ExcNotInitialized());
@@ -163,10 +175,10 @@ int main(int argc, char *argv[])
      M_adjoint[2] = 10;
      M_adjoint[3] = 11;
 */	
-     neqn_M.resize(18);
-     nbc_M.resize(18);
+     neqn_M.resize(40);
+     nbc_M.resize(40);
 
-     for(unsigned int i = 3 ; i <= 20; i++)
+     for(unsigned int i = 3 ; i <= 42; i++)
      {
      	neqn_M[i-3]=i;
      	nbc_M[i-3]=int(i/2);
@@ -232,7 +244,6 @@ int main(int argc, char *argv[])
 void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 												 const int &nbc_M,const double &Kn)
 {
-	std::cout << "developing systems: " << std::endl;
 	// we first initialise all the matrices
 	system_matrices.Ax.resize(neqn_M,neqn_M);
 	system_matrices.Ay.resize(neqn_M,neqn_M);

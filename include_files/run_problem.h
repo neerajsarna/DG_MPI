@@ -26,14 +26,15 @@ run_problem
     FESystem<dim> dummy_fe_grid;
     FESystem<dim> dummy_fe_velocity;
 
-		Vector<double> error_per_cell_velocity;
+	Vector<double> error_per_cell_velocity;
     Vector<double> error_per_cell_grid;
     Vector<double> error_per_cell_grid_target;
     double exact_target_value =0;
     double numerical_target_value=0;
     Vector<double> store_user_index;          // dummy vector to transfer user index during grid refinement
 
-		 double t;		// time of the computation
+    double t;		// time of the computation
+    const double balancing_fac = 3.0;
 
 	 void write_error(const std::string &filename,const Triangulation<dim> &triangulation,const Vector<double> &error_per_cell);
      void write_grid(const std::string &filename,const Triangulation<dim> &triangulation);

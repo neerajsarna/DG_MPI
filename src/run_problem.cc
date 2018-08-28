@@ -20,8 +20,8 @@ dummy_fe_velocity(FE_DGQ<dim>(0),1),
 dim_problem(dim_problem)
 {
      AssertThrow(max_equations_primal <= max_equations_adjoint,ExcInternalError()); 
-     const unsigned int refinement_type_grid = 0;
-     const unsigned int refinement_type_velocity = 0;
+     const unsigned int refinement_type_grid = 1;
+     const unsigned int refinement_type_velocity = 1;
      const bool to_solve_adjoint = false;
      const bool to_compute_velocity_error = false;
      const bool to_compute_grid_error = false;
@@ -96,12 +96,12 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 16 * 320;
+     const unsigned int max_dofs = 200;
 
-    // while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
-    while (cycle < 6)
+     while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
 
+        std::cout <<"#DOFS...." << compute_active_dofs(triangulation,solve_primal.n_eqn) << std::endl;
         std::cout << "refinement cycle: " << cycle <<  std::endl;
 	   		std::cout << "solving primal: " << std::endl;
         timer.enter_subsection("solve primal");
@@ -213,8 +213,8 @@ dim_problem(dim_problem)
           timer.enter_subsection("perform adaptivity");
           
           update_index_vector(triangulation,refinement_type_velocity,system_mat_primal.size());  // update the user indices based upon the error
-          //update_grid_refine_flags(triangulation,refinement_type_grid);  
-          //perform_grid_refinement_and_sol_transfer(triangulation,solve_primal,solve_adjoint); // perform grid refinement and solution transfer
+          update_grid_refine_flags(triangulation,refinement_type_grid);  
+          perform_grid_refinement_and_sol_transfer(triangulation,solve_primal,solve_adjoint); // perform grid refinement and solution transfer
           fill_user_index_from_index_vector();  // update the user indices 
 
           timer.leave_subsection();
@@ -404,31 +404,33 @@ run_problem<dim>::develop_convergence_table(const double &error_primal,
 
   std::string col1 = "primal_error";
   std::string col2 = "adjoint_error";
-  std::string col3 = "min_h";
+  std::string col3 = "total cells";
   std::string col4 = "dofs_primal";
 
   std::string col5 = "target_error";
   std::string col6 = "predicted_error_grid";
   std::string col7 = "predicted_error_velocity";
   std::string col8 = "corrected_error";
+  std::string col9 = "total predicted error";
 
   
-
   const double error_observed = error_per_cell_grid_target.mean_value() * error_per_cell_grid_target.size();
   const double error_predicted_grid = error_per_cell_grid.mean_value() * error_per_cell_grid.size();
   
-
   const double error_predicted_velocity = error_per_cell_velocity.mean_value() * error_per_cell_velocity.size();
   const double error_corrected = error_observed - error_predicted_grid - error_predicted_velocity;
 
+  const double total_predicted_error = error_predicted_grid + error_predicted_velocity;
+
   convergence_table.add_value(col1,error_primal);
   convergence_table.add_value(col2,error_adjoint);
-  convergence_table.add_value(col3,min_h);
+  convergence_table.add_value(col3,triangulation.n_active_cells());
   convergence_table.add_value(col4,num_dofs);
   convergence_table.add_value(col5,fabs(error_observed));
   convergence_table.add_value(col6,fabs(error_predicted_grid));
   convergence_table.add_value(col7,fabs(error_predicted_velocity));
   convergence_table.add_value(col8,fabs(error_corrected));
+  convergence_table.add_value(col9,fabs(total_predicted_error));
 
   convergence_table.set_scientific(col1,true);
   convergence_table.set_scientific(col2,true);
@@ -438,13 +440,18 @@ run_problem<dim>::develop_convergence_table(const double &error_primal,
   convergence_table.set_scientific(col6,true);
   convergence_table.set_scientific(col7,true);
   convergence_table.set_scientific(col8,true);
+  convergence_table.set_scientific(col9,true);
 }
 
 template<int dim>
 void
 run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
-       std::ofstream output_convergence(foldername + std::string("/convergence_table_uniform_no_grid_refine.txt"));
+  // gamma is the balancing factor
+      std::string filename = foldername + std::string("/convergence_table_adaptive")
+                             + std::string("_gamma_3.txt");
+
+      std::ofstream output_convergence(filename);
 
       convergence_table.evaluate_convergence_rates("primal_error",
                                                   "dofs_primal",
@@ -1078,16 +1085,23 @@ run_problem<dim>::update_index_vector(Triangulation<dim> &triangulation,
       typename DoFHandler<dim>::active_cell_iterator cell = dummy_dof_handler_velocity.begin_active(),
                                                   endc = dummy_dof_handler_velocity.end();
       for(; cell != endc ; cell++)
+      {
+        const double grid_error = fabs(error_per_cell_grid(cell->active_cell_index()));
+        const double velocity_error = fabs(error_per_cell_velocity(cell->active_cell_index()));
+
         if(cell->refine_flag_set())
           {
                 std::vector<types::global_dof_index> local_dof_indices(1);
                 cell->get_dof_indices(local_dof_indices);
                 
-                if(store_user_index(local_dof_indices[0]) < num_systems-1)
+                if(store_user_index(local_dof_indices[0]) < num_systems-1 && 
+                  balancing_fac * velocity_error > grid_error)
+
                   store_user_index(local_dof_indices[0]) += 1; // increase by one     
 
-                cell->clear_refine_flag();
+                cell->clear_refine_flag();    // prepare the cell for further grid refinement
           } 
+      }
       break;     
     }
     default:
@@ -1130,24 +1144,33 @@ run_problem<dim>::update_grid_refine_flags(Triangulation<dim> &triangulation,
                                                       frac_refine,frac_coarsen); 
 
       
-    // refine_and_coarsen_cancellation(triangulation,
-    //                                  error_per_cell_grid,
-    //                                  frac_refine);
 
-      if(dim_problem == 1)
-      {
       typename Triangulation<dim>::active_cell_iterator cell = triangulation.begin_active(),
                                                      endc = triangulation.end();
 
+
       for(; cell != endc ; cell++)
-        if(cell->refine_flag_set())
+      {
+        const double grid_error = fabs(error_per_cell_grid(cell->active_cell_index()));
+        const double velocity_error = fabs(error_per_cell_velocity(cell->active_cell_index()));
+
+        if(cell->refine_flag_set() && grid_error > balancing_fac * velocity_error)
+        {
+          if(dim_problem == 1)
             cell->set_refine_flag(RefinementCase<dim>::cut_axis(0));
+          else
+            cell->set_refine_flag();
+        }
+        if(cell->refine_flag_set() && grid_error <= balancing_fac * velocity_error)
+            cell->clear_refine_flag();
       }
+
 
       break;
     }
   }
 }
+
 
 // the following routine takes care of the inter element cancellation
 template<int dim>

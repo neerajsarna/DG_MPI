@@ -33,33 +33,33 @@ for i = 1 : M
 end
 
 
-% %% write Ax
-% data = get_sparse_data(Ax);
-% filename = strcat('Ax/Ax',num2str(M),'.txt');
-% mkdir Ax;
-% dlmwrite(filename,size(data,1),'precision',16);
-% dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
-% 
-% %% write P
-% data = get_sparse_data(P);
-% mkdir P;
-% filename = strcat('P/P',num2str(M),'.txt');
-% dlmwrite(filename,size(data,1),'precision',16);
-% dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
-% 
-% %% write Binflow
-% data = get_sparse_data(Binflow);
-% mkdir Binflow;
-% filename = strcat('Binflow/Binflow',num2str(M),'.txt');
-% dlmwrite(filename,size(data,1),'precision',16);
-% dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
-% 
-% %% write Bwall
-% data = get_sparse_data(Bwall);
-% mkdir Bwall;
-% filename = strcat('Bwall/Bwall',num2str(M),'.txt');
-% dlmwrite(filename,size(data,1),'precision',16);
-% dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
+%% write Ax
+data = get_sparse_data(Ax);
+filename = strcat('Ax/Ax',num2str(M),'.txt');
+mkdir Ax;
+dlmwrite(filename,size(data,1),'precision',16);
+dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
+
+%% write P
+data = get_sparse_data(P);
+mkdir P;
+filename = strcat('P/P',num2str(M),'.txt');
+dlmwrite(filename,size(data,1),'precision',16);
+dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
+
+%% write Binflow
+data = get_sparse_data(Binflow);
+mkdir Binflow;
+filename = strcat('Binflow/Binflow',num2str(M),'.txt');
+dlmwrite(filename,size(data,1),'precision',16);
+dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
+
+%% write Bwall
+data = get_sparse_data(Bwall);
+mkdir Bwall;
+filename = strcat('Bwall/Bwall',num2str(M),'.txt');
+dlmwrite(filename,size(data,1),'precision',16);
+dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
 
 %% write penaltyInflow
 data = get_sparse_data(penaltyInflow);
@@ -73,14 +73,14 @@ filename = strcat('Bwall/penalty_odd_wall',num2str(M),'.txt');
 dlmwrite(filename,size(data,1),'precision',16);
 dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
 
-% %% write the rotator
-% mkdir Rotator;
-% for i = 1 : 4
-%     data = get_sparse_data(rotator{i});
-%     filename = strcat('Rotator/rotator',num2str(M),'_',num2str(i),'.txt');
-%     dlmwrite(filename,size(data,1),'precision',16);
-%     dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
-% end
+%% write the rotator
+mkdir Rotator;
+for i = 1 : 4
+    data = get_sparse_data(rotator{i});
+    filename = strcat('Rotator/rotator',num2str(M),'_',num2str(i),'.txt');
+    dlmwrite(filename,size(data,1),'precision',16);
+    dlmwrite(filename,data,'delimiter',' ','-append','precision',16);
+end
 
 end
 
