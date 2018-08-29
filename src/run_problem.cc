@@ -96,7 +96,7 @@ dim_problem(dim_problem)
 	   std::vector<Vector<double>> component_to_system = solve_primal.return_component_to_system(); 
      std::vector<Vector<double>> component_to_system_adjoint = solve_adjoint.return_component_to_system(); 
 	   std::vector<Vector<double>> temp;
-     const unsigned int max_dofs = 200;
+     const unsigned int max_dofs = 1500;
 
      while(compute_active_dofs(triangulation,solve_primal.n_eqn) <= max_dofs)
 	   {
@@ -449,7 +449,7 @@ run_problem<dim>::print_convergence_table(const std::string &foldername)
 { 
   // gamma is the balancing factor
       std::string filename = foldername + std::string("/convergence_table_adaptive")
-                             + std::string("_gamma_3.txt");
+                             + std::string("_gamma_0p5.txt");
 
       std::ofstream output_convergence(filename);
 

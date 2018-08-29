@@ -34,7 +34,7 @@ run_problem
     Vector<double> store_user_index;          // dummy vector to transfer user index during grid refinement
 
     double t;		// time of the computation
-    const double balancing_fac = 3.0;
+    const double balancing_fac = 0.5;
 
 	 void write_error(const std::string &filename,const Triangulation<dim> &triangulation,const Vector<double> &error_per_cell);
      void write_grid(const std::string &filename,const Triangulation<dim> &triangulation);

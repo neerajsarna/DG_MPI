@@ -10,7 +10,7 @@
 ### Request the time you need for execution in minutes
 ### The format for the parameter is: [hour:]minute,
 ### that means for 80 minutes you could also use this: 1:20
-#BSUB -W 5:00
+#BSUB -W 10:00
  
 ### Request memory you need for your job per PROCESS in MB
 #BSUB -M 6000
@@ -29,4 +29,4 @@ cd /home/ns179556/DG_MPI
  
 export FLAGS_MPI_BATCH="-np 1"
 ### Execute your application
-mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 160 
+mpirun $FLAGS_MPI_BATCH ./2x1v_moments_wall_Adp.out 16 20
