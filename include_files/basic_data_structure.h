@@ -20,4 +20,5 @@
 		// by default we have a false
 		bool bc_inhomo_time = false;
 		bool have_force = false;
+		double exact_target_value = 0; // exact value of the target
 	};

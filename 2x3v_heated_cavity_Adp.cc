@@ -3,26 +3,34 @@
 
 using namespace dealii;
 
+
+// given the number of equations and the number of boundary conditions, following routine develops system matrices for
+// our ADJOINT moment system. 
 void develop_system_adjoint(system_data &system_matrices,const int &M,
 					const int &neqn_M,const int &nbc_M,const double &Kn);	// develop the adjiont system
 
+// same as above but for the PRIMAL problem.
 void develop_system(system_data &system_matrices,const int &M,
 					const int &neqn_M,const int &nbc_M,const double &Kn);	// develop the primal system
 
 
+// Same as above but takes in vectors of number of equation and rest of the parameters. Then 
+// for every entry inside the vector, it calls the above routines. 
+// Routine for PRIMAL problem.
 std::vector<system_data>
 develop_complete_system(const std::vector<int> &M,
 						const std::vector<int> &neqn_M,
 						const std::vector<int> &nbc_M,
 						const double Kn);
 
+// Routine for ADJOINT problem. 
 std::vector<system_data>
 develop_complete_system_adjoint(const std::vector<int> &M,
 						const std::vector<int> &neqn_M,
 						const std::vector<int> &nbc_M,
 						const double Kn);
 
-// now we specify the iniital and the boundary conditions
+// class which contains the initial and boundary conditions
 template<int dim>
 class
 ic_bc:public ic_bc_base<dim>
@@ -39,6 +47,7 @@ ic_bc:public ic_bc_base<dim>
 								Vector<double> &value,const double &t);
 };
 
+// same as above but for the adjoint problem
 template<int dim>
 class
 ic_bc_adjoint:public ic_bc_base<dim>
@@ -55,6 +64,7 @@ ic_bc_adjoint:public ic_bc_base<dim>
 								Vector<double> &value,const double &t);
 };
 
+// compute the modulus of a matrix
 Full_matrix compute_Amod(const Sparse_Matrix &A)
 {
       EigenSolver<MatrixXd> ES(A);
@@ -67,6 +77,7 @@ Full_matrix compute_Amod(const Sparse_Matrix &A)
 
 }
 
+// set boundary ids in a square
 void 
 set_square_bid(Triangulation<2> &triangulation)
 {
@@ -133,21 +144,30 @@ int main(int argc, char *argv[])
      const std::vector<int> nbc_M = {5,8,14,20,30,40,55,70,91,112,140,168,204,240,285,330,385,440};
      const double Kn = 0.1;
 
-     const unsigned int num_systems = 1;
+     const unsigned int num_systems = 4;
      std::vector<int> M(num_systems);
      std::vector<int> M_adjoint(num_systems);
      M[0] = 3;
-     //M[1] = 5;
+     M[1] = 5;
+     M[2] = 7;
+     M[3] = 9;
 
      M_adjoint[0] = 3;
-     //M_adjoint[1] = 7;
+     M_adjoint[1] = 5;
+     M_adjoint[2] = 7;
+     M_adjoint[3] = 9;
 
+     // develop system matrices for the primal problem.
 	 std::vector<system_data> system_matrices = develop_complete_system(M,neqn_M,nbc_M,Kn);
-	 std::vector<system_data> system_matrices_error = develop_complete_system(M_adjoint,neqn_M,nbc_M,Kn);	// required for error computation
+	 // develop system matrices for the error computation. System matrices are same as the primal problem
+	 // but are bigger for error computation.
+	 std::vector<system_data> system_matrices_error = develop_complete_system(M_adjoint,neqn_M,nbc_M,Kn);
+	 // system matrices for adjoint. 
      std::vector<system_data> system_matrices_adjoint = develop_complete_system_adjoint(M_adjoint,neqn_M,nbc_M,Kn);
      
       // create a rectangular mesh 
       Triangulation<dim> triangulation;
+      // number of repetitions in every direction
       unsigned int repetitions = atoi(argv[2]);
 
       GridGenerator::subdivided_hyper_cube(triangulation,repetitions);
@@ -157,13 +177,22 @@ int main(int argc, char *argv[])
       ic_bc<dim> initial_boundary;	
       ic_bc_adjoint<dim> initial_boundary_adjoint;	
 
+      // folder where all the output goes
       std::string foldername = "2x3v_heated_cavity_Adp/";
 
+      // Maximum number of equations in all the different moment systems we loaded. Following computation assumes that
+      // entries inside system_matrices have increasing value of $M$ (maximum tensorial degree in the Hermite expansion).
       const unsigned int max_neqn_primal = system_matrices[system_matrices.size()-1].Ax.rows();
       const unsigned int max_neqn_adjoint = system_matrices_adjoint[system_matrices_adjoint.size()-1].Ax.rows();
 
 
-       run_problem<dim> Run_Problem(system_matrices,	  // system data
+      // we give the exact value of the target functional from the DVM solution. Sufficient to put the value in the 
+      // first element.
+      // target functional here is the total heat flux in the y-direction i.e. \int_{(0,1)\times (0,1)}q_y dx dy.
+      system_matrices[0].exact_target_value = 0.154185;
+
+
+      run_problem<dim> Run_Problem(system_matrices,	  // system data
        								system_matrices_error,
 				  			  		system_matrices_adjoint, // adjoint data
 							  		triangulation, // triangulation
@@ -254,6 +283,8 @@ void develop_system(system_data &system_matrices,const int &M,const int &neqn_M,
 void develop_system_adjoint(system_data &system_matrices,const int &M,const int &neqn_M,
 							const int &nbc_M,const double &Kn)
 {
+	// first we develop a temporary primal system. Then, by changing matrices in this system
+	// we develop the adjoint system. 
 	system_data temp;
 	develop_system(temp,M,neqn_M,nbc_M,Kn);
 
@@ -515,9 +546,9 @@ ic_bc_adjoint<dim>::force(Vector<double> &value,
 	Assert(force_vec.size() != 0,ExcNotImplemented());
 	value = 0;
 
-	// a mean value for temperature. 
-	value(3) = sqrt(2)/3.0;
-	value(5) = sqrt(2)/3.0;
-	value(6) = sqrt(2)/3.0;
+	// mean value for qy 
+	value(11) = sqrt(3.0/2.0); // coefficient for (0,3,0)
+	value(8) = sqrt(1.0/2.0); // coefficient for (2,1,0)
+	value(12) = sqrt(1.0/2.0); // coefficient for (0,1,2)
 }
 
